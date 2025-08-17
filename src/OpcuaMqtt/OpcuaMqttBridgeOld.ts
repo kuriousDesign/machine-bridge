@@ -11,14 +11,26 @@ interface MqttCommand {
   nodeId: string;
 }
 
+interface Link {
+  direction: 'opcua-to-mqtt' | 'mqtt-to-opcua' | 'bi-directional';
+  opcuaNode: string;
+  mqttTopic: string;
+}
+
+
+
+
+
 export class OpcuaMqttBridge {
   private opcuaClient: OPCUAClient;
+  private opcuaEndpoint: string;
   private mqttClient: MqttClient;
   private session: ClientSession | null = null;
   private subscriptions: Map<string, any> = new Map();
 
   constructor(mqttClient: MqttClient, opcuaEndpoint: string) {
     this.mqttClient = mqttClient;
+    this.opcuaEndpoint = opcuaEndpoint;
     this.opcuaClient = OPCUAClient.create({
       applicationName: 'OpcuaMqttBridge',
       connectionStrategy: {
@@ -29,7 +41,7 @@ export class OpcuaMqttBridge {
   }
 
   async connect(): Promise<void> {
-    await this.opcuaClient.connect();
+    await this.opcuaClient.connect(this.opcuaEndpoint);
     this.session = await this.opcuaClient.createSession();
     this.setupMqttCommandListener();
   }
@@ -41,7 +53,34 @@ export class OpcuaMqttBridge {
     await this.opcuaClient.disconnect();
   }
 
-  async subscribeToNodes(nodes: OpcuaNode[]): Promise<void> {
+
+// createOpcuaMonitoredItems will take in list of this.links and create a subscription then a list of monitored items that will
+// be collected as a monitoredGroup
+  async createOpcuaMonitoredItems(links: Link[]): Promise<void> {
+    if (!this.session) throw new Error('Not connected to OPC UA server');
+
+    const subscription = await this.session.createSubscription2({
+      requestedPublishingInterval: 1000, //what does this do? 
+      requestedLifetimeCount: 100,
+      requestedMaxKeepAliveCount: 10,
+      maxNotificationsPerPublish: 100,
+      publishingEnabled: true,
+      priority: 10
+    });
+
+    const monitoredItems = links.map(link => {
+      return subscription.monitor({
+        nodeId: link.opcuaNode,
+        attributeId: AttributeIds.Value
+      });
+    });
+
+    // Collect all monitored items into a group
+    const monitoredGroup = await Promise.all(monitoredItems);
+    this.subscriptions.set(subscription.id, monitoredGroup);
+  }
+
+  async createLinks(links: Links[]): Promise<void> {
     if (!this.session) throw new Error('Not connected to OPC UA server');
 
     for (const node of nodes) {
@@ -59,7 +98,7 @@ export class OpcuaMqttBridge {
         attributeId: AttributeIds.Value
       });
 
-      monitoredItem.on('changed', (dataValue) => {
+      (await monitoredItem).on('changed', (dataValue: any) => {
         this.mqttClient.publish(node.mqttTopic, JSON.stringify({
           value: dataValue.value.value,
           timestamp: dataValue.sourceTimestamp,

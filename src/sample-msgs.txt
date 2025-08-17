@@ -1,2 +1,0 @@
-{"type":"subscribe","deviceId":"device1","dataType":"temp"}
-{"type":"device_update","deviceId":"device1","dataType":"temp","value":25}

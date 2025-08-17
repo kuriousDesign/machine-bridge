@@ -1,482 +1,394 @@
-/**
- * OPCUA MQTT BRIDGE - Functional Description
- * 
- * # HOW THE BRIDGE WORKS
+/*
+# HOW THE BRIDGE WORKS
 This bridge will manage a connection between a single machine (OpcuaServer) and a single MQTT Broker.
 The bridge will publish device-based topics and some system topics to the MQTT Broker continuously.
-Mqtt Clients will subscribe and unsubscripe to topics at will, which the broker will manage (not this code)
+Mqtt Clients will subscribe and unsubscripe to topics at will, which the broker will manage.
 
-## OPCUA CONNECTION AND SUBSCRIPTION PROCEDURE
-1. The bridge will establish connection via a single session with the opcua server
-2. Once connected, establish a heartbeat connection (read and writing from and to two specific heartbeat nodes),  2. Sets up a timer that reads from PLC heartbeat node and writes to HMI heartbeat node every 500ms
-3. Once heartbeat health with plc is determined, it will create links subscription to opcua nodes to be relayed to the mqtt and vice versa:
-    a. the list of links is first determined by reading an array tag called Machine.RegisteredDevices of type RegisteredDevice{deviceIndex:UINT, deviceType:DeviceTypes enum, devicePath: string}, first device is the machine itself with its id
-4. subscribe to machineConnectTopic and listen for mqtt clients who have just connected to the broker and want to setup their connection to the bridge.
-5. 
+## OPCUA CONNECTION AND SUBSCRIPTION TO MONITORED NODES PROCEDURE
+1. The bridge will await connection via a single session with the opcua server
+2. Once connected, await a heartbeat connection (read and writing from and to two specific heartbeat nodes), and maintain this every 500ms
+3. Read tag for an array tag called Machine.RegisteredDevices of type RegisteredDevice{deviceStoreIndex:UINT, deviceType:DeviceTypes enum, deviceTypeStoreIndex:UINT, deviceMqttTopicPath: string}, first device is the machine itself with its id. Each non empty entry in the registeredDeviceArray will be used to create a map of links, key = nodeId and Link{deviceIndex}. There will. the key will be the nodeId, derived from 
+it will create a map of links: key will be nodeId subscription to opcua nodes to be relayed to the mqtt:
+
 # HOW LINKS WORK
 Changes to Device-based Opcua Monitored Nodes will trigger publish to mqtt topics to the broker, the topics use the devicePath plus the specific topic (e.g. status, cfg, data) to build the topic string, prepended with the machineId. Ideally this also occurs at some consistent period (250ms).
 
-## DATA STORAGE ON PLC
-Machine.Devices[] for generic device data {Cfg, Status, Errors} and Machine.<DeviceType>[] for deviceType specific data {Cfg, Data}
+The Link will have to relay the opcua data into the corresponding json before publishing to broker. Mqtt data will contain the following structure MqttMessage{timestamp: number, payload: unknown}
 
-The Link will have to translate the opcua data into the corresponding json before publishing to broker. Mqtt data will contain the following structure MqttMessage{timestamp: number, payload: unknown}
+MonitoredItems can immediately start publishing to the mqtt topic without waiting for mqtt clients to connect.
 
-UI will wait for the registered devices topic to publish before it creates its top level navigation for devices.
- * 
- 
- *
- * MQTT CLIENT CONNECTION FLOW:
- * 4. When a mqtt client sends a connection message
- *    - store clientId in a map of mqttConnectedClients, if not already there
- *    - if playload contains deviceRegistration, then send the device registration array.
- *    - if payload from client contains heartbeat, then update heartbeat information (we will want to clear old clients)
+# MQTT CLIENT CONNECTION FLOW:
+When a mqtt client sends a connection message
+- store clientId in a map of mqttConnectedClients, if not already there
+- if playload contains deviceRegistration, then send the device registration array.
+- if payload from client contains heartbeat, then update heartbeat information (we will want to clear old clients)
 
- * 
- * REAL-TIME DATA MONITORING:
- * 5. Creates subscriptions to monitor specified OPC UA nodes for value changes
- * 6. When monitored values change, automatically emits 'newValue' events to the web client
- * 7. Handles both scalar values and arrays appropriately
- * 
- * CLIENT OPERATION HANDLERS:
- * 8. 'login' - Writes username/password to OPC UA nodes and triggers login button
- * 9. 'logout' - Triggers logout button in OPC UA server
- * 10. 'writeSimple' - Writes basic data types (string, number, boolean) to OPC UA nodes
- * 11. 'writeArray' - Writes array data (specifically Int16Array) to OPC UA nodes
- * 12. 'writeButtonPress' - Simulates button press (writes true, then false after delay)
- * 13. 'writeExtension' - Writes complex extension objects to OPC UA nodes
- * 14. 'recipeDelete' - Complex operation that reads recipe array, deletes item, sorts, and writes back
- * 
- * CONNECTION MANAGEMENT:
- * 15. Tracks all active connections in a Map for cleanup purposes
- * 16. When client disconnects: terminates subscriptions, closes sessions, disconnects OPC UA clients
- * 17. On process shutdown (SIGINT): gracefully closes all connections and stops heartbeat
- * 
- * KEY GOTCHAS:
- * - Each Socket.IO client gets its own dedicated OPC UA connection (not shared)
- * - Heartbeat runs independently of client connections
- * - Button presses auto-reset to false after configured delay
- * - Recipe deletion involves complex array manipulation and sorting
- * - All OPC UA node IDs are prefixed with controller-specific paths
- */
+# DATA STORAGE ON PLC
+Machine.Devices[] for deviceStore which contains an array of device data (type Device) and Machine.<DeviceType>[] for deviceTypeStore (e.g. Machine.Axes[], Machine.Robots[])
 
+# ON EXIT
+On process shutdown (SIGINT): gracefully closes mqtt and opcua connections and stops heartbeat
+*/
 
-
-
-import { Server, Socket } from 'socket.io';
 import {
-  AttributeIds,
-  ClientMonitoredItemBase,
-  ClientMonitoredItemGroup,
-  ClientSession,
-  ClientSubscription,
-  ConnectionStrategyOptions,
-  DataType,
-  DataValue,
-  MessageSecurityMode,
-  NodeId,
-  OPCUAClient,
-  OPCUAClientOptions,
-  resolveNodeId,
-  SecurityPolicy,
-  StatusCode,
-  StatusCodes,
-  TimestampsToReturn,
-  VariantArrayType,
-  WriteValueOptions,
+    AttributeIds,
+    ClientMonitoredItemBase,
+    ClientMonitoredItemGroup,
+    ClientSession,
+    ClientSubscription,
+    ConnectionStrategyOptions,
+    DataType,
+    ExtraDataTypeManager,
+    DataValue,
+    MessageSecurityMode,
+    NodeId,
+    OPCUAClient,
+    OPCUAClientOptions,
+    ReadValueIdOptions,
+    resolveNodeId,
+    SecurityPolicy,
+    StatusCode,
+    StatusCodes,
+    TimestampsToReturn,
+    VariantArrayType,
+    WriteValueOptions,
+    CreateSubscriptionRequestOptions,
+    MonitoringParametersOptions,
+    MonitoringMode,
+    DataChangeFilter,
+    DataChangeTrigger,
+    DeadbandType,
+    BrowseDescriptionLike,
+    BrowseDirection,
+
 } from 'node-opcua';
-import config from 'config';
-import {
-  NewValue,
-  UserInput,
-  LoginInput,
-  InputNodeId,
-  RecipeDeleteInput,
-  RecipeData,
-} from '@robotic-workcell/sdk';
+import mqtt, { MqttClient } from 'mqtt';
 
-// const endpointUrl = 'opc.tcp://5UVSEL0-ZENBOOK:4334/UA/MyLittleServer';
-// const endpointUrl: string = config.get('opcuaEndpointUrl');
-const endpointUrl: string = process.env.opcuaEndpointUrl;
-const controllerName: string = process.env.opcuaControllerName;
+import { Device, DeviceTags } from '@kuriousdesign/machine-sdk';
+
+
+interface HeartBeatConnection {
+    connectionId: string;
+    heartbeatValue: number;
+    timer: NodeJS.Timer;
+}
 
 const connectionStrategy: ConnectionStrategyOptions = {
-  initialDelay: 1000,
-  maxDelay: 4000,
+    initialDelay: 1000,
+    maxDelay: 4000,
 };
 
 const opcuaOptions: OPCUAClientOptions = {
-  applicationName: 'NodeOPCUA-Client',
-  connectionStrategy: connectionStrategy,
-  securityMode: MessageSecurityMode.None,
-  securityPolicy: SecurityPolicy.None,
-  endpointMustExist: true,
-  keepSessionAlive: true,
+    applicationName: 'OpcuaMqttBridge',
+    connectionStrategy: connectionStrategy,
+    securityMode: MessageSecurityMode.None,
+    securityPolicy: SecurityPolicy.None,
+    endpointMustExist: true,
+    keepSessionAlive: true,
 };
 
-const subscriptionOptions = {
-  maxNotificationsPerPublish: 1000,
-  publishingEnabled: true,
-  requestedLifetimeCount: 100,
-  requestedMaxKeepAliveCount: 10,
-  requestedPublishingInterval: 50, //affects lag, decrease to reduce lag
+const subscriptionOptions: CreateSubscriptionRequestOptions = {
+    maxNotificationsPerPublish: 1000,
+    publishingEnabled: true,
+    requestedLifetimeCount: 100,
+    requestedMaxKeepAliveCount: 10,
+    requestedPublishingInterval: 100, //affects lag, decrease to reduce lag
 };
 
-const optionsGroup = {
-  discardOldest: true,
-  queueSize: 1,
-  samplingInterval: 50, //affects lag, decrease to reduce lag
+const filter = new DataChangeFilter({
+  trigger: DataChangeTrigger.StatusValueTimestamp, // Report on any of Status, Value, or Timestamp
+  deadbandType: DeadbandType.None,                 // No deadband suppression
+  deadbandValue: 0
+});
+
+
+const optionsGroup: MonitoringParametersOptions = {
+    discardOldest: true,
+    queueSize: 1,
+    samplingInterval: 100, //affects lag, decrease to reduce lag
+    filter
 };
 
-interface ClientConnection {
-  id: string;
-  socketConnection: Socket;
-  opcuaSession: ClientSession;
-  opcuaClient: OPCUAClient;
-}
-
-interface HeartBeatConnection {
-  opcuaSession: ClientSession;
-  opcuaClient: OPCUAClient;
-  timer: NodeJS.Timer;
-}
+import { DeviceRegistration, MachineTags, PlcNamespaces, nodeListString, nodeTypeString } from '@kuriousdesign/machine-sdk'
 
 
 
-class OpcuaManager {
-  private socketio: Server;
-  // private opcuaClient: OPCUAClient;
-  private heartBeatConnection: HeartBeatConnection | null = null;
-  private connections: Map<string, ClientConnection>;
-  private nodeListPrefix: string;
-  private nodeTypePrefix: string;
+class OpcuaMqttBridge {
+    private mqttClient: MqttClient | null = null;
+    private opcuaClient: OPCUAClient | null = null;
+    private opcuaSession: ClientSession | null = null;
+    private opcuaControllerName: string;
+    private opcuaHeartBeatConnection: HeartBeatConnection | null = null;
+    private mqttClientHeartBeatConnections: Map<string, HeartBeatConnection> | null = null;
+    private nodeListPrefix: string;
+    private nodeTypePrefix: string;
+    private mqttOptions: unknown;
+    private mqttBrokerUrl: string;
+    private opcuaEndpoint: string;
+    private bridgeHealthIsOk: boolean = false;
+    private mqttBrokerIsConnected: boolean = false;
+    private opcuaServerIsConnected: boolean = false;
+    private registeredDevices: DeviceRegistration[] = [];
+    private dataTypeManager: ExtraDataTypeManager | null = null;
+    private nodeIdToMqttTopicMap = new Map<string, string>();
+    private opcuaSubscription: ClientSubscription | null = null;
+    private monitoredItemGroup: ClientMonitoredItemGroup | null = null;
 
-  constructor(socketio: Server) {
-    this.connections = new Map<string, ClientConnection>();
-    this.socketio = socketio;
-    this.nodeListPrefix = config.get('nodeListPrefix') + controllerName + '.Application.';
-    this.nodeTypePrefix = config.get('nodeTypePrefix') + controllerName + '.Application.';
-    console.log('Opcua Server Name: ' + controllerName);
-    console.log('Opcua Server location: ' + endpointUrl);
-    this.initialize();
-  }
+    constructor(mqttBrokerUrl: string, mqttOptions: unknown, opcuaEndpoint: string, opcuaControllerName: string) {
+        console.log('Initializing OpcuaMqttBridge...');
+        this.mqttOptions = mqttOptions;
+        this.opcuaEndpoint = opcuaEndpoint;
+        this.mqttBrokerUrl = mqttBrokerUrl;
+        this.opcuaControllerName = opcuaControllerName;
+        this.nodeTypePrefix = nodeTypeString + this.opcuaControllerName + '.Application.';
+        this.nodeListPrefix = nodeListString + this.opcuaControllerName + '.Application.';
+        // need a map that uses nodeId as key and topic as value
 
-  private async initialize() {
-    try {
-      const hbOpcuaClient: OPCUAClient = OPCUAClient.create(opcuaOptions);
-      await hbOpcuaClient.connect(endpointUrl);
-      const hbOpcuaSession: ClientSession = await hbOpcuaClient.createSession();
 
-      const heartbeatPLCNodeId = `${this.nodeListPrefix}${config.get(
-        'heartbeatPLCNodeId',
-      )}`;
-      const heartbeatHMINodeId = `${this.nodeListPrefix}${config.get(
-        'heartbeatHMINodeId',
-      )}`;
+        this.initializeMqttClient().then(() => this.initializeOpcuaClient().then(() => this.retrieveRegisteredDevices().then(() => {
+            console.log('create device entries for nodeIdToMqttTopicMap');
+            this.registeredDevices.forEach((device) => {
+                const deviceNodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceStore + '[' + device.id + ']';
+                const deviceTopic = 'machine/' + device.parentId + '/' + device.id;
+        
+                Object.values(DeviceTags).map((tag:string) => {
+                    const nodeId = deviceNodeId + '.' + tag;
+                    const topic = deviceTopic + '/' + tag.toLowerCase();
+                    this.nodeIdToMqttTopicMap.set(nodeId, topic);
+                });
 
-      const timer: NodeJS.Timer = setInterval(async () => {
-        try {
-          const receivingValue = await hbOpcuaSession.read({
-            nodeId: heartbeatPLCNodeId,
-            attributeId: AttributeIds.Value,
-          });
 
-          const sendingValue: WriteValueOptions = {
-            nodeId: heartbeatHMINodeId,
-            attributeId: AttributeIds.Value,
-            value: {
-              value: {
-                dataType: DataType.Byte,
-                value: receivingValue.value.value,
-              },
-            },
-          };
-          await hbOpcuaSession.write(sendingValue);
-        } catch (error) {
-          console.error(error.message);
-        }
-      }, 500);
+            });
+            console.log(this.nodeIdToMqttTopicMap.get('Machine.Devices[8].Is'));
 
-      console.log('Starting heartbeat');
+            this.subscribeToMonitoredItems();
 
-      this.heartBeatConnection = {
-        opcuaClient: hbOpcuaClient,
-        opcuaSession: hbOpcuaSession,
-        timer,
-      };
-
-      this.socketio.on('connection', async (socket: Socket) => {
-        // socket.emit('welcome', 'hello there!');
-        console.log(`new socket connection ${socket.id}`);
-        const opcuaClient: OPCUAClient = OPCUAClient.create(opcuaOptions);
-        opcuaClient.on('connected', () => {
-          console.log('opcua client connected');
-          socket.emit('status', 'connected');
-        });
-        await opcuaClient.connect(endpointUrl);
-        const opcuaSession: ClientSession = await opcuaClient.createSession();
-        this.connections.set(socket.id, {
-          id: socket.id,
-          socketConnection: socket,
-          opcuaSession,
-          opcuaClient,
-        });
-
-        opcuaClient.on('start_reconnection', () => {
-          console.log('opcua client trying to reconnect');
-          socket.emit('status', 'reconnecting');
-        });
-        opcuaSession.on('session_restored', () => {
-          console.log('session restored');
-          socket.emit('status', 'reconnected');
-        });
-        const itemsToMonitor = (<Array<string>>config.get('nodeList')).map(nodeId => {
-          return {
-            attributeId: AttributeIds.Value,
-            nodeId: `${this.nodeListPrefix}${nodeId}`,
-          };
-        });
-
-        const subscription: ClientSubscription = await opcuaSession.createSubscription2(
-          subscriptionOptions,
-        );
-        const monitoredItemGroup = ClientMonitoredItemGroup.create(
-          subscription,
-          itemsToMonitor,
-          optionsGroup,
-          TimestampsToReturn.Both,
-        );
-        monitoredItemGroup.on(
-          'changed',
-          (monitoredItem: ClientMonitoredItemBase, dataValue: DataValue) => {
-            const newValue: NewValue = {
-              nodeId: monitoredItem.itemToMonitor.nodeId
-                .toString()
-                .replace(this.nodeListPrefix, ''),
-              value:
-                dataValue.value.arrayType === VariantArrayType.Array
-                  ? Array.from(dataValue.value.value)
-                  : dataValue.value.value,
-            };
-
-            console.log(monitoredItem.itemToMonitor.nodeId.toString());
-            socket.emit('newValue', newValue);
-          },
-        );
-        socket.on('login', async (data: LoginInput) => {
-          const usernameNodeToWrite: WriteValueOptions = {
-            nodeId: `${this.nodeListPrefix}${InputNodeId.Username}`,
-            attributeId: AttributeIds.Value,
-            value: {
-              value: {
-                dataType: DataType.String,
-                value: data.username,
-              },
-            },
-          };
-
-          const passwordNodeToWrite: WriteValueOptions = {
-            nodeId: `${this.nodeListPrefix}${InputNodeId.Password}`,
-            attributeId: AttributeIds.Value,
-            value: {
-              value: {
-                dataType: DataType.String,
-                value: data.password,
-              },
-            },
-          };
-
-          const loginBtnNodeToWrite: WriteValueOptions = {
-            nodeId: `${this.nodeListPrefix}${InputNodeId.LoginBtnBlick}`,
-            attributeId: AttributeIds.Value,
-            value: {
-              value: {
-                dataType: DataType.Boolean,
-                value: true,
-              },
-            },
-          };
-
-          await opcuaSession.write(usernameNodeToWrite);
-          await opcuaSession.write(passwordNodeToWrite);
-          await opcuaSession.write(loginBtnNodeToWrite);
-        });
-
-        socket.on('logout', async () => {
-          const logoutBtnNodeToWrite: WriteValueOptions = {
-            nodeId: `${this.nodeListPrefix}${InputNodeId.LogoutBtnBlick}`,
-            attributeId: AttributeIds.Value,
-            value: {
-              value: {
-                dataType: DataType.Boolean,
-                value: true,
-              },
-            },
-          };
-          await opcuaSession.write(logoutBtnNodeToWrite);
-        });
-
-        socket.on('writeSimple', async (data: UserInput) => {
-          console.log(`user input\n`, data);
-          const nodeToWrite: WriteValueOptions = {
-            nodeId: `${this.nodeListPrefix}${data.nodeId}`,
-            attributeId: AttributeIds.Value,
-            value: {
-              value: {
-                dataType: <number>data.nodeDataType,
-                value: data.value,
-              },
-            },
-          };
-          await opcuaSession.write(nodeToWrite);
-        });
-
-        socket.on('writeArray', async (data: UserInput) => {
-          console.log(`user input\n`, data);
-          const arrayOfValue = new Int16Array(data.value);
-          const nodeToWrite: WriteValueOptions = {
-            nodeId: `${this.nodeListPrefix}${data.nodeId}`,
-            attributeId: AttributeIds.Value,
-            value: {
-              value: {
-                dataType: DataType.Int16,
-                arrayType: VariantArrayType.Array,
-                value: arrayOfValue,
-              },
-            },
-          };
-          await opcuaSession.write(nodeToWrite);
-        });
-
-        socket.on('writeButtonPress', async (data: UserInput) => {
-          console.log(`user input\n`, data);
-          const nodeToWrite: WriteValueOptions = {
-            nodeId: `${this.nodeListPrefix}${data.nodeId}`,
-            attributeId: AttributeIds.Value,
-            value: {
-              value: {
-                dataType: DataType.Boolean,
-                value: data.value,
-              },
-            },
-          };
-          await opcuaSession.write(nodeToWrite);
-
-          //make button press false after several milliseconds
-          if (data.value === true) {
-            const nodeToWriteBackToFalse: WriteValueOptions = { ...nodeToWrite };
-            nodeToWriteBackToFalse.value.value.value = false;
-            setTimeout(async () => {
-              await opcuaSession.write(nodeToWriteBackToFalse);
-            }, <number>config.get('buttonPressDelayMS'));
-          }
-        });
-
-        socket.on('writeExtension', async (data: UserInput) => {
-          console.log(`user input\n`, data);
-          const nodeId = `${this.nodeListPrefix}${data.nodeId}`;
-          const extObject = await opcuaSession.constructExtensionObject(
-            resolveNodeId(`${this.nodeTypePrefix}${data.nodeDataType}`),
-            data.value,
-          );
-          console.log(extObject);
-          const statusCode: StatusCode = await opcuaSession.write({
-            nodeId: nodeId,
-            attributeId: AttributeIds.Value,
-            value: {
-              statusCode: StatusCodes.Good,
-              value: {
-                dataType: DataType.ExtensionObject,
-                value: extObject,
-              },
-            },
-          });
-          console.log(statusCode);
-          // const nodeToWrite: WriteValueOptions = {
-          //   nodeId: `${this.nodeListPrefix}${data.nodeId}`,
-          //   attributeId: AttributeIds.Value,
-          //   value: {
-          //     value: {
-          //       dataType: DataType.String,
-          //       value: data.value,
-          //     },
-          //   },
-          // };
-          // opcuaSession.write(nodeToWrite, (err, result) => {
-          //   if (err) {
-          //     console.warn(err);
-          //   }
-          // });
-        });
-
-        socket.on('recipeDelete', async (data: RecipeDeleteInput) => {
-          const recipeDataNodeId: string = config.get('recipeDataNodeId');
-          const recipeData: RecipeData[] = (
-            await opcuaSession.read({
-              nodeId: `${this.nodeListPrefix}${recipeDataNodeId}`,
-              attributeId: AttributeIds.Value,
-            })
-          ).value.value;
-          const indexToDelete = data.index;
-          recipeData[indexToDelete] = {
-            ncProgramNumber: 0,
-            extrusionLength_mm: 0,
-            extrusionType: 0,
-            partName: '',
-            partWeight_kg: 0,
-          };
-
-          recipeData.sort((a, b) => b.ncProgramNumber - a.ncProgramNumber);
-
-          const extObjArray = [];
-          for (let index = 0; index < recipeData.length; index++) {
-            const extObject = await opcuaSession.constructExtensionObject(
-              resolveNodeId(`${this.nodeTypePrefix}RecipeData`),
-              recipeData[index],
-            );
-            extObjArray.push(extObject);
-          }
-
-          const arrayNodeToWrite: WriteValueOptions = {
-            nodeId: `${this.nodeListPrefix}${recipeDataNodeId}`,
-            attributeId: AttributeIds.Value,
-            value: {
-              value: {
-                dataType: DataType.ExtensionObject,
-                arrayType: VariantArrayType.Array,
-                value: extObjArray,
-              },
-            },
-          };
-
-          await opcuaSession.write(arrayNodeToWrite);
-        });
-
-        socket.on('disconnect', async () => {
-          console.log(`deleting socket connection ${socket.id}`);
-          await subscription.terminate();
-          await opcuaSession.close();
-          await opcuaClient.disconnect();
-          this.connections.delete(socket.id);
-        });
-      });
-      process.on('SIGINT', async () => {
-        console.log('shutting down connections');
-        for (const [socketId, connection] of this.connections.entries()) {
-          this.socketio.to(socketId).emit('status', 'shutdown');
-          await connection.opcuaSession.close();
-          await connection.opcuaClient.disconnect();
-        }
-
-        console.log('Ending heartbeat');
-        clearInterval(this.heartBeatConnection.timer);
-        await this.heartBeatConnection.opcuaSession.close();
-        await this.heartBeatConnection.opcuaClient.disconnect();
-        process.exit();
-      });
-    } catch (error) {
-      console.error(error.message);
+            console.log('Both MQTT and OPC UA clients initialized');
+        })));
     }
-  }
+
+    private async subscribeToMonitoredItems(): Promise<void> {
+        if (!this.opcuaSession) {
+            throw new Error("OPC UA session is not initialized");
+        }
+        console.log('Subscribing to monitored items...');
+        this.opcuaSubscription = await this.opcuaSession.createSubscription2(
+            subscriptionOptions,
+        );
+        // Subscribe to each nodeId in the map
+        const itemToMonitor = [] as { attributeId: number; nodeId: string }[];
+        for (const [nodeId, topic] of this.nodeIdToMqttTopicMap) {
+            itemToMonitor.push({
+                attributeId: AttributeIds.Value,
+                nodeId: `${this.nodeListPrefix}${nodeId}`,
+            });
+        }
+
+
+        //console.log('Creating monitored item group with items:', itemToMonitor);
+        this.monitoredItemGroup = ClientMonitoredItemGroup.create(
+            this.opcuaSubscription,
+            itemToMonitor,
+            optionsGroup,
+            TimestampsToReturn.Both,
+        );
+
+        await this.monitoredItemGroup.setMonitoringMode(MonitoringMode.Reporting); // <-- forces periodic reporting
+
+        this.monitoredItemGroup.on(
+            'initialized',
+            () => {
+                //console.log('Monitored items initialized!!!!!');
+            }
+        );
+
+        this.monitoredItemGroup.on(
+            'changed',
+            (monitoredItem: ClientMonitoredItemBase, dataValue: DataValue) => {
+               
+                const newValue = this.decipherOpcuaValue(dataValue);
+                const fullNodeId = monitoredItem.itemToMonitor.nodeId.value;
+                const nodeId = fullNodeId.toString().replace(this.nodeListPrefix.replace('ns=4;s=', ''), '');
+                const topic = this.nodeIdToMqttTopicMap.get(nodeId);
+                //console.log('Corresponding MQTT topic:', topic);
+                if (topic && this.mqttClient && this.bridgeHealthIsOk) {
+                    const message = {
+                        timestamp: Date.now(),
+                        payload: newValue
+                    }
+                    this.mqttClient.publish(topic, JSON.stringify(message));
+                    //console.log(`Published to MQTT topic ${topic}:`, newValue);
+                } else if (!this.bridgeHealthIsOk) {
+                    //console.warn('Bridge connection health is not OK, not publishing to MQTT');
+                } else {
+                    console.error('No valid MQTT topic found for nodeId:', nodeId);
+                }
+            },
+        );
+    }
+
+    private async initializeMqttClient(): Promise<void> {
+        console.log('connecting to mqtt broker at: ' + this.mqttBrokerUrl);
+        this.mqttClient = mqtt.connect(this.mqttBrokerUrl, this.mqttOptions as mqtt.IClientOptions);
+        this.mqttClient.on('connect', () => {
+            console.log('✅ MQTT client connected to broker');
+            this.updateMqttConnectionStatus(true);
+        });
+        this.mqttClient.on('error', (err) => {
+            console.error('MQTT error:', err.message);
+            this.updateMqttConnectionStatus(false);
+        });
+        this.mqttClient.on('close', () => {
+            console.log('MQTT connection closed');
+            this.updateMqttConnectionStatus(false);
+        });
+    }
+    private async initializeOpcuaClient(): Promise<void> {
+        this.opcuaClient = OPCUAClient.create(opcuaOptions);
+
+        this.opcuaClient.on("backoff", (retry, delay) => {
+            console.warn(
+                `OPC UA retry #${retry}, next attempt in ${delay} ms`
+            );
+        });
+
+        this.opcuaClient.on("connection_lost", () => {
+            console.warn("OPC UA connection lost");
+            this.updateOpcuaConnectionStatus(false);
+        });
+
+        this.opcuaClient.on("after_reconnection", () => {
+            console.log("✅ OPC UA reconnected");
+            this.updateOpcuaConnectionStatus(true);
+        });
+
+        try {
+            console.log("connecting to opcua endpoint: " + this.opcuaEndpoint);
+            await this.opcuaClient.connect(this.opcuaEndpoint);
+            console.log("✅ OPC UA client connected");
+
+            this.opcuaSession = await this.opcuaClient.createSession();
+            
+
+            this.dataTypeManager = new ExtraDataTypeManager();
+
+            console.log("✅ OPC UA session created");
+
+            this.updateOpcuaConnectionStatus(true);
+        } catch (err: any) {
+            console.error("❌ Failed to connect to OPC UA:", err.message);
+
+            // Retry after delay
+            setTimeout(() => {
+                this.initializeOpcuaClient();
+            }, 5000);
+        }
+    }
+
+    private async retrieveRegisteredDevices(): Promise<DeviceRegistration[]> {
+        console.log("Retrieving registered devices from OPC UA...");
+        //1. build tag
+        const registeredDevicesNodeId = this.concatNodeId(PlcNamespaces.Machine, MachineTags.registeredDevices);
+
+        //2. read 
+        const heartbeatPlcNodeId = this.concatNodeId(PlcNamespaces.Machine, MachineTags.HeartbeatPLC);
+
+        //console.log('reading OPC UA value from: ' + heartbeatPlcNodeId);
+        const heartbeatPlc = await this.readOpcuaValue(heartbeatPlcNodeId) as number;
+        //console.log('Current PLC Heartbeat value: ' + heartbeatPlc);
+        //console.log('reading OPC UA value from: ' + registeredDevicesNodeId);
+        const registeredDevices = await this.readOpcuaValue(registeredDevicesNodeId) as DeviceRegistration[];
+        // remove any items that have id of 0
+        this.registeredDevices = registeredDevices.filter((device: DeviceRegistration) => device.id !== 0)
+        console.log("Retrieved registered devices, count:", this.registeredDevices.length);
+        return registeredDevices;
+    }
+
+    private async readOpcuaValue(nodeId: string): Promise<any> {
+        if (!this.opcuaSession) {
+            throw new Error("OPC UA session is not initialized");
+        }
+
+        try {
+            const readValueOptions: ReadValueIdOptions = {
+                nodeId: nodeId,
+                attributeId: AttributeIds.Value,
+            }
+            const data = await this.opcuaSession.read(readValueOptions);
+            const value = this.decipherOpcuaValue(data);
+            //console.log(`Deciphered OPC UA value from ${nodeId}:`, value);
+            if (data.statusCode === StatusCodes.Good) {
+                return value;
+            } else {
+                console.warn(`Failed to read OPC UA value from ${nodeId}: ${data.statusCode}`);
+                return null;
+            }
+        } catch (error) {
+            console.error(`Failed to read OPC UA value from ${nodeId}:`, error);
+            throw error;
+        }
+    }
+
+    // Add this helper method to the class (recursive for nested arrays/objects)
+    private toPlainObjects(value: any): any {
+        if (Array.isArray(value)) {
+            return value.map(item => this.toPlainObjects(item));
+        } else if (value !== null && typeof value === 'object') {
+            const plainObj: any = {};
+            for (const key in value) {
+                if (Object.prototype.hasOwnProperty.call(value, key)) {
+                    plainObj[key] = this.toPlainObjects(value[key]);
+                }
+            }
+            return plainObj;
+        }
+        return value; // Primitives remain unchanged
+    }
+
+    private decipherOpcuaValue(data: any): any {
+        const decipheredValue =
+            data.value.arrayType === VariantArrayType.Array
+                ? Array.from(data.toJSON().value.value)
+                : (data.toJSON().value.value);
+
+        return decipheredValue;
+    }
+
+    private concatNodeId(namespace: string, tag: string): string {
+        return `${this.nodeListPrefix}${namespace}.${tag}`;
+    }
+
+    privateconcatNodeIdOfArrayTag(namespace: string, tag: string, index: number): string {
+        return `${this.nodeListPrefix}.${namespace}.${tag}[${index}]`;
+    }
+
+
+    private updateBridgeHealth() {
+        const newState = this.mqttBrokerIsConnected && this.opcuaServerIsConnected;
+        if (newState !== this.bridgeHealthIsOk) {
+            this.bridgeHealthIsOk ? console.error('❌ Bridge connection health is BAD') : console.log('✅ Bridge connection health is OK');
+           
+        }
+        this.bridgeHealthIsOk = newState;
+    }
+
+    private updateMqttConnectionStatus(isConnected: boolean) {
+
+        if (isConnected !== this.mqttBrokerIsConnected) {
+            console.log(`MQTT Broker ${isConnected ? 'connected' : 'disconnected'}`);
+        }
+        this.mqttBrokerIsConnected = isConnected;
+        this.updateBridgeHealth();
+    }
+
+    private updateOpcuaConnectionStatus(isConnected: boolean) {
+        if (this.opcuaServerIsConnected !== isConnected) {
+            console.log(`OPC UA Server ${isConnected ? 'connected' : 'disconnected'}`);
+        }
+        this.opcuaServerIsConnected = isConnected;
+        this.updateBridgeHealth();
+    }
+
 }
 
-export default OpcuaManager;
+export default OpcuaMqttBridge;

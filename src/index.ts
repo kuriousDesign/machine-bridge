@@ -1,5 +1,5 @@
 import { MqttProtocol } from "mqtt";
-import OpcuaMqttBridge from "./OpcuaMqtt/opcua-mqtt-fresh";
+import OpcuaMqttBridge from "./OpcuaMqtt/OpcuaMqttBridge";
 import "dotenv/config"; // auto-loads .env
 
 async function main() {

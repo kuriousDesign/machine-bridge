@@ -64,7 +64,7 @@ import {
 } from 'node-opcua';
 import mqtt, { MqttClient } from 'mqtt';
 
-import { Device, DeviceTags } from '@kuriousdesign/machine-sdk';
+import { Device, DeviceTags, TopicData } from '@kuriousdesign/machine-sdk';
 
 
 interface HeartBeatConnection {
@@ -76,6 +76,7 @@ interface HeartBeatConnection {
 const connectionStrategy: ConnectionStrategyOptions = {
     initialDelay: 1000,
     maxDelay: 4000,
+    maxRetry: -1  // -1 means infinite retries
 };
 
 const opcuaOptions: OPCUAClientOptions = {
@@ -96,9 +97,9 @@ const subscriptionOptions: CreateSubscriptionRequestOptions = {
 };
 
 const filter = new DataChangeFilter({
-  trigger: DataChangeTrigger.StatusValueTimestamp, // Report on any of Status, Value, or Timestamp
-  deadbandType: DeadbandType.None,                 // No deadband suppression
-  deadbandValue: 0
+    trigger: DataChangeTrigger.StatusValueTimestamp, // Report on any of Status, Value, or Timestamp
+    deadbandType: DeadbandType.None,                 // No deadband suppression
+    deadbandValue: 0
 });
 
 
@@ -133,6 +134,7 @@ class OpcuaMqttBridge {
     private nodeIdToMqttTopicMap = new Map<string, string>();
     private opcuaSubscription: ClientSubscription | null = null;
     private monitoredItemGroup: ClientMonitoredItemGroup | null = null;
+    private timerConnectionStatusForMqtt: NodeJS.Timeout | null = null;
 
     constructor(mqttBrokerUrl: string, mqttOptions: unknown, opcuaEndpoint: string, opcuaControllerName: string) {
         console.log('Initializing OpcuaMqttBridge...');
@@ -142,6 +144,10 @@ class OpcuaMqttBridge {
         this.opcuaControllerName = opcuaControllerName;
         this.nodeTypePrefix = nodeTypeString + this.opcuaControllerName + '.Application.';
         this.nodeListPrefix = nodeListString + this.opcuaControllerName + '.Application.';
+        this.timerConnectionStatusForMqtt = setInterval(() => {
+            this.publishBridgeConnectionStatus();
+        }, 1000);
+
         // need a map that uses nodeId as key and topic as value
 
 
@@ -150,8 +156,8 @@ class OpcuaMqttBridge {
             this.registeredDevices.forEach((device) => {
                 const deviceNodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceStore + '[' + device.id + ']';
                 const deviceTopic = 'machine/' + device.parentId + '/' + device.id;
-        
-                Object.values(DeviceTags).map((tag:string) => {
+
+                Object.values(DeviceTags).map((tag: string) => {
                     const nodeId = deviceNodeId + '.' + tag;
                     const topic = deviceTopic + '/' + tag.toLowerCase();
                     this.nodeIdToMqttTopicMap.set(nodeId, topic);
@@ -205,14 +211,14 @@ class OpcuaMqttBridge {
         this.monitoredItemGroup.on(
             'changed',
             (monitoredItem: ClientMonitoredItemBase, dataValue: DataValue) => {
-               
+
                 const newValue = this.decipherOpcuaValue(dataValue);
                 const fullNodeId = monitoredItem.itemToMonitor.nodeId.value;
                 const nodeId = fullNodeId.toString().replace(this.nodeListPrefix.replace('ns=4;s=', ''), '');
                 const topic = this.nodeIdToMqttTopicMap.get(nodeId);
                 //console.log('Corresponding MQTT topic:', topic);
                 if (topic && this.mqttClient && this.bridgeHealthIsOk) {
-                    const message = {
+                    const message: TopicData = {
                         timestamp: Date.now(),
                         payload: newValue
                     }
@@ -250,6 +256,16 @@ class OpcuaMqttBridge {
             console.warn(
                 `OPC UA retry #${retry}, next attempt in ${delay} ms`
             );
+            if (this.mqttBrokerIsConnected && this.mqttClient) {
+                // publish a bridge health status message
+                const message: TopicData = {
+                    timestamp: Date.now(),
+                    payload: "OPC UA connection lost"
+                };
+                this.mqttClient.publish("machine/bridge/status", JSON.stringify(message));
+                //this.mqttClient.('error', new Error(JSON.stringify(message)));
+                //console.log("Published bridge error:", message);
+            }
         });
 
         this.opcuaClient.on("connection_lost", () => {
@@ -268,7 +284,7 @@ class OpcuaMqttBridge {
             console.log("✅ OPC UA client connected");
 
             this.opcuaSession = await this.opcuaClient.createSession();
-            
+
 
             this.dataTypeManager = new ExtraDataTypeManager();
 
@@ -367,9 +383,32 @@ class OpcuaMqttBridge {
         const newState = this.mqttBrokerIsConnected && this.opcuaServerIsConnected;
         if (newState !== this.bridgeHealthIsOk) {
             this.bridgeHealthIsOk ? console.error('❌ Bridge connection health is BAD') : console.log('✅ Bridge connection health is OK');
-           
+
         }
         this.bridgeHealthIsOk = newState;
+
+    }
+
+    private async publishBridgeConnectionStatus() {
+        if (this.mqttClient && this.mqttBrokerIsConnected) {
+            let message: TopicData;
+            if (this.opcuaServerIsConnected) {
+                message = {
+                    timestamp: Date.now(),
+                    payload: "Running"
+                };
+            } else {
+                message = {
+                    timestamp: Date.now(),
+                    payload: "Opcua Server Disconnected"
+                };
+            }
+            this.mqttClient.publish("machine/bridge/status", JSON.stringify(message));
+            //console.log(`Published bridge connection status:`, message);
+        }
+
+        
+        
     }
 
     private updateMqttConnectionStatus(isConnected: boolean) {
@@ -387,6 +426,10 @@ class OpcuaMqttBridge {
         }
         this.opcuaServerIsConnected = isConnected;
         this.updateBridgeHealth();
+        // have it reset the timer and fire immediately
+
+        this.publishBridgeConnectionStatus();
+   
     }
 
 }

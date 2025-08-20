@@ -64,7 +64,7 @@ import {
 } from 'node-opcua';
 import mqtt, { MqttClient } from 'mqtt';
 
-import { Device, DeviceTags, TopicData } from '@kuriousdesign/machine-sdk';
+import { DeviceTags, MqttTopics, TopicData } from '@kuriousdesign/machine-sdk';
 
 
 interface HeartBeatConnection {
@@ -165,7 +165,7 @@ class OpcuaMqttBridge {
 
 
             });
-            console.log(this.nodeIdToMqttTopicMap.get('Machine.Devices[8].Is'));
+            //console.log(this.nodeIdToMqttTopicMap.get('Machine.Devices[8].Is'));
 
             this.subscribeToMonitoredItems();
 
@@ -212,22 +212,23 @@ class OpcuaMqttBridge {
             'changed',
             (monitoredItem: ClientMonitoredItemBase, dataValue: DataValue) => {
 
+                // Decode the OPC UA value and the node id
                 const newValue = this.decipherOpcuaValue(dataValue);
                 const fullNodeId = monitoredItem.itemToMonitor.nodeId.value;
+                // strip away Node Id Down to just namespace and tag
                 const nodeId = fullNodeId.toString().replace(this.nodeListPrefix.replace('ns=4;s=', ''), '');
                 const topic = this.nodeIdToMqttTopicMap.get(nodeId);
-                //console.log('Corresponding MQTT topic:', topic);
-                if (topic && this.mqttClient && this.bridgeHealthIsOk) {
+                if (!topic) {
+                    console.error('No valid MQTT topic found for nodeId:', nodeId);
+                } else if (topic && this.mqttClient && this.bridgeHealthIsOk) {
                     const message: TopicData = {
                         timestamp: Date.now(),
                         payload: newValue
                     }
                     this.mqttClient.publish(topic, JSON.stringify(message));
-                    //console.log(`Published to MQTT topic ${topic}:`, newValue);
+                 
                 } else if (!this.bridgeHealthIsOk) {
                     //console.warn('Bridge connection health is not OK, not publishing to MQTT');
-                } else {
-                    console.error('No valid MQTT topic found for nodeId:', nodeId);
                 }
             },
         );
@@ -262,7 +263,7 @@ class OpcuaMqttBridge {
                     timestamp: Date.now(),
                     payload: "OPC UA connection lost"
                 };
-                this.mqttClient.publish("machine/bridge/status", JSON.stringify(message));
+                this.mqttClient.publish(MqttTopics.BRIDGE_STATUS, JSON.stringify(message));
                 //this.mqttClient.('error', new Error(JSON.stringify(message)));
                 //console.log("Published bridge error:", message);
             }
@@ -403,7 +404,7 @@ class OpcuaMqttBridge {
                     payload: "Opcua Server Disconnected"
                 };
             }
-            this.mqttClient.publish("machine/bridge/status", JSON.stringify(message));
+            this.mqttClient.publish(MqttTopics.BRIDGE_STATUS, JSON.stringify(message));
             //console.log(`Published bridge connection status:`, message);
         }
 

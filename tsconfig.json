@@ -9,6 +9,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../machine-sdk/src/functions/mqtt-helpers.ts"],
   "exclude": ["node_modules"]
 }

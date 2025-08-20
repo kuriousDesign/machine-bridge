@@ -1,12 +1,8 @@
 // Build Node Strings for OPCUA
 
-import { Device, DeviceTypes } from "@kuriousdesign/machine-sdk";
-
-
 export function buildOpcuaNodePrefix(controllerName: string, nodeId: string): string {
   return `ns=1;s=${nodeId}`;
 }
-
 
 // create a method that takes in a data type and decomposes it to a string array of its members
 const decomposeDataType = (dataType: any): string[] => {
@@ -29,4 +25,18 @@ const createNodeListFromDataType = (dataType: any, baseNodePrefix: string): stri
 };
 
 
-
+// Add this helper method to the class (recursive for nested arrays/objects)
+export function toPlainObjects(value: any): any {
+  if (Array.isArray(value)) {
+    return value.map(item => toPlainObjects(item));
+  } else if (value !== null && typeof value === 'object') {
+    const plainObj: any = {};
+    for (const key in value) {
+      if (Object.prototype.hasOwnProperty.call(value, key)) {
+        plainObj[key] = toPlainObjects(value[key]);
+      }
+    }
+    return plainObj;
+  }
+  return value; // Primitives remain unchanged
+}

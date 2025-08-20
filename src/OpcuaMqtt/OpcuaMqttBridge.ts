@@ -64,7 +64,7 @@ import {
 } from 'node-opcua';
 import mqtt, { MqttClient } from 'mqtt';
 
-import { DeviceTags, MqttTopics, TopicData } from '@kuriousdesign/machine-sdk';
+import { BridgeCmds, DeviceTags, MqttTopics, TopicData, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
 
 
 interface HeartBeatConnection {
@@ -130,6 +130,7 @@ class OpcuaMqttBridge {
     private mqttBrokerIsConnected: boolean = false;
     private opcuaServerIsConnected: boolean = false;
     private registeredDevices: DeviceRegistration[] = [];
+    private deviceMap: Map<number, DeviceRegistration> = new Map();
     private dataTypeManager: ExtraDataTypeManager | null = null;
     private nodeIdToMqttTopicMap = new Map<string, string>();
     private opcuaSubscription: ClientSubscription | null = null;
@@ -155,7 +156,7 @@ class OpcuaMqttBridge {
             console.log('create device entries for nodeIdToMqttTopicMap');
             this.registeredDevices.forEach((device) => {
                 const deviceNodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceStore + '[' + device.id + ']';
-                const deviceTopic = 'machine/' + device.parentId + '/' + device.id;
+                const deviceTopic = buildFullTopicPath(device,this.deviceMap);
 
                 Object.values(DeviceTags).map((tag: string) => {
                     const nodeId = deviceNodeId + '.' + tag;
@@ -165,13 +166,15 @@ class OpcuaMqttBridge {
 
 
             });
-            //console.log(this.nodeIdToMqttTopicMap.get('Machine.Devices[8].Is'));
+            console.log(this.nodeIdToMqttTopicMap);
 
             this.subscribeToMonitoredItems();
 
             console.log('Both MQTT and OPC UA clients initialized');
         })));
     }
+
+
 
     private async subscribeToMonitoredItems(): Promise<void> {
         if (!this.opcuaSession) {
@@ -226,7 +229,7 @@ class OpcuaMqttBridge {
                         payload: newValue
                     }
                     this.mqttClient.publish(topic, JSON.stringify(message));
-                 
+
                 } else if (!this.bridgeHealthIsOk) {
                     //console.warn('Bridge connection health is not OK, not publishing to MQTT');
                 }
@@ -240,6 +243,20 @@ class OpcuaMqttBridge {
         this.mqttClient.on('connect', () => {
             console.log('✅ MQTT client connected to broker');
             this.updateMqttConnectionStatus(true);
+            // create subscription to bridge commands and handle incoming messages
+            this.mqttClient!.subscribe(MqttTopics.BRIDGE_CMD, (err) => {
+                if (err) {
+                    console.error('Failed to subscribe to bridge commands:', err.message);
+                } else {
+                    console.log('✅ Subscribed to bridge commands');
+                }
+            });
+            this.mqttClient!.on('message', (topic, message) => {
+                if (topic === MqttTopics.BRIDGE_CMD) {
+                    const command = JSON.parse(message.toString()) as TopicData;
+                    this.handleBridgeCommand(command);
+                }
+            });
         });
         this.mqttClient.on('error', (err) => {
             console.error('MQTT error:', err.message);
@@ -250,6 +267,49 @@ class OpcuaMqttBridge {
             this.updateMqttConnectionStatus(false);
         });
     }
+
+    private async handleBridgeCommand(message: TopicData): Promise<void> {
+        const cmdData = message.payload as {cmd: string};
+        console.log('Received bridge command:', cmdData.cmd);
+        // Handle the command as needed
+        
+        switch (cmdData.cmd) {
+            case BridgeCmds.CONNECT:
+                // publish the deviceMap if it exists, if not create a timer that keeps checking
+                if (this.deviceMap.size > 0) {
+                    const message: TopicData = {
+                        timestamp: Date.now(),
+                        payload: Array.from(this.deviceMap.entries())
+                    };
+                    if (this.mqttClient) {
+                        console.log("Publishing deviceMap to bridge");
+                        this.mqttClient.publish(MqttTopics.DEVICE_MAP, JSON.stringify(message));
+                    } else{
+                        console.warn("Cannot publish deviceMap, mqttClient not connected");
+                    }
+                } else {
+                    console.log("DeviceMap not yet available, cannot publish to bridge/deviceMap");
+                    // Create a timer to check for deviceMap availability
+                    // const checkDeviceMap = setInterval(() => {
+                    //     if (this.deviceMap && this.mqttClient) {
+                    //         const message: TopicData = {
+                    //             timestamp: Date.now(),
+                    //             payload: Array.from(this.deviceMap.entries())
+                    //         };
+                    //         this.mqttClient.publish(MqttTopics.BRIDGE_STATUS, JSON.stringify(message));
+                    //         clearInterval(checkDeviceMap);
+                    //     }
+                    // }, 1000);
+                }
+                break;
+            case BridgeCmds.DISCONNECT:
+                //this.handleDisconnectCommand();
+                break;
+            default:
+                console.warn('Unknown bridge command:', cmdData.cmd);
+        }
+    }
+
     private async initializeOpcuaClient(): Promise<void> {
         this.opcuaClient = OPCUAClient.create(opcuaOptions);
 
@@ -317,6 +377,11 @@ class OpcuaMqttBridge {
         const registeredDevices = await this.readOpcuaValue(registeredDevicesNodeId) as DeviceRegistration[];
         // remove any items that have id of 0
         this.registeredDevices = registeredDevices.filter((device: DeviceRegistration) => device.id !== 0)
+        // build device map
+        this.registeredDevices.forEach(deviceReg => {
+            this.deviceMap.set(deviceReg.id, deviceReg);
+            console.log("adding device to map:", deviceReg.id, "with parent id:", deviceReg.parentId);
+        });
         console.log("Retrieved registered devices, count:", this.registeredDevices.length);
         return registeredDevices;
     }
@@ -346,21 +411,7 @@ class OpcuaMqttBridge {
         }
     }
 
-    // Add this helper method to the class (recursive for nested arrays/objects)
-    private toPlainObjects(value: any): any {
-        if (Array.isArray(value)) {
-            return value.map(item => this.toPlainObjects(item));
-        } else if (value !== null && typeof value === 'object') {
-            const plainObj: any = {};
-            for (const key in value) {
-                if (Object.prototype.hasOwnProperty.call(value, key)) {
-                    plainObj[key] = this.toPlainObjects(value[key]);
-                }
-            }
-            return plainObj;
-        }
-        return value; // Primitives remain unchanged
-    }
+
 
     private decipherOpcuaValue(data: any): any {
         const decipheredValue =
@@ -407,9 +458,6 @@ class OpcuaMqttBridge {
             this.mqttClient.publish(MqttTopics.BRIDGE_STATUS, JSON.stringify(message));
             //console.log(`Published bridge connection status:`, message);
         }
-
-        
-        
     }
 
     private updateMqttConnectionStatus(isConnected: boolean) {
@@ -430,9 +478,7 @@ class OpcuaMqttBridge {
         // have it reset the timer and fire immediately
 
         this.publishBridgeConnectionStatus();
-   
     }
-
 }
 
 export default OpcuaMqttBridge;

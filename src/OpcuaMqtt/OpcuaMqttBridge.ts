@@ -269,7 +269,7 @@ class OpcuaMqttBridge {
     }
 
     private async handleBridgeCommand(message: TopicData): Promise<void> {
-        const cmdData = message.payload as {cmd: string};
+        const cmdData = message.payload as {cmd: BridgeCmds};
         console.log('Received bridge command:', cmdData.cmd);
         // Handle the command as needed
         

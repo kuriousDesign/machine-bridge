@@ -64,7 +64,7 @@ import {
 } from 'node-opcua';
 import mqtt, { MqttClient } from 'mqtt';
 
-import { BridgeCmds, DeviceTags, MqttTopics, TopicData, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
+import { BridgeCmds, DeviceActionRequestData, DeviceTags, MqttTopics, TopicData, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
 
 
 interface HeartBeatConnection {
@@ -111,6 +111,7 @@ const optionsGroup: MonitoringParametersOptions = {
 };
 
 import { DeviceRegistration, MachineTags, PlcNamespaces, nodeListString, nodeTypeString } from '@kuriousdesign/machine-sdk'
+import c from 'config';
 
 
 
@@ -156,7 +157,7 @@ class OpcuaMqttBridge {
             console.log('create device entries for nodeIdToMqttTopicMap');
             this.registeredDevices.forEach((device) => {
                 const deviceNodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceStore + '[' + device.id + ']';
-                const deviceTopic = buildFullTopicPath(device,this.deviceMap);
+                const deviceTopic = buildFullTopicPath(device, this.deviceMap);
 
                 Object.values(DeviceTags).map((tag: string) => {
                     const nodeId = deviceNodeId + '.' + tag;
@@ -164,6 +165,7 @@ class OpcuaMqttBridge {
                     this.nodeIdToMqttTopicMap.set(nodeId, topic);
                 });
 
+                this.subscribeToMqttTopicDeviceHmiActionRequest(device);
 
             });
             console.log(this.nodeIdToMqttTopicMap);
@@ -237,6 +239,109 @@ class OpcuaMqttBridge {
         );
     }
 
+    // create device action request subscription method that creaes subscription to all device action request nodes
+    // on message, write to the corresponding opcua node for the device action request
+    // the device action request node is located at Machine.DeviceStore[deviceId].ApiOpcua.HmiReq
+    private async subscribeToMqttTopicDeviceHmiActionRequest(device: DeviceRegistration): Promise<void> {
+        if (!this.opcuaSession) {
+            throw new Error("OPC UA session is not initialized");
+        }
+        if (!this.mqttClient) {
+            throw new Error("MQTT client is not initialized");
+        }
+        if (!this.deviceMap || this.deviceMap.size === 0) {
+            throw new Error("Device map is not initialized or empty");
+        }
+
+        const deviceTopic = buildFullTopicPath(device, this.deviceMap);
+        const tag = 'ApiOpcua.HmiReq';
+        //const nodeId = deviceNodeId + '.' + tag;
+        const topic = deviceTopic + '/apiOpcua/hmiReq';
+        console.log('Subscribing to device action request topic:', topic);
+        //this.nodeIdToMqttTopicMap.set(nodeId, topic);
+        // subscribe to topic
+        this.mqttClient.subscribe(topic, { qos: 1 }, (err) => {
+            if (err) {
+                console.error('Failed to subscribe to device action request topic:', err.message);
+            } else {
+                console.log('✅ Subscribed to device action request topic');
+            }
+        });
+    }
+
+private async handleHmiActionRequest(device: DeviceRegistration, message: DeviceActionRequestData): Promise<void> {
+    console.log('Handling HMI Action Request for device:', device, 'with message:', message);
+
+    if (!this.opcuaSession) {
+        console.error('OPC UA session is not initialized');
+        return;
+    }
+
+    const deviceNodeId = `${PlcNamespaces.Machine}.${MachineTags.deviceStore}[${device.id}]`;
+    const baseNodeId = `${deviceNodeId}.apiOpcua.hmiReq.actionRequestData`;
+    const paramArrayOfValue = new Float64Array(message.ParamArray);
+
+    // Write values for SenderId, ActionType, and ActionId
+    const writeValues: WriteValueOptions[] = [
+        {
+            attributeId: AttributeIds.Value,
+            nodeId: `${this.nodeListPrefix}${baseNodeId}.SenderId`,
+            value: {
+                value: {
+                    dataType: DataType.Int16,
+                    value: message.SenderId
+                }
+            }
+        },
+        {
+            attributeId: AttributeIds.Value,
+            nodeId: `${this.nodeListPrefix}${baseNodeId}.ActionType`,
+            value: {
+                value: {
+                    dataType: DataType.Int16,
+                    value: message.ActionType // Fixed the type check
+                }
+            }
+        },
+        {
+            attributeId: AttributeIds.Value,
+            nodeId: `${this.nodeListPrefix}${baseNodeId}.ActionId`,
+            value: {
+                value: {
+                    dataType: DataType.Int16,
+                    value: message.ActionId
+                }
+            }
+        }
+    ];
+
+    // Separate write value for ParamArray
+    const paramArrayWriteValue: WriteValueOptions = {
+        attributeId: AttributeIds.Value,
+        nodeId: `${this.nodeListPrefix}${baseNodeId}.ParamArray`,
+        value: {
+            value: {
+                dataType: DataType.Double, // Changed to Double to match Float32Array, adjust if needed
+                arrayType: VariantArrayType.Array,
+                value: paramArrayOfValue
+            }
+        }
+    };
+
+
+    try {
+        // Write SenderId, ActionType, and ActionId first
+        await this.opcuaSession.write(writeValues);
+        //console.log('Successfully wrote to OPC UA nodes (excluding ParamArray):', writeValues.map(w => w.nodeId));
+
+        // Write ParamArray separately
+        await this.opcuaSession.write(paramArrayWriteValue);
+        //console.log('Successfully wrote ParamArray to OPC UA node:', paramArrayWriteValue.nodeId);
+    } catch (error) {
+        console.error('Failed to write to OPC UA nodes:', [...writeValues.map(w => w.nodeId), paramArrayWriteValue.nodeId], 'Error:', error);
+    }
+}
+
     private async initializeMqttClient(): Promise<void> {
         console.log('connecting to mqtt broker at: ' + this.mqttBrokerUrl);
         this.mqttClient = mqtt.connect(this.mqttBrokerUrl, this.mqttOptions as mqtt.IClientOptions);
@@ -255,6 +360,27 @@ class OpcuaMqttBridge {
                 if (topic === MqttTopics.BRIDGE_CMD) {
                     const command = JSON.parse(message.toString()) as TopicData;
                     this.handleBridgeCommand(command);
+                } else {
+                    console.log('Received message on topic:', topic, 'with message:', message.toString());
+                    if (topic.endsWith('/apiOpcua/hmiReq')) {
+                        const hmiActionReqData = JSON.parse(message.toString()) as DeviceActionRequestData;
+
+                        // extract deviceId from topic
+                        const topicParts = topic.split('/');
+                        const deviceIdStr = topicParts[topicParts.length - 3];
+                        const deviceId = Number(deviceIdStr);
+                        if (isNaN(deviceId)) {
+                            console.error('Invalid deviceId extracted from topic:', topic);
+                            return;
+                        }
+                        //console.log('Received HMI Action Request:', hmiActionReqData, 'for deviceId:', deviceId);
+                        const device = this.deviceMap.get(deviceId);
+                        if (!device) {
+                            console.error('No device found for deviceId:', deviceId);
+                            return;
+                        }
+                        this.handleHmiActionRequest(device, hmiActionReqData);
+                    }
                 }
             });
         });
@@ -269,10 +395,10 @@ class OpcuaMqttBridge {
     }
 
     private async handleBridgeCommand(message: TopicData): Promise<void> {
-        const cmdData = message.payload as {cmd: BridgeCmds};
+        const cmdData = message.payload as { cmd: BridgeCmds };
         console.log('Received bridge command:', cmdData.cmd);
         // Handle the command as needed
-        
+
         switch (cmdData.cmd) {
             case BridgeCmds.CONNECT:
                 // publish the deviceMap if it exists, if not create a timer that keeps checking
@@ -284,7 +410,7 @@ class OpcuaMqttBridge {
                     if (this.mqttClient) {
                         console.log("Publishing deviceMap to bridge");
                         this.mqttClient.publish(MqttTopics.DEVICE_MAP, JSON.stringify(message));
-                    } else{
+                    } else {
                         console.warn("Cannot publish deviceMap, mqttClient not connected");
                     }
                 } else {

@@ -63,8 +63,8 @@ import {
 
 } from 'node-opcua';
 import mqtt, { MqttClient } from 'mqtt';
-
-import { BridgeCmds, DeviceActionRequestData, DeviceTags, MqttTopics, TopicData, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
+import CodesysOpcuaDriver from './codesys-opcua-driver';
+import { BridgeCmds, DeviceActionRequestData, DeviceId, DeviceTags, MqttTopics, TopicData, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
 
 
 interface HeartBeatConnection {
@@ -111,8 +111,6 @@ const optionsGroup: MonitoringParametersOptions = {
 };
 
 import { DeviceRegistration, MachineTags, PlcNamespaces, nodeListString, nodeTypeString } from '@kuriousdesign/machine-sdk'
-import c from 'config';
-
 
 
 class OpcuaMqttBridge {
@@ -120,6 +118,7 @@ class OpcuaMqttBridge {
     private opcuaClient: OPCUAClient | null = null;
     private opcuaSession: ClientSession | null = null;
     private opcuaControllerName: string;
+    private codesysOpcuaDriver: CodesysOpcuaDriver | null = null;
     private opcuaHeartBeatConnection: HeartBeatConnection | null = null;
     private mqttClientHeartBeatConnections: Map<string, HeartBeatConnection> | null = null;
     private nodeListPrefix: string;
@@ -277,68 +276,69 @@ private async handleHmiActionRequest(device: DeviceRegistration, message: Device
         return;
     }
 
-    const deviceNodeId = `${PlcNamespaces.Machine}.${MachineTags.deviceStore}[${device.id}]`;
-    const baseNodeId = `${deviceNodeId}.apiOpcua.hmiReq.actionRequestData`;
-    const paramArrayOfValue = new Float64Array(message.ParamArray);
+    
+    //const baseNodeId = `${deviceNodeId}.apiOpcua.hmiReq.actionRequestData`;
+    // const paramArrayOfValue = new Float64Array(message.ParamArray);
 
-    // Write values for SenderId, ActionType, and ActionId
-    const writeValues: WriteValueOptions[] = [
-        {
-            attributeId: AttributeIds.Value,
-            nodeId: `${this.nodeListPrefix}${baseNodeId}.SenderId`,
-            value: {
-                value: {
-                    dataType: DataType.Int16,
-                    value: message.SenderId
-                }
-            }
-        },
-        {
-            attributeId: AttributeIds.Value,
-            nodeId: `${this.nodeListPrefix}${baseNodeId}.ActionType`,
-            value: {
-                value: {
-                    dataType: DataType.Int16,
-                    value: message.ActionType // Fixed the type check
-                }
-            }
-        },
-        {
-            attributeId: AttributeIds.Value,
-            nodeId: `${this.nodeListPrefix}${baseNodeId}.ActionId`,
-            value: {
-                value: {
-                    dataType: DataType.Int16,
-                    value: message.ActionId
-                }
-            }
-        }
-    ];
+    // // Write values for SenderId, ActionType, and ActionId
+    // const writeValues: WriteValueOptions[] = [
+    //     {
+    //         attributeId: AttributeIds.Value,
+    //         nodeId: `${this.nodeListPrefix}${baseNodeId}.SenderId`,
+    //         value: {
+    //             value: {
+    //                 dataType: DataType.Int16,
+    //                 value: message.SenderId
+    //             }
+    //         }
+    //     },
+    //     {
+    //         attributeId: AttributeIds.Value,
+    //         nodeId: `${this.nodeListPrefix}${baseNodeId}.ActionType`,
+    //         value: {
+    //             value: {
+    //                 dataType: DataType.Int16,
+    //                 value: message.ActionType // Fixed the type check
+    //             }
+    //         }
+    //     },
+    //     {
+    //         attributeId: AttributeIds.Value,
+    //         nodeId: `${this.nodeListPrefix}${baseNodeId}.ActionId`,
+    //         value: {
+    //             value: {
+    //                 dataType: DataType.Int16,
+    //                 value: message.ActionId
+    //             }
+    //         }
+    //     }
+    // ];
 
-    // Separate write value for ParamArray
-    const paramArrayWriteValue: WriteValueOptions = {
-        attributeId: AttributeIds.Value,
-        nodeId: `${this.nodeListPrefix}${baseNodeId}.ParamArray`,
-        value: {
-            value: {
-                dataType: DataType.Double, // Changed to Double to match Float32Array, adjust if needed
-                arrayType: VariantArrayType.Array,
-                value: paramArrayOfValue
-            }
-        }
-    };
+    // // Separate write value for ParamArray
+    // const paramArrayWriteValue: WriteValueOptions = {
+    //     attributeId: AttributeIds.Value,
+    //     nodeId: `${this.nodeListPrefix}${baseNodeId}.ParamArray`,
+    //     value: {
+    //         value: {
+    //             dataType: DataType.Double, // Changed to Double to match Float32Array, adjust if needed
+    //             arrayType: VariantArrayType.Array,
+    //             value: paramArrayOfValue
+    //         }
+    //     }
+    // };
 
 
     try {
         // Write SenderId, ActionType, and ActionId first
-        await this.opcuaSession.write(writeValues);
+        //await this.opcuaSession.write(writeValues);
         //console.log('Successfully wrote to OPC UA nodes (excluding ParamArray):', writeValues.map(w => w.nodeId));
 
         // Write ParamArray separately
-        await this.opcuaSession.write(paramArrayWriteValue);
+        //await this.opcuaSession.write(paramArrayWriteValue);
         //console.log('Successfully wrote ParamArray to OPC UA node:', paramArrayWriteValue.nodeId);
+        this.codesysOpcuaDriver?.requestAction(device.id, message.ActionType, message.ActionId, message.ParamArray);
     } catch (error) {
-        console.error('Failed to write to OPC UA nodes:', [...writeValues.map(w => w.nodeId), paramArrayWriteValue.nodeId], 'Error:', error);
+        console.error('Failed to write to OPC UA nodes, Error:', error);
     }
 }
 
@@ -471,8 +471,7 @@ private async handleHmiActionRequest(device: DeviceRegistration, message: Device
             console.log("✅ OPC UA client connected");
 
             this.opcuaSession = await this.opcuaClient.createSession();
-
-
+            this.codesysOpcuaDriver = new CodesysOpcuaDriver(DeviceId.HMI,this.opcuaSession,this.opcuaControllerName);
             this.dataTypeManager = new ExtraDataTypeManager();
 
             console.log("✅ OPC UA session created");

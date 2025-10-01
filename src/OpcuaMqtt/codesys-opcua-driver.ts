@@ -114,7 +114,7 @@ export default class CodesysOpcuaDriver {
             // Handle ULINT (UInt64) values
             if (dataType === DataType.UInt64) {
                 const variant = dataValue.value;
-                console.log(`Read UInt64 variant for node ${tag}:`, variant);
+                //console.log(`Read UInt64 variant for node ${tag}:`, variant);
 
                 // Handle case where ULINT is returned as array of two 32-bit UInt32 values [high, low]
                 if (Array.isArray(variant.value) && variant.value.length === 2) {
@@ -167,7 +167,7 @@ export default class CodesysOpcuaDriver {
                 };
             }
 
-            console.log(`Wrote ${value} to node ${tag}`);
+            //console.log(`Wrote ${value} to node ${tag}`);
 
             return {
 
@@ -208,7 +208,7 @@ export default class CodesysOpcuaDriver {
         // 1. Set Request Sts to INACTIVE
         const stsTag = `${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.Sts`;
         await this.writeTag(stsTag, ApiReqRespStates.INACTIVE);
-        console.log(`Set ${stsTag} to INACTIVE`);
+        //console.log(`Set ${stsTag} to INACTIVE`);
 
         // 2. Wait for status to update
         const startTime = Date.now();
@@ -217,7 +217,7 @@ export default class CodesysOpcuaDriver {
             if (currentSts === ApiReqRespStates.INACTIVE) break;
             await this.sleep(10);
         }
-        console.log(`Confirmed ${stsTag} is INACTIVE`);
+        //console.log(`Confirmed ${stsTag} is INACTIVE`);
 
 
         // 3. Fill action request data

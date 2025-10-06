@@ -64,13 +64,14 @@ import {
 } from 'node-opcua';
 import mqtt, { MqttClient } from 'mqtt';
 import CodesysOpcuaDriver from './codesys-opcua-driver';
-import { BridgeCmds, DeviceActionRequestData, DeviceId, DeviceTags, MqttTopics, TopicData, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
+import { BridgeCmds, DeviceActionRequestData, DeviceId, DeviceTags, MqttTopics, TopicData, buildFullTopicPath, initialMachine } from '@kuriousdesign/machine-sdk';
 
 
 interface HeartBeatConnection {
     connectionId: string;
     heartbeatValue: number;
     timer: NodeJS.Timer;
+    heartbeatInterval?: NodeJS.Timeout;
 }
 
 const connectionStrategy: ConnectionStrategyOptions = {
@@ -88,12 +89,14 @@ const opcuaOptions: OPCUAClientOptions = {
     keepSessionAlive: true,
 };
 
+const PUBLISHING_INTERVAL = 250; // in ms
+
 const subscriptionOptions: CreateSubscriptionRequestOptions = {
     maxNotificationsPerPublish: 1000,
     publishingEnabled: true,
     requestedLifetimeCount: 100,
     requestedMaxKeepAliveCount: 10,
-    requestedPublishingInterval: 100, //affects lag, decrease to reduce lag
+    requestedPublishingInterval: PUBLISHING_INTERVAL, //affects lag, decrease to reduce lag
 };
 
 const filter = new DataChangeFilter({
@@ -106,7 +109,7 @@ const filter = new DataChangeFilter({
 const optionsGroup: MonitoringParametersOptions = {
     discardOldest: true,
     queueSize: 1,
-    samplingInterval: 100, //affects lag, decrease to reduce lag
+    samplingInterval: PUBLISHING_INTERVAL, //affects lag, decrease to reduce lag
     filter
 };
 
@@ -136,6 +139,7 @@ class OpcuaMqttBridge {
     private opcuaSubscription: ClientSubscription | null = null;
     private monitoredItemGroup: ClientMonitoredItemGroup | null = null;
     private timerConnectionStatusForMqtt: NodeJS.Timeout | null = null;
+    private lastPlcHeartbeatValue: number = 0;
 
     constructor(mqttBrokerUrl: string, mqttOptions: unknown, opcuaEndpoint: string, opcuaControllerName: string) {
         console.log('Initializing OpcuaMqttBridge...');
@@ -153,7 +157,22 @@ class OpcuaMqttBridge {
 
 
         this.initializeMqttClient().then(() => this.initializeOpcuaClient().then(() => this.retrieveRegisteredDevices().then(() => {
+            console.log('create machine entries for nodeIdToMqttTopicMap');
+            // add machine topics to the map
+            // If you want the property names (keys) as strings:
+
+
+            // Or if you want both keys and values:
+            Object.entries(initialMachine).map(([key, value]) => {
+                const tag = key; // property name as string
+                // value is the actual property value
+                const nodeId = PlcNamespaces.Machine + '.' + tag;
+                const topic = PlcNamespaces.Machine.toLowerCase() + '/' + tag.toLowerCase();
+                this.nodeIdToMqttTopicMap.set(nodeId, topic);
+            });
+
             console.log('create device entries for nodeIdToMqttTopicMap');
+            // add device topics to the map
             this.registeredDevices.forEach((device) => {
                 const deviceNodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceStore + '[' + device.id + ']';
                 const deviceTopic = buildFullTopicPath(device, this.deviceMap);
@@ -167,7 +186,7 @@ class OpcuaMqttBridge {
                 this.subscribeToMqttTopicDeviceHmiActionRequest(device);
 
             });
-            console.log(this.nodeIdToMqttTopicMap);
+            console.log('nodeIdToMqttTopicMap: ', this.nodeIdToMqttTopicMap);
 
             this.subscribeToMonitoredItems();
 
@@ -188,6 +207,7 @@ class OpcuaMqttBridge {
         // Subscribe to each nodeId in the map
         const itemToMonitor = [] as { attributeId: number; nodeId: string }[];
         for (const [nodeId, topic] of this.nodeIdToMqttTopicMap) {
+            const attributeId = AttributeIds.Value;
             itemToMonitor.push({
                 attributeId: AttributeIds.Value,
                 nodeId: `${this.nodeListPrefix}${nodeId}`,
@@ -222,17 +242,30 @@ class OpcuaMqttBridge {
                 // strip away Node Id Down to just namespace and tag
                 const nodeId = fullNodeId.toString().replace(this.nodeListPrefix.replace('ns=4;s=', ''), '');
                 const topic = this.nodeIdToMqttTopicMap.get(nodeId);
+
+                //console.log(topic);
                 if (!topic) {
                     console.error('No valid MQTT topic found for nodeId:', nodeId);
                 } else if (topic && this.mqttClient && this.bridgeHealthIsOk) {
+                    //console.log('nodeId changed:', nodeId, 'publishing to topic:', topic, 'with value:', newValue);
                     const message: TopicData = {
                         timestamp: Date.now(),
                         payload: newValue
                     }
                     this.mqttClient.publish(topic, JSON.stringify(message));
+                    if (topic === "machine/pdmsts") {
+                        //console.log('Machine.pdmSts:', newValue.parts[0].processSts);
+                    }
+                    if (topic === "machine/estopcircuit_ok") {
+                        //console.log('Machine.estopCircuit_OK:', newValue);
+                    }
+                    if (topic === "machine/heartbeatplc") {
+                        //console.log('Machine.heartbeatPlc:', newValue);
+                    }
+         
 
                 } else if (!this.bridgeHealthIsOk) {
-                    //console.warn('Bridge connection health is not OK, not publishing to MQTT');
+                    console.warn('Bridge connection health is not OK, not publishing to MQTT');
                 }
             },
         );
@@ -268,79 +301,79 @@ class OpcuaMqttBridge {
         });
     }
 
-private async handleHmiActionRequest(device: DeviceRegistration, message: DeviceActionRequestData): Promise<void> {
-    console.log('Handling HMI Action Request for device:', device, 'with message:', message);
+    private async handleHmiActionRequest(device: DeviceRegistration, message: DeviceActionRequestData): Promise<void> {
+        console.log('Handling HMI Action Request for device:', device, 'with message:', message);
 
-    if (!this.opcuaSession) {
-        console.error('OPC UA session is not initialized');
-        return;
+        if (!this.opcuaSession) {
+            console.error('OPC UA session is not initialized');
+            return;
+        }
+
+
+        //const baseNodeId = `${deviceNodeId}.apiOpcua.hmiReq.actionRequestData`;
+        // const paramArrayOfValue = new Float64Array(message.ParamArray);
+
+        // // Write values for SenderId, ActionType, and ActionId
+        // const writeValues: WriteValueOptions[] = [
+        //     {
+        //         attributeId: AttributeIds.Value,
+        //         nodeId: `${this.nodeListPrefix}${baseNodeId}.SenderId`,
+        //         value: {
+        //             value: {
+        //                 dataType: DataType.Int16,
+        //                 value: message.SenderId
+        //             }
+        //         }
+        //     },
+        //     {
+        //         attributeId: AttributeIds.Value,
+        //         nodeId: `${this.nodeListPrefix}${baseNodeId}.ActionType`,
+        //         value: {
+        //             value: {
+        //                 dataType: DataType.Int16,
+        //                 value: message.ActionType // Fixed the type check
+        //             }
+        //         }
+        //     },
+        //     {
+        //         attributeId: AttributeIds.Value,
+        //         nodeId: `${this.nodeListPrefix}${baseNodeId}.ActionId`,
+        //         value: {
+        //             value: {
+        //                 dataType: DataType.Int16,
+        //                 value: message.ActionId
+        //             }
+        //         }
+        //     }
+        // ];
+
+        // // Separate write value for ParamArray
+        // const paramArrayWriteValue: WriteValueOptions = {
+        //     attributeId: AttributeIds.Value,
+        //     nodeId: `${this.nodeListPrefix}${baseNodeId}.ParamArray`,
+        //     value: {
+        //         value: {
+        //             dataType: DataType.Double, // Changed to Double to match Float32Array, adjust if needed
+        //             arrayType: VariantArrayType.Array,
+        //             value: paramArrayOfValue
+        //         }
+        //     }
+        // };
+
+
+        try {
+            // Write SenderId, ActionType, and ActionId first
+            //await this.opcuaSession.write(writeValues);
+            //console.log('Successfully wrote to OPC UA nodes (excluding ParamArray):', writeValues.map(w => w.nodeId));
+
+            // Write ParamArray separately
+            //await this.opcuaSession.write(paramArrayWriteValue);
+            //console.log('Successfully wrote ParamArray to OPC UA node:', paramArrayWriteValue.nodeId);
+            this.codesysOpcuaDriver?.requestAction(device.id, message.ActionType, message.ActionId, message.ParamArray);
+        } catch (error) {
+            console.error('Failed to write to OPC UA nodes, Error:', error);
+        }
     }
-
-    
-    //const baseNodeId = `${deviceNodeId}.apiOpcua.hmiReq.actionRequestData`;
-    // const paramArrayOfValue = new Float64Array(message.ParamArray);
-
-    // // Write values for SenderId, ActionType, and ActionId
-    // const writeValues: WriteValueOptions[] = [
-    //     {
-    //         attributeId: AttributeIds.Value,
-    //         nodeId: `${this.nodeListPrefix}${baseNodeId}.SenderId`,
-    //         value: {
-    //             value: {
-    //                 dataType: DataType.Int16,
-    //                 value: message.SenderId
-    //             }
-    //         }
-    //     },
-    //     {
-    //         attributeId: AttributeIds.Value,
-    //         nodeId: `${this.nodeListPrefix}${baseNodeId}.ActionType`,
-    //         value: {
-    //             value: {
-    //                 dataType: DataType.Int16,
-    //                 value: message.ActionType // Fixed the type check
-    //             }
-    //         }
-    //     },
-    //     {
-    //         attributeId: AttributeIds.Value,
-    //         nodeId: `${this.nodeListPrefix}${baseNodeId}.ActionId`,
-    //         value: {
-    //             value: {
-    //                 dataType: DataType.Int16,
-    //                 value: message.ActionId
-    //             }
-    //         }
-    //     }
-    // ];
-
-    // // Separate write value for ParamArray
-    // const paramArrayWriteValue: WriteValueOptions = {
-    //     attributeId: AttributeIds.Value,
-    //     nodeId: `${this.nodeListPrefix}${baseNodeId}.ParamArray`,
-    //     value: {
-    //         value: {
-    //             dataType: DataType.Double, // Changed to Double to match Float32Array, adjust if needed
-    //             arrayType: VariantArrayType.Array,
-    //             value: paramArrayOfValue
-    //         }
-    //     }
-    // };
-
-
-    try {
-        // Write SenderId, ActionType, and ActionId first
-        //await this.opcuaSession.write(writeValues);
-        //console.log('Successfully wrote to OPC UA nodes (excluding ParamArray):', writeValues.map(w => w.nodeId));
-
-        // Write ParamArray separately
-        //await this.opcuaSession.write(paramArrayWriteValue);
-        //console.log('Successfully wrote ParamArray to OPC UA node:', paramArrayWriteValue.nodeId);
-        this.codesysOpcuaDriver?.requestAction(device.id, message.ActionType, message.ActionId, message.ParamArray);
-    } catch (error) {
-        console.error('Failed to write to OPC UA nodes, Error:', error);
-    }
-}
 
     private async initializeMqttClient(): Promise<void> {
         console.log('connecting to mqtt broker at: ' + this.mqttBrokerUrl);
@@ -462,7 +495,7 @@ private async handleHmiActionRequest(device: DeviceRegistration, message: Device
 
         this.opcuaClient.on("after_reconnection", () => {
             console.log("✅ OPC UA reconnected");
-            this.updateOpcuaConnectionStatus(true);
+            //this.updateOpcuaConnectionStatus(true);
         });
 
         try {
@@ -471,12 +504,44 @@ private async handleHmiActionRequest(device: DeviceRegistration, message: Device
             console.log("✅ OPC UA client connected");
 
             this.opcuaSession = await this.opcuaClient.createSession();
-            this.codesysOpcuaDriver = new CodesysOpcuaDriver(DeviceId.HMI,this.opcuaSession,this.opcuaControllerName);
+            this.codesysOpcuaDriver = new CodesysOpcuaDriver(DeviceId.HMI, this.opcuaSession, this.opcuaControllerName);
             this.dataTypeManager = new ExtraDataTypeManager();
 
             console.log("✅ OPC UA session created");
 
-            this.updateOpcuaConnectionStatus(true);
+            //this.updateOpcuaConnectionStatus(true);
+
+            // create heartbeat with opcua tag that gets value every 1000ms
+            this.opcuaHeartBeatConnection = {
+                connectionId: 'opcua-heartbeat',
+                heartbeatValue: 0,
+                timer: setInterval(async () => {
+                    if (this.opcuaSession && this.opcuaHeartBeatConnection) {
+                        const heartbeatPlcNodeId = this.concatNodeId(PlcNamespaces.Machine, MachineTags.HeartbeatPLC);
+                        const heartbeatValue = await this.readOpcuaValue(heartbeatPlcNodeId);
+                        if (heartbeatValue === null || this.lastPlcHeartbeatValue === heartbeatValue) {
+                            console.warn('OPC UA Heartbeat value not changing, connection may be lost');
+                            this.updateOpcuaConnectionStatus(false);
+                            return;
+                        }
+                        this.updateOpcuaConnectionStatus(true);
+                        // store the heartbeat value
+                        this.opcuaHeartBeatConnection.heartbeatValue = heartbeatValue as number;
+                        this.lastPlcHeartbeatValue = heartbeatValue as number;
+                        console.log('OPC UA Heartbeat value:', heartbeatValue);
+                        // write hmi heartbeat value back to opcua
+                        const heartbeatHmiNodeId = this.concatNodeId(PlcNamespaces.Machine, MachineTags.HeartbeatHMI);
+                        await this.writeOpcuaValue(heartbeatHmiNodeId, heartbeatValue, DataType.Byte);
+                    }
+                }, 1000)
+            };
+
+            // Wait for OPC UA connection to be established
+            while (!this.opcuaServerIsConnected) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            console.log("✅ OPC UA connection established, proceeding...");
+
         } catch (err: any) {
             console.error("❌ Failed to connect to OPC UA:", err.message);
 
@@ -488,6 +553,10 @@ private async handleHmiActionRequest(device: DeviceRegistration, message: Device
     }
 
     private async retrieveRegisteredDevices(): Promise<DeviceRegistration[]> {
+        if (!this.opcuaServerIsConnected) {
+            console.log("OPC UA server not connected, cannot retrieve registered devices");
+            return [];
+        }
         console.log("Retrieving registered devices from OPC UA...");
         //1. build tag
         const registeredDevicesNodeId = this.concatNodeId(PlcNamespaces.Machine, MachineTags.registeredDevices);
@@ -511,6 +580,33 @@ private async handleHmiActionRequest(device: DeviceRegistration, message: Device
         return registeredDevices;
     }
 
+    private async writeOpcuaValue(nodeId: string, value: any, dataType: DataType): Promise<void> {
+        if (!this.opcuaSession) {
+            throw new Error("OPC UA session is not initialized");
+        }
+        try {
+            const writeValue: WriteValueOptions = {
+                nodeId: nodeId,
+                attributeId: AttributeIds.Value,
+                value: {
+                    value: {
+                        dataType: dataType,
+                        value: value
+                    }
+                }
+            };
+            await this.opcuaSession.write(writeValue);
+            const readValue = await this.readOpcuaValue(nodeId); // verify write
+            //console.log(`Wrote OPC UA value to ${nodeId}:`, value);
+            if (readValue !== value) {
+                console.error(`Verification failed for node ${nodeId}: expected ${value}, got ${readValue}`);
+            }
+        } catch (error) {
+            console.error(`Failed to write OPC UA value to ${nodeId}:`, error);
+            throw error;
+        }
+    }
+
     private async readOpcuaValue(nodeId: string): Promise<any> {
         if (!this.opcuaSession) {
             throw new Error("OPC UA session is not initialized");
@@ -531,6 +627,15 @@ private async handleHmiActionRequest(device: DeviceRegistration, message: Device
                 return null;
             }
         } catch (error) {
+            if (error instanceof Error && error.message.includes('BadNodeIdUnknown')) {
+                console.warn(`Warning: BadNodeIdUnknown for ${nodeId}, the machine may not be in run mode`);
+                return null;
+            } else if (error instanceof Error && error.message.includes('BadConnectionClosed')) {
+                console.warn(`Warning: BadConnectionClosed for ${nodeId}, the OPC UA connection may be closed`);
+                this.updateOpcuaConnectionStatus(false);
+                return null;
+            }
+
             console.error(`Failed to read OPC UA value from ${nodeId}:`, error);
             throw error;
         }

@@ -10,7 +10,7 @@ export default class CodesysOpcuaDriver {
     private apiRespTag: string = "apiOpcua.hmiResp";
     private request: ApiOpcuaReqData;
     private response: ApiOpcuaReqData;
-    private machineStatus: Machine;
+    //private machineStatus: Machine;
     private logMsg: string = "";
     private lastLogTimeStamp: number = 0;
     private lastLogMsgId: number = 0;
@@ -36,16 +36,16 @@ export default class CodesysOpcuaDriver {
 
         this.response = { ...this.request };
 
-        this.machineStatus = {
-            estopCircuit_OK: false,
-            estopCircuitDelayed_OK: false,
-            fenceCircuit_OK: false,
-            guardDoors_LOCKED: false,
-            networkHealth_OK: false,
-            ethercatMaster_OK: false,
-            ethercatSlaves_OK: false,
-            supplyAir_OK: false
-        };
+        // this.machineStatus = {
+        //     estopCircuit_OK: false,
+        //     estopCircuitDelayed_OK: false,
+        //     fenceCircuit_OK: false,
+        //     guardDoors_LOCKED: false,
+        //     networkHealth_OK: false,
+        //     ethercatMaster_OK: false,
+        //     ethercatSlaves_OK: false,
+        //     supplyAir_OK: false
+        // };
     }
 
     private addNodePrefix(tag: string): string {
@@ -158,9 +158,7 @@ export default class CodesysOpcuaDriver {
             // Verify write
             const readValue = await this.readTag(tag, dataType);
             if (readValue !== value) {
-                console.error(`Verification failed for node ${tag}: expected ${value}, got ${readValue}`);
-                // print the types of each
-                console.log(`Type of written value: ${typeof value}, Type of read value: ${typeof readValue}`);
+                console.error(`Verification failed for node ${tag}: expected ${value}, got ${readValue}. Type of written value: ${typeof value}, Type of read value: ${typeof readValue}`);
                 return {
                     success: false,
                     message: `Failed to verify write to node ${tag}: expected ${value}, got ${readValue}`

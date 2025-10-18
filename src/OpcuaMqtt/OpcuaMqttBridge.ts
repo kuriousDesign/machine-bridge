@@ -70,7 +70,7 @@ import { BridgeCmds, DeviceActionRequestData, DeviceId, DeviceTags, MqttTopics, 
 interface HeartBeatConnection {
     connectionId: string;
     heartbeatValue: number;
-    timer: NodeJS.Timer;
+    timer: NodeJS.Timeout;
     heartbeatInterval?: NodeJS.Timeout;
 }
 
@@ -182,6 +182,9 @@ class OpcuaMqttBridge {
                     const topic = deviceTopic + '/' + tag.toLowerCase();
                     this.nodeIdToMqttTopicMap.set(nodeId, topic);
                 });
+                const deviceLogNodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceLogs + '[' + device.id + ']';
+                const deviceLogTopic = deviceTopic + '/log';
+                this.nodeIdToMqttTopicMap.set(deviceLogNodeId, deviceLogTopic);
 
                 this.subscribeToMqttTopicDeviceHmiActionRequest(device);
 
@@ -261,11 +264,12 @@ class OpcuaMqttBridge {
                     }
                     if (topic === "machine/heartbeatplc") {
                         //console.log('Machine.heartbeatPlc:', newValue);
+                        // log full node Id
+                        //console.log('Full NodeId for heartbeatPlc:', fullNodeId);
                     }
-         
 
                 } else if (!this.bridgeHealthIsOk) {
-                    console.warn('Bridge connection health is not OK, not publishing to MQTT');
+                    //console.warn('Bridge connection health is not OK, not publishing to MQTT');
                 }
             },
         );
@@ -520,15 +524,19 @@ class OpcuaMqttBridge {
                         const heartbeatPlcNodeId = this.concatNodeId(PlcNamespaces.Machine, MachineTags.HeartbeatPLC);
                         const heartbeatValue = await this.readOpcuaValue(heartbeatPlcNodeId);
                         if (heartbeatValue === null || this.lastPlcHeartbeatValue === heartbeatValue) {
-                            console.warn('OPC UA Heartbeat value not changing, connection may be lost');
+                            if (this.opcuaServerIsConnected) {
+                                console.warn('OPC UA Heartbeat value not changing, connection may be lost');
+                            }
                             this.updateOpcuaConnectionStatus(false);
+                            // kill this timer
+                            //clearInterval(this.opcuaHeartBeatConnection.timer);
                             return;
                         }
                         this.updateOpcuaConnectionStatus(true);
                         // store the heartbeat value
                         this.opcuaHeartBeatConnection.heartbeatValue = heartbeatValue as number;
                         this.lastPlcHeartbeatValue = heartbeatValue as number;
-                        console.log('OPC UA Heartbeat value:', heartbeatValue);
+                        //console.log('OPC UA Heartbeat value:', heartbeatValue);
                         // write hmi heartbeat value back to opcua
                         const heartbeatHmiNodeId = this.concatNodeId(PlcNamespaces.Machine, MachineTags.HeartbeatHMI);
                         await this.writeOpcuaValue(heartbeatHmiNodeId, heartbeatValue, DataType.Byte);
@@ -709,6 +717,152 @@ class OpcuaMqttBridge {
 
         this.publishBridgeConnectionStatus();
     }
+
+    private shuttingDown: boolean = false;
+
+public async shutdown(): Promise<void> {
+    if (this.shuttingDown) {
+        console.log('Shutdown already in progress/complete');
+        return;
+    }
+    this.shuttingDown = true;
+    console.log('Shutting down OpcuaMqttBridge...');
+
+    // 1) stop the connection status timer
+    try {
+        if (this.timerConnectionStatusForMqtt) {
+            clearInterval(this.timerConnectionStatusForMqtt);
+            this.timerConnectionStatusForMqtt = null;
+        }
+    } catch (err) {
+        console.warn('Error clearing timerConnectionStatusForMqtt', err);
+    }
+
+    // 2) stop opcua heartbeat timer
+    try {
+        if (this.opcuaHeartBeatConnection && this.opcuaHeartBeatConnection.timer) {
+            clearInterval(this.opcuaHeartBeatConnection.timer);
+            // if you used heartbeatInterval use clearTimeout/clearInterval on that too
+            if (this.opcuaHeartBeatConnection.heartbeatInterval) {
+                clearTimeout(this.opcuaHeartBeatConnection.heartbeatInterval);
+            }
+            this.opcuaHeartBeatConnection = null;
+        }
+    } catch (err) {
+        console.warn('Error clearing opcua heartbeat timers', err);
+    }
+
+    // 3) terminate monitoredItemGroup
+    try {
+        if (this.monitoredItemGroup) {
+            // try terminate or dispose depending on API
+            if (typeof (this.monitoredItemGroup as any).terminate === 'function') {
+                await (this.monitoredItemGroup as any).terminate();
+            } else if (typeof (this.monitoredItemGroup as any).dispose === 'function') {
+                (this.monitoredItemGroup as any).dispose();
+            }
+            this.monitoredItemGroup = null;
+        }
+    } catch (err) {
+        console.warn('Failed to terminate monitoredItemGroup', err);
+    }
+
+    // 4) terminate subscription
+    try {
+        if (this.opcuaSubscription) {
+            if (typeof (this.opcuaSubscription as any).terminate === 'function') {
+                await (this.opcuaSubscription as any).terminate();
+            } else if (typeof (this.opcuaSubscription as any).close === 'function') {
+                await (this.opcuaSubscription as any).close();
+            }
+            this.opcuaSubscription = null;
+        }
+    } catch (err) {
+        console.warn('Failed to terminate opcuaSubscription', err);
+    }
+
+    // 5) close session
+    try {
+        if (this.opcuaSession) {
+            // session.close will reject if already closed; swallow errors
+            await this.opcuaSession.close().catch((e) => {
+                console.warn('Error closing OPC UA session', e);
+            });
+            this.opcuaSession = null;
+        }
+    } catch (err) {
+        console.warn('Failed to close session', err);
+    }
+
+    // 6) disconnect OPC UA client
+    try {
+        if (this.opcuaClient) {
+            if (typeof (this.opcuaClient as any).disconnect === 'function') {
+                await (this.opcuaClient as any).disconnect().catch((e: any) => {
+                    console.warn('Error disconnecting OPC UA client', e);
+                });
+            }
+            this.opcuaClient = null;
+        }
+    } catch (err) {
+        console.warn('Failed to disconnect opcuaClient', err);
+    }
+
+    // 7) cleanup mqtt client: unsubscribe from topics you created, remove listeners, end client
+    try {
+        if (this.mqttClient) {
+            // optional: unsubscribe from topics we subscribed to (bridge command + device topics)
+            try {
+                // unsubscribe wildcard or known topics (no-op if not subscribed)
+                this.mqttClient.unsubscribe(MqttTopics.BRIDGE_CMD, () => { /* ignore */ });
+            } catch (e) { /* ignore */ }
+
+            // remove all listeners you added to avoid leaks
+            this.mqttClient.removeAllListeners('message');
+            this.mqttClient.removeAllListeners('connect');
+            this.mqttClient.removeAllListeners('error');
+            this.mqttClient.removeAllListeners('close');
+
+            // end the client. `true` forces close and drains queue immediately
+            await new Promise<void>((resolve) => {
+                try {
+                    this.mqttClient!.end(true, {}, () => {
+                        resolve();
+                    });
+                } catch (e) {
+                    // fallback to immediate resolve
+                    console.warn('Error ending mqttClient', e);
+                    resolve();
+                }
+            });
+            this.mqttClient = null;
+        }
+    } catch (err) {
+        console.warn('Failed to cleanup mqttClient', err);
+    }
+
+    // 8) clear mqtt heartbeat connections if any
+    try {
+        if (this.mqttClientHeartBeatConnections) {
+            for (const hb of this.mqttClientHeartBeatConnections.values()) {
+                if (hb.timer) clearInterval(hb.timer);
+                if (hb.heartbeatInterval) clearTimeout(hb.heartbeatInterval);
+            }
+            this.mqttClientHeartBeatConnections.clear();
+            this.mqttClientHeartBeatConnections = null;
+        }
+    } catch (err) {
+        console.warn('Failed clearing mqtt heartbeat connections', err);
+    }
+
+    // 9) mark flags
+    this.opcuaServerIsConnected = false;
+    this.mqttBrokerIsConnected = false;
+    this.bridgeHealthIsOk = false;
+
+    console.log('OpcuaMqttBridge shutdown finished');
+}
+
 }
 
 export default OpcuaMqttBridge;

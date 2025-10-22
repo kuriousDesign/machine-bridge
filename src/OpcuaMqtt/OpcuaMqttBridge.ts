@@ -508,13 +508,11 @@ class OpcuaMqttBridge {
             console.log("✅ OPC UA client connected");
 
             this.opcuaSession = await this.opcuaClient.createSession();
-            this.codesysOpcuaDriver = new CodesysOpcuaDriver(DeviceId.HMI, this.opcuaSession, this.opcuaControllerName);
-            this.dataTypeManager = new ExtraDataTypeManager();
-
             console.log("✅ OPC UA session created");
-
+            this.codesysOpcuaDriver = new CodesysOpcuaDriver(DeviceId.HMI, this.opcuaSession, this.opcuaControllerName);
+            console.log("✅ CODESYS OPC UA driver created");
+            this.dataTypeManager = new ExtraDataTypeManager();
             //this.updateOpcuaConnectionStatus(true);
-
             // create heartbeat with opcua tag that gets value every 1000ms
             this.opcuaHeartBeatConnection = {
                 connectionId: 'opcua-heartbeat',

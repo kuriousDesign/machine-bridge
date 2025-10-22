@@ -1,5 +1,8 @@
 import { ClientSession, Variant, AttributeIds, DataType, VariantArrayType, ReadValueIdOptions, StatusCodes, DataValue } from "node-opcua";
-import { ActionTypes, DeviceCmds, AxisMethods, DeviceId, States, ApiOpcuaReqData, Machine, DeviceActionRequestData, ApiReqRespStates, AxisProcesses, DeviceConstants, PlcNamespaces, MachineTags, apiReqRespStateToString } from "@kuriousdesign/machine-sdk";
+import { ActionTypes, initialApiOpcuaReqData, DeviceCmds, States, ApiOpcuaReqData, DeviceActionRequestData, ApiReqRespStates, AxisProcesses, DeviceConstants, PlcNamespaces, MachineTags, apiReqRespStateToString } from "@kuriousdesign/machine-sdk";
+
+// Debug: Log the imported ApiReqRespStates to verify its structure
+console.log('ApiReqRespStates:', ApiReqRespStates);
 
 
 export default class CodesysOpcuaDriver {
@@ -16,36 +19,15 @@ export default class CodesysOpcuaDriver {
     private lastLogMsgId: number = 0;
     private lastReadLogIndex: number = 255;
     private devicesNodeId = `${PlcNamespaces.Machine}.${MachineTags.deviceStore}`;
+    private uniqueActionRequestCtr: number = 0;
 
     constructor(id: number, session: ClientSession, opcuaControllerName: string = "CODESYS Control for Linux SL") {
         this.id = id;
         this.session = session;
         this.nodePrefix = `ns=4;s=|var|${opcuaControllerName}.Application.`;
-
-        this.request = {
-            id: 0,
-            checkSum: 0,
-            actionRequestData: {
-                SenderId: DeviceId.NONE,
-                ActionType: 0,
-                ActionId: 0,
-                ParamArray: [0.0, 0.0, 0.0]
-            },
-            sts: ApiReqRespStates.INACTIVE
-        };
-
+        this.request = initialApiOpcuaReqData;
+        console.log(`CodesysOpcuaDriver initialized for device ID ${this.id} with controller ${opcuaControllerName}`);
         this.response = { ...this.request };
-
-        // this.machineStatus = {
-        //     estopCircuit_OK: false,
-        //     estopCircuitDelayed_OK: false,
-        //     fenceCircuit_OK: false,
-        //     guardDoors_LOCKED: false,
-        //     networkHealth_OK: false,
-        //     ethercatMaster_OK: false,
-        //     ethercatSlaves_OK: false,
-        //     supplyAir_OK: false
-        // };
     }
 
     private addNodePrefix(tag: string): string {
@@ -97,7 +79,7 @@ export default class CodesysOpcuaDriver {
             console.error('OPC UA session is not initialized');
             return null;
         }
-
+        //console.log(`Reading tag ${tag} with dataType ${DataType[dataType]}`);
         try {
             const nodeId = this.addNodePrefix(tag);
             const readValueOptions: ReadValueIdOptions = {
@@ -137,6 +119,7 @@ export default class CodesysOpcuaDriver {
                 console.warn(`Null or undefined value for node ${tag}`);
                 return null;
             }
+            //console.log(`Read value for node ${tag}:`, value);
             return value as number; // Cast to number for non-UInt64 types
         } catch (error) {
             console.error(`Failed to read node ${tag}:`, error);
@@ -146,14 +129,17 @@ export default class CodesysOpcuaDriver {
 
     async writeTag(tag: string, value: any, dataType: DataType = DataType.Int16): Promise<{ success: boolean; message: string }> {
         try {
+            //console.log('hi jake');
+            console.log(`Writing value to node ${tag}:`, value, `with dataType ${DataType[dataType]}`);
             const nodeId = this.addNodePrefix(tag);
             const variant = new Variant({ dataType, value });
-
+            
             await this.session.write({
                 nodeId,
                 attributeId: AttributeIds.Value,
                 value: { value: variant }
             });
+            //console.log(`Wrote value to node ${tag}:`, value);
 
             // Verify write
             const readValue = await this.readTag(tag, dataType);
@@ -203,20 +189,13 @@ export default class CodesysOpcuaDriver {
             }
         }
 
-        // 1. Set Request Sts to INACTIVE
+        //console.log(`We have control of device ${targetDeviceId}, proceeding with action request`);
+       
+        //console.log(`Writing sts to WRITING`);
         const stsTag = `${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.Sts`;
-        await this.writeTag(stsTag, ApiReqRespStates.INACTIVE);
-        //console.log(`Set ${stsTag} to INACTIVE`);
 
-        // 2. Wait for status to update
-        const startTime = Date.now();
-        while (Date.now() - startTime < 3000) {
-            const currentSts = await this.readTag(stsTag);
-            if (currentSts === ApiReqRespStates.INACTIVE) break;
-            await this.sleep(10);
-        }
-        //console.log(`Confirmed ${stsTag} is INACTIVE`);
-
+        await this.writeTag(stsTag, ApiReqRespStates.WRITING, DataType.Int16);
+        //console.log(`Set ${stsTag} to WRITING`);
 
         // 3. Fill action request data
 
@@ -224,9 +203,11 @@ export default class CodesysOpcuaDriver {
         for (let i = 0; i < Math.min(paramArray.length, DeviceConstants.MAX_NUM_PARAMS); i++) {
             paddedParamArray[i] = paramArray[i] || 0.0;
         }
-
-
+        this.uniqueActionRequestCtr += 1;
+        this.uniqueActionRequestCtr %= 255;
+        const uniqueActionRequestId = this.id * 1000 + this.uniqueActionRequestCtr;
         const DeviceActionRequestData: DeviceActionRequestData = {
+            UniqueActionRequestId: uniqueActionRequestId,
             SenderId: this.id,
             ActionType: actionType,
             ActionId: actionId,
@@ -235,6 +216,7 @@ export default class CodesysOpcuaDriver {
 
 
         // 4. Write action request data
+        await this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.UniqueActionRequestId`, DeviceActionRequestData.UniqueActionRequestId);
         await this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.SenderId`, DeviceActionRequestData.SenderId);
         await this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.ActionType`, DeviceActionRequestData.ActionType);
         await this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.ActionId`, DeviceActionRequestData.ActionId);
@@ -246,16 +228,14 @@ export default class CodesysOpcuaDriver {
 
         // 5. Fill API data
         this.request = {
-            id: Date.now(),
+            id: uniqueActionRequestId,
             checkSum: 0, // Simplified checksum
             actionRequestData: DeviceActionRequestData,
             sts: ApiReqRespStates.REQUEST_READY
         };
 
         // 6. Write API data
-        //console.log(`Writing action request to device ${targetDeviceId}:`, this.request);
-        await this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.id`, this.request.id, DataType.UInt64);
-        //console.log(`Wrote ${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.id = ${this.request.id}`);
+        await this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.id`, this.request.id, DataType.Int32);
         await this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.checkSum`, this.request.checkSum);
         await this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.Sts`, this.request.sts);
 
@@ -267,9 +247,10 @@ export default class CodesysOpcuaDriver {
         const startTime = Date.now();
         console.log(`Waiting for API response for request ID: ${requestId}`);
 
+        // Poll for response status change
         while (Date.now() - startTime < 1000) {
             const responseSts = await this.readTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiRespTag}.Sts`);
-            const responseId = await this.readTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiRespTag}.id`, DataType.UInt64);
+            const responseId = await this.readTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiRespTag}.id`, DataType.Int32);
 
             if (responseId === requestId &&
                 responseSts !== ApiReqRespStates.REQUEST_READY &&

@@ -182,10 +182,21 @@ class OpcuaMqttBridge {
                     const topic = deviceTopic + '/' + tag.toLowerCase();
                     this.nodeIdToMqttTopicMap.set(nodeId, topic);
                 });
+
+                // adding device log
                 const deviceLogNodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceLogs + '[' + device.id + ']';
                 const deviceLogTopic = deviceTopic + '/log';
                 this.nodeIdToMqttTopicMap.set(deviceLogNodeId, deviceLogTopic);
 
+                // adding device sts: Machine. + <deviceMnemonic> + Sts
+                const deviceStsNodeId = PlcNamespaces.Machine + '.' + device.mnemonic + 'Sts';
+                const deviceStsTopic = deviceTopic + '/sts';
+                // only add if mnemonic is ROB or POT or ABB
+                if (device.mnemonic === 'ROB' || device.mnemonic === 'POT' || device.mnemonic === 'ABB') {
+                    this.nodeIdToMqttTopicMap.set(deviceStsNodeId, deviceStsTopic);
+                }
+
+                // subscribe to device HMI action request topic
                 this.subscribeToMqttTopicDeviceHmiActionRequest(device);
 
             });
@@ -216,7 +227,6 @@ class OpcuaMqttBridge {
                 nodeId: `${this.nodeListPrefix}${nodeId}`,
             });
         }
-
 
         //console.log('Creating monitored item group with items:', itemToMonitor);
         this.monitoredItemGroup = ClientMonitoredItemGroup.create(
@@ -313,66 +323,7 @@ class OpcuaMqttBridge {
             return;
         }
 
-
-        //const baseNodeId = `${deviceNodeId}.apiOpcua.hmiReq.actionRequestData`;
-        // const paramArrayOfValue = new Float64Array(message.ParamArray);
-
-        // // Write values for SenderId, ActionType, and ActionId
-        // const writeValues: WriteValueOptions[] = [
-        //     {
-        //         attributeId: AttributeIds.Value,
-        //         nodeId: `${this.nodeListPrefix}${baseNodeId}.SenderId`,
-        //         value: {
-        //             value: {
-        //                 dataType: DataType.Int16,
-        //                 value: message.SenderId
-        //             }
-        //         }
-        //     },
-        //     {
-        //         attributeId: AttributeIds.Value,
-        //         nodeId: `${this.nodeListPrefix}${baseNodeId}.ActionType`,
-        //         value: {
-        //             value: {
-        //                 dataType: DataType.Int16,
-        //                 value: message.ActionType // Fixed the type check
-        //             }
-        //         }
-        //     },
-        //     {
-        //         attributeId: AttributeIds.Value,
-        //         nodeId: `${this.nodeListPrefix}${baseNodeId}.ActionId`,
-        //         value: {
-        //             value: {
-        //                 dataType: DataType.Int16,
-        //                 value: message.ActionId
-        //             }
-        //         }
-        //     }
-        // ];
-
-        // // Separate write value for ParamArray
-        // const paramArrayWriteValue: WriteValueOptions = {
-        //     attributeId: AttributeIds.Value,
-        //     nodeId: `${this.nodeListPrefix}${baseNodeId}.ParamArray`,
-        //     value: {
-        //         value: {
-        //             dataType: DataType.Double, // Changed to Double to match Float32Array, adjust if needed
-        //             arrayType: VariantArrayType.Array,
-        //             value: paramArrayOfValue
-        //         }
-        //     }
-        // };
-
-
         try {
-            // Write SenderId, ActionType, and ActionId first
-            //await this.opcuaSession.write(writeValues);
-            //console.log('Successfully wrote to OPC UA nodes (excluding ParamArray):', writeValues.map(w => w.nodeId));
-
-            // Write ParamArray separately
-            //await this.opcuaSession.write(paramArrayWriteValue);
-            //console.log('Successfully wrote ParamArray to OPC UA node:', paramArrayWriteValue.nodeId);
             this.codesysOpcuaDriver?.requestAction(device.id, message.ActionType, message.ActionId, message.ParamArray);
         } catch (error) {
             console.error('Failed to write to OPC UA nodes, Error:', error);

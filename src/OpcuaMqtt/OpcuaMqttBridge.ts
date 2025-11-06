@@ -60,6 +60,8 @@ import {
     DeadbandType,
     BrowseDescriptionLike,
     BrowseDirection,
+    MonitoredItem,
+    ClientMonitoredItem,
 
 } from 'node-opcua';
 import mqtt, { MqttClient } from 'mqtt';
@@ -92,7 +94,7 @@ const opcuaOptions: OPCUAClientOptions = {
 const PUBLISHING_INTERVAL = 250; // in ms
 
 const subscriptionOptions: CreateSubscriptionRequestOptions = {
-    maxNotificationsPerPublish: 1000,
+    maxNotificationsPerPublish: 2000,
     publishingEnabled: true,
     requestedLifetimeCount: 100,
     requestedMaxKeepAliveCount: 10,
@@ -136,7 +138,8 @@ class OpcuaMqttBridge {
     private deviceMap: Map<number, DeviceRegistration> = new Map();
     private dataTypeManager: ExtraDataTypeManager | null = null;
     private nodeIdToMqttTopicMap = new Map<string, string>();
-    private opcuaSubscription: ClientSubscription | null = null;
+    private opcuaSubscription0: ClientSubscription | null = null;
+    private opcuaSubscription1: ClientSubscription | null = null;
     private monitoredItemGroup: ClientMonitoredItemGroup | null = null;
     private timerConnectionStatusForMqtt: NodeJS.Timeout | null = null;
     private lastPlcHeartbeatValue: number = 0;
@@ -176,11 +179,18 @@ class OpcuaMqttBridge {
             this.registeredDevices.forEach((device) => {
                 const deviceNodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceStore + '[' + device.id + ']';
                 const deviceTopic = buildFullTopicPath(device, this.deviceMap);
+                let everyOtherTag = 1;
 
                 Object.values(DeviceTags).map((tag: string) => {
                     const nodeId = deviceNodeId + '.' + tag;
-                    const topic = deviceTopic + '/' + tag.toLowerCase();
-                    this.nodeIdToMqttTopicMap.set(nodeId, topic);
+                    const topic = deviceTopic + '/' + tag.toLowerCase().replace('.', '/');
+                    // replace . in topic with /
+
+                    if ((device.id < 25 || device.id > 20) && tag !== DeviceTags.Log && everyOtherTag % 1 === 0) {
+                        this.nodeIdToMqttTopicMap.set(nodeId, topic);
+                    }
+                    everyOtherTag += 1;
+
                 });
 
                 // adding device log
@@ -189,10 +199,12 @@ class OpcuaMqttBridge {
                 this.nodeIdToMqttTopicMap.set(deviceLogNodeId, deviceLogTopic);
 
                 // adding device sts: Machine. + <deviceMnemonic> + Sts
-                const deviceStsNodeId = PlcNamespaces.Machine + '.' + device.mnemonic + 'Sts';
+                const deviceStsNodeId = PlcNamespaces.Machine + '.' + device.mnemonic.toLowerCase() + 'Sts';
                 const deviceStsTopic = deviceTopic + '/sts';
                 // only add if mnemonic is ROB or POT or ABB
-                if (device.mnemonic === 'ROB' || device.mnemonic === 'POT' || device.mnemonic === 'ABB') {
+                if (device.mnemonic === 'SYS' || device.mnemonic === 'CON' || device.mnemonic === 'HMI') {
+                }
+                else {
                     this.nodeIdToMqttTopicMap.set(deviceStsNodeId, deviceStsTopic);
                 }
 
@@ -200,89 +212,190 @@ class OpcuaMqttBridge {
                 this.subscribeToMqttTopicDeviceHmiActionRequest(device);
 
             });
-            console.log('nodeIdToMqttTopicMap: ', this.nodeIdToMqttTopicMap);
+            //console.log('nodeIdToMqttTopicMap entries:');
+            this.nodeIdToMqttTopicMap.forEach((topic, nodeId) => {
+                console.log(`  ${nodeId} => ${topic}`);
+            });
 
             this.subscribeToMonitoredItems();
+            //this.subscribeToMonitoredItemsIndividually();
 
             console.log('Both MQTT and OPC UA clients initialized');
         })));
     }
 
+    private async subscribeToMonitoredItemsIndividually(): Promise<void> {
+        if (!this.opcuaSession) {
+            throw new Error("OPC UA session is not initialized");
+        }
+        console.log('Subscribing to monitored items', this.nodeIdToMqttTopicMap.size, 'items to monitor...');
+        this.opcuaSubscription0 = await this.opcuaSession.createSubscription2(
+            subscriptionOptions,
+        );
+        const itemsToMonitor = [] as { attributeId: number; nodeId: string }[];
+        for (const [nodeId, topic] of this.nodeIdToMqttTopicMap) {
+            const attributeId = AttributeIds.Value;
+            itemsToMonitor.push({
+                attributeId: AttributeIds.Value,
+                nodeId: `${this.nodeListPrefix}${nodeId}`,
+            });
+        }
+        console.log("Monitoring", itemsToMonitor.length, "items");
+        itemsToMonitor.forEach((i, idx) => {
+            if (!i || !i.nodeId) console.warn("Missing nodeId at index", idx, i);
+        });
 
+        for (const item of itemsToMonitor) {
+            try {
+                const monitoredItem = await ClientMonitoredItem.create(
+                    this.opcuaSubscription0,
+                    item,
+                    optionsGroup,
+                    TimestampsToReturn.Both
+                );
+
+                monitoredItem.on(
+                    'err',
+                    (message: string) => {
+                        console.error('Monitored item error:', message);
+                    }
+                );
+
+                // Subscribe to value changes via the subscription's 'changed' event
+                if (this.opcuaSubscription0) {
+                    this.opcuaSubscription0.on(
+                        'changed',
+                        (monitoredItem: ClientMonitoredItemBase, dataValue: DataValue) => {
+                            this.handleMonitoredItemChange(monitoredItem, dataValue);
+                        }
+                    );
+                }
+            } catch (err) {
+                console.error("Failed to create monitored item for", item.nodeId, err);
+            }
+        }
+    }
+
+
+
+    private async handleMonitoredItemChange(monitoredItem: ClientMonitoredItemBase, dataValue: DataValue): Promise<void> {
+        try {
+            // Decode the OPC UA value and the node id
+            const newValue = this.decipherOpcuaValue(dataValue);
+            const fullNodeId = monitoredItem.itemToMonitor.nodeId.value;
+            // strip away Node Id Down to just namespace and tag
+            const nodeId = fullNodeId.toString().replace(this.nodeListPrefix.replace('ns=4;s=', ''), '');
+            const topic = this.nodeIdToMqttTopicMap.get(nodeId);
+
+            //console.log(topic);
+            if (!topic) {
+                console.error('No valid MQTT topic found for nodeId:', nodeId);
+            } else if (topic && this.mqttClient && this.bridgeHealthIsOk) {
+                //console.log('nodeId changed:', nodeId, 'publishing to topic:', topic, 'with value:', newValue);
+                const message: TopicData = {
+                    timestamp: Date.now(),
+                    payload: newValue
+                }
+                this.mqttClient.publish(topic, JSON.stringify(message));
+                if (topic === "machine/pdmsts") {
+                    //console.log('Machine.pdmSts:', newValue.parts[0].processSts);
+                }
+                if (topic === "machine/estopcircuit_ok") {
+                    //console.log('Machine.estopCircuit_OK:', newValue);
+                }
+                if (topic === "machine/heartbeatplc") {
+                    console.log('Machine.heartbeatPlc:', newValue);
+                    // log full node Id
+                    //console.log('Full NodeId for heartbeatPlc:', fullNodeId);
+                }
+
+            } else if (!this.bridgeHealthIsOk) {
+                //console.warn('Bridge connection health is not OK, not publishing to MQTT');
+            }
+        } catch (error) {
+            console.error('Error processing monitored item change:', error);
+        }
+
+    }
 
     private async subscribeToMonitoredItems(): Promise<void> {
         if (!this.opcuaSession) {
             throw new Error("OPC UA session is not initialized");
         }
-        console.log('Subscribing to monitored items...');
-        this.opcuaSubscription = await this.opcuaSession.createSubscription2(
+        console.log('Subscribing to monitored items', this.nodeIdToMqttTopicMap.size, 'items to monitor...');
+        this.opcuaSubscription0 = await this.opcuaSession.createSubscription2(
             subscriptionOptions,
         );
         // Subscribe to each nodeId in the map
-        const itemToMonitor = [] as { attributeId: number; nodeId: string }[];
+        const itemsToMonitor = [] as { attributeId: number; nodeId: string }[];
+        const maxNumberOfItemsPerGroup = 100; // adjust as needed
+        let numItemsAdded = 0;
         for (const [nodeId, topic] of this.nodeIdToMqttTopicMap) {
+                      if (itemsToMonitor.length >= maxNumberOfItemsPerGroup) {
+                break; // only add up to the max number of items
+            }
             const attributeId = AttributeIds.Value;
-            itemToMonitor.push({
+            itemsToMonitor.push({
                 attributeId: AttributeIds.Value,
                 nodeId: `${this.nodeListPrefix}${nodeId}`,
             });
+            numItemsAdded += 1;
+        }
+
+        // validate each nodeId before creating monitored item group
+        for (const item of itemsToMonitor) {
+            try {
+                const data = await this.opcuaSession.read({
+                    nodeId: item.nodeId,
+                    attributeId: AttributeIds.Value
+                });
+                if (data.statusCode !== StatusCodes.Good || data.value.value === null || data.value.value === undefined) {
+                    console.error("Invalid nodeId for monitoring, status code:", data.statusCode.toString(), "NodeId:", item.nodeId, "Value:", data.value.value);
+                    continue; // skip adding this item to monitored items
+                }
+                //console.log("Validated nodeId for monitoring:", item.nodeId, "Value:", data.value.value);
+                
+            } catch (error) {
+                console.error("Failed to read nodeId before monitoring:", item.nodeId, error);
+            }
         }
 
         //console.log('Creating monitored item group with items:', itemToMonitor);
         this.monitoredItemGroup = ClientMonitoredItemGroup.create(
-            this.opcuaSubscription,
-            itemToMonitor,
+            this.opcuaSubscription0,
+            itemsToMonitor,
             optionsGroup,
             TimestampsToReturn.Both,
         );
 
-        await this.monitoredItemGroup.setMonitoringMode(MonitoringMode.Reporting); // <-- forces periodic reporting
+        console.log("Monitored item group created");
+
+        try {
+            await this.monitoredItemGroup.setMonitoringMode(MonitoringMode.Reporting); // <-- forces periodic reporting
+            console.log("Monitored item group set to Reporting mode");
+        } catch (error) {
+            console.error("Failed to set monitored item group to Reporting mode:", error);
+        }
+
 
         this.monitoredItemGroup.on(
             'initialized',
             () => {
-                //console.log('Monitored items initialized!!!!!');
+                console.log('Monitored items initialized!!!!!');
+                if (this.monitoredItemGroup) {
+
+                }
             }
         );
+
 
         this.monitoredItemGroup.on(
             'changed',
             (monitoredItem: ClientMonitoredItemBase, dataValue: DataValue) => {
-
-                // Decode the OPC UA value and the node id
-                const newValue = this.decipherOpcuaValue(dataValue);
-                const fullNodeId = monitoredItem.itemToMonitor.nodeId.value;
-                // strip away Node Id Down to just namespace and tag
-                const nodeId = fullNodeId.toString().replace(this.nodeListPrefix.replace('ns=4;s=', ''), '');
-                const topic = this.nodeIdToMqttTopicMap.get(nodeId);
-
-                //console.log(topic);
-                if (!topic) {
-                    console.error('No valid MQTT topic found for nodeId:', nodeId);
-                } else if (topic && this.mqttClient && this.bridgeHealthIsOk) {
-                    //console.log('nodeId changed:', nodeId, 'publishing to topic:', topic, 'with value:', newValue);
-                    const message: TopicData = {
-                        timestamp: Date.now(),
-                        payload: newValue
-                    }
-                    this.mqttClient.publish(topic, JSON.stringify(message));
-                    if (topic === "machine/pdmsts") {
-                        //console.log('Machine.pdmSts:', newValue.parts[0].processSts);
-                    }
-                    if (topic === "machine/estopcircuit_ok") {
-                        //console.log('Machine.estopCircuit_OK:', newValue);
-                    }
-                    if (topic === "machine/heartbeatplc") {
-                        //console.log('Machine.heartbeatPlc:', newValue);
-                        // log full node Id
-                        //console.log('Full NodeId for heartbeatPlc:', fullNodeId);
-                    }
-
-                } else if (!this.bridgeHealthIsOk) {
-                    //console.warn('Bridge connection health is not OK, not publishing to MQTT');
-                }
+                this.handleMonitoredItemChange(monitoredItem, dataValue);
             },
         );
+        
     }
 
     // create device action request subscription method that creaes subscription to all device action request nodes
@@ -310,7 +423,7 @@ class OpcuaMqttBridge {
             if (err) {
                 console.error('Failed to subscribe to device action request topic:', err.message);
             } else {
-                console.log('✅ Subscribed to device action request topic');
+                //console.log('✅ Subscribed to device action request topic');
             }
         });
     }
@@ -669,148 +782,148 @@ class OpcuaMqttBridge {
 
     private shuttingDown: boolean = false;
 
-public async shutdown(): Promise<void> {
-    if (this.shuttingDown) {
-        console.log('Shutdown already in progress/complete');
-        return;
-    }
-    this.shuttingDown = true;
-    console.log('Shutting down OpcuaMqttBridge...');
-
-    // 1) stop the connection status timer
-    try {
-        if (this.timerConnectionStatusForMqtt) {
-            clearInterval(this.timerConnectionStatusForMqtt);
-            this.timerConnectionStatusForMqtt = null;
+    public async shutdown(): Promise<void> {
+        if (this.shuttingDown) {
+            console.log('Shutdown already in progress/complete');
+            return;
         }
-    } catch (err) {
-        console.warn('Error clearing timerConnectionStatusForMqtt', err);
-    }
+        this.shuttingDown = true;
+        console.log('Shutting down OpcuaMqttBridge...');
 
-    // 2) stop opcua heartbeat timer
-    try {
-        if (this.opcuaHeartBeatConnection && this.opcuaHeartBeatConnection.timer) {
-            clearInterval(this.opcuaHeartBeatConnection.timer);
-            // if you used heartbeatInterval use clearTimeout/clearInterval on that too
-            if (this.opcuaHeartBeatConnection.heartbeatInterval) {
-                clearTimeout(this.opcuaHeartBeatConnection.heartbeatInterval);
+        // 1) stop the connection status timer
+        try {
+            if (this.timerConnectionStatusForMqtt) {
+                clearInterval(this.timerConnectionStatusForMqtt);
+                this.timerConnectionStatusForMqtt = null;
             }
-            this.opcuaHeartBeatConnection = null;
+        } catch (err) {
+            console.warn('Error clearing timerConnectionStatusForMqtt', err);
         }
-    } catch (err) {
-        console.warn('Error clearing opcua heartbeat timers', err);
-    }
 
-    // 3) terminate monitoredItemGroup
-    try {
-        if (this.monitoredItemGroup) {
-            // try terminate or dispose depending on API
-            if (typeof (this.monitoredItemGroup as any).terminate === 'function') {
-                await (this.monitoredItemGroup as any).terminate();
-            } else if (typeof (this.monitoredItemGroup as any).dispose === 'function') {
-                (this.monitoredItemGroup as any).dispose();
-            }
-            this.monitoredItemGroup = null;
-        }
-    } catch (err) {
-        console.warn('Failed to terminate monitoredItemGroup', err);
-    }
-
-    // 4) terminate subscription
-    try {
-        if (this.opcuaSubscription) {
-            if (typeof (this.opcuaSubscription as any).terminate === 'function') {
-                await (this.opcuaSubscription as any).terminate();
-            } else if (typeof (this.opcuaSubscription as any).close === 'function') {
-                await (this.opcuaSubscription as any).close();
-            }
-            this.opcuaSubscription = null;
-        }
-    } catch (err) {
-        console.warn('Failed to terminate opcuaSubscription', err);
-    }
-
-    // 5) close session
-    try {
-        if (this.opcuaSession) {
-            // session.close will reject if already closed; swallow errors
-            await this.opcuaSession.close().catch((e) => {
-                console.warn('Error closing OPC UA session', e);
-            });
-            this.opcuaSession = null;
-        }
-    } catch (err) {
-        console.warn('Failed to close session', err);
-    }
-
-    // 6) disconnect OPC UA client
-    try {
-        if (this.opcuaClient) {
-            if (typeof (this.opcuaClient as any).disconnect === 'function') {
-                await (this.opcuaClient as any).disconnect().catch((e: any) => {
-                    console.warn('Error disconnecting OPC UA client', e);
-                });
-            }
-            this.opcuaClient = null;
-        }
-    } catch (err) {
-        console.warn('Failed to disconnect opcuaClient', err);
-    }
-
-    // 7) cleanup mqtt client: unsubscribe from topics you created, remove listeners, end client
-    try {
-        if (this.mqttClient) {
-            // optional: unsubscribe from topics we subscribed to (bridge command + device topics)
-            try {
-                // unsubscribe wildcard or known topics (no-op if not subscribed)
-                this.mqttClient.unsubscribe(MqttTopics.BRIDGE_CMD, () => { /* ignore */ });
-            } catch (e) { /* ignore */ }
-
-            // remove all listeners you added to avoid leaks
-            this.mqttClient.removeAllListeners('message');
-            this.mqttClient.removeAllListeners('connect');
-            this.mqttClient.removeAllListeners('error');
-            this.mqttClient.removeAllListeners('close');
-
-            // end the client. `true` forces close and drains queue immediately
-            await new Promise<void>((resolve) => {
-                try {
-                    this.mqttClient!.end(true, {}, () => {
-                        resolve();
-                    });
-                } catch (e) {
-                    // fallback to immediate resolve
-                    console.warn('Error ending mqttClient', e);
-                    resolve();
+        // 2) stop opcua heartbeat timer
+        try {
+            if (this.opcuaHeartBeatConnection && this.opcuaHeartBeatConnection.timer) {
+                clearInterval(this.opcuaHeartBeatConnection.timer);
+                // if you used heartbeatInterval use clearTimeout/clearInterval on that too
+                if (this.opcuaHeartBeatConnection.heartbeatInterval) {
+                    clearTimeout(this.opcuaHeartBeatConnection.heartbeatInterval);
                 }
-            });
-            this.mqttClient = null;
-        }
-    } catch (err) {
-        console.warn('Failed to cleanup mqttClient', err);
-    }
-
-    // 8) clear mqtt heartbeat connections if any
-    try {
-        if (this.mqttClientHeartBeatConnections) {
-            for (const hb of this.mqttClientHeartBeatConnections.values()) {
-                if (hb.timer) clearInterval(hb.timer);
-                if (hb.heartbeatInterval) clearTimeout(hb.heartbeatInterval);
+                this.opcuaHeartBeatConnection = null;
             }
-            this.mqttClientHeartBeatConnections.clear();
-            this.mqttClientHeartBeatConnections = null;
+        } catch (err) {
+            console.warn('Error clearing opcua heartbeat timers', err);
         }
-    } catch (err) {
-        console.warn('Failed clearing mqtt heartbeat connections', err);
+
+        // 3) terminate monitoredItemGroup
+        try {
+            if (this.monitoredItemGroup) {
+                // try terminate or dispose depending on API
+                if (typeof (this.monitoredItemGroup as any).terminate === 'function') {
+                    await (this.monitoredItemGroup as any).terminate();
+                } else if (typeof (this.monitoredItemGroup as any).dispose === 'function') {
+                    (this.monitoredItemGroup as any).dispose();
+                }
+                this.monitoredItemGroup = null;
+            }
+        } catch (err) {
+            console.warn('Failed to terminate monitoredItemGroup', err);
+        }
+
+        // 4) terminate subscription
+        try {
+            if (this.opcuaSubscription0) {
+                if (typeof (this.opcuaSubscription0 as any).terminate === 'function') {
+                    await (this.opcuaSubscription0 as any).terminate();
+                } else if (typeof (this.opcuaSubscription0 as any).close === 'function') {
+                    await (this.opcuaSubscription0 as any).close();
+                }
+                this.opcuaSubscription0 = null;
+            }
+        } catch (err) {
+            console.warn('Failed to terminate opcuaSubscription', err);
+        }
+
+        // 5) close session
+        try {
+            if (this.opcuaSession) {
+                // session.close will reject if already closed; swallow errors
+                await this.opcuaSession.close().catch((e) => {
+                    console.warn('Error closing OPC UA session', e);
+                });
+                this.opcuaSession = null;
+            }
+        } catch (err) {
+            console.warn('Failed to close session', err);
+        }
+
+        // 6) disconnect OPC UA client
+        try {
+            if (this.opcuaClient) {
+                if (typeof (this.opcuaClient as any).disconnect === 'function') {
+                    await (this.opcuaClient as any).disconnect().catch((e: any) => {
+                        console.warn('Error disconnecting OPC UA client', e);
+                    });
+                }
+                this.opcuaClient = null;
+            }
+        } catch (err) {
+            console.warn('Failed to disconnect opcuaClient', err);
+        }
+
+        // 7) cleanup mqtt client: unsubscribe from topics you created, remove listeners, end client
+        try {
+            if (this.mqttClient) {
+                // optional: unsubscribe from topics we subscribed to (bridge command + device topics)
+                try {
+                    // unsubscribe wildcard or known topics (no-op if not subscribed)
+                    this.mqttClient.unsubscribe(MqttTopics.BRIDGE_CMD, () => { /* ignore */ });
+                } catch (e) { /* ignore */ }
+
+                // remove all listeners you added to avoid leaks
+                this.mqttClient.removeAllListeners('message');
+                this.mqttClient.removeAllListeners('connect');
+                this.mqttClient.removeAllListeners('error');
+                this.mqttClient.removeAllListeners('close');
+
+                // end the client. `true` forces close and drains queue immediately
+                await new Promise<void>((resolve) => {
+                    try {
+                        this.mqttClient!.end(true, {}, () => {
+                            resolve();
+                        });
+                    } catch (e) {
+                        // fallback to immediate resolve
+                        console.warn('Error ending mqttClient', e);
+                        resolve();
+                    }
+                });
+                this.mqttClient = null;
+            }
+        } catch (err) {
+            console.warn('Failed to cleanup mqttClient', err);
+        }
+
+        // 8) clear mqtt heartbeat connections if any
+        try {
+            if (this.mqttClientHeartBeatConnections) {
+                for (const hb of this.mqttClientHeartBeatConnections.values()) {
+                    if (hb.timer) clearInterval(hb.timer);
+                    if (hb.heartbeatInterval) clearTimeout(hb.heartbeatInterval);
+                }
+                this.mqttClientHeartBeatConnections.clear();
+                this.mqttClientHeartBeatConnections = null;
+            }
+        } catch (err) {
+            console.warn('Failed clearing mqtt heartbeat connections', err);
+        }
+
+        // 9) mark flags
+        this.opcuaServerIsConnected = false;
+        this.mqttBrokerIsConnected = false;
+        this.bridgeHealthIsOk = false;
+
+        console.log('OpcuaMqttBridge shutdown finished');
     }
-
-    // 9) mark flags
-    this.opcuaServerIsConnected = false;
-    this.mqttBrokerIsConnected = false;
-    this.bridgeHealthIsOk = false;
-
-    console.log('OpcuaMqttBridge shutdown finished');
-}
 
 }
 

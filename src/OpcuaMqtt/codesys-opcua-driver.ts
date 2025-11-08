@@ -130,7 +130,7 @@ export default class CodesysOpcuaDriver {
     async writeTag(tag: string, value: any, dataType: DataType = DataType.Int16): Promise<{ success: boolean; message: string }> {
         try {
             //console.log('hi jake');
-            console.log(`Writing value to node ${tag}:`, value, `with dataType ${DataType[dataType]}`);
+            //console.log(`Writing value to node ${tag}:`, value, `with dataType ${DataType[dataType]}`);
             const nodeId = this.addNodePrefix(tag);
             const variant = new Variant({ dataType, value });
             

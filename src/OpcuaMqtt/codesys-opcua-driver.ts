@@ -73,6 +73,35 @@ export default class CodesysOpcuaDriver {
         }
     }
 
+    async readTagDataType(tag: string): Promise<DataType | null> {
+        if (!this.session) {
+            console.error('OPC UA session is not initialized');
+            return null;
+        }
+        try {
+            const nodeId = this.addNodePrefix(tag);
+            const readValueOptions: ReadValueIdOptions = {
+                nodeId: nodeId,
+                attributeId: AttributeIds.DataType
+            };
+            const dataValue: DataValue = await this.session.read(readValueOptions);
+            const browseResult = await this.session.browse(nodeId);
+
+            if (dataValue.statusCode === StatusCodes.Good) {
+                const dataType = dataValue.value.value.value;
+                if (dataType === 3013) {
+                    return DataType.String;
+                }
+                return dataValue.value.value.value as DataType;
+            } else {
+                console.warn(`Failed to read OPC UA data type from ${nodeId}: ${dataValue.statusCode}`);
+                return null;
+            }
+        } catch (error) {
+            console.error(`Failed to read OPC UA data type from ${tag}:`, error);
+            return null;
+        }
+    }
 
     async readTag(tag: string, dataType: DataType = DataType.Int16): Promise<any> {
         if (!this.session) {
@@ -87,6 +116,7 @@ export default class CodesysOpcuaDriver {
                 attributeId: AttributeIds.Value
             };
             const dataValue: DataValue = await this.session.read(readValueOptions);
+            const dataType = dataValue.value.dataType
 
             if (!dataValue || !dataValue.value) {
                 console.warn(`No value returned for node ${tag}`);
@@ -127,13 +157,115 @@ export default class CodesysOpcuaDriver {
         }
     }
 
+    async writeNestedObject(
+        baseTag: string,
+        value: any
+    ): Promise<{ success: boolean; message: string; details?: any }> {
+        const writesToPerform: Array<{ nodeId: string; value: any }> = [];
+
+        // 1. Flatten nested object/array → list of { nodeId, value }
+        const traverseAndFlatten = (currentTag: string, currentValue: any) => {
+            if (currentValue === null || typeof currentValue !== "object") {
+                writesToPerform.push({ nodeId: currentTag, value: currentValue });
+                return;
+            }
+
+            if (Array.isArray(currentValue)) {
+                for (let i = 0; i < currentValue.length; i++) {
+                    traverseAndFlatten(`${currentTag}[${i}]`, currentValue[i]);
+                }
+            } else {
+                for (const key in currentValue) {
+                    if (Object.prototype.hasOwnProperty.call(currentValue, key)) {
+                        traverseAndFlatten(`${currentTag}.${key}`, currentValue[key]);
+                    }
+                }
+            }
+        };
+
+        traverseAndFlatten(baseTag, value);
+
+        if (writesToPerform.length === 0) {
+            return { success: true, message: "No values to write" };
+        }
+
+        console.log(`Preparing to write ${writesToPerform.length} tags under ${baseTag}`);
+
+        try {
+            // 2. Read ALL data types in parallel
+            const dataTypePromises = writesToPerform.map(item =>
+                this.readTagDataType(item.nodeId)
+                    .then(type => ({ nodeId: item.nodeId, value: item.value, dataType: type }))
+                    .catch(err => ({
+                        nodeId: item.nodeId,
+                        value: item.value,
+                        dataType: null,
+                        error: err instanceof Error ? err.message : String(err)
+                    }))
+            );
+
+            const results = await Promise.all(dataTypePromises);
+
+            // 3. Write ALL valid items in parallel
+            const writePromises = results.map(async (result) => {
+                if (result.dataType === null) {
+                    return {
+                        nodeId: result.nodeId,
+                        success: false,
+                        error: 'error' in result ? result.error : "Unknown data type"
+                    };
+                }
+
+                try {
+                    await this.writeTag(result.nodeId, result.value, result.dataType);
+                    return { nodeId: result.nodeId, success: true };
+                } catch (err) {
+                    return {
+                        nodeId: result.nodeId,
+                        success: false,
+                        error: err instanceof Error ? err.message : String(err)
+                    };
+                }
+            });
+
+            const writeResults = await Promise.all(writePromises);
+
+            // 4. Summarize results
+            const successCount = writeResults.filter(r => r.success).length;
+            const failed = writeResults.filter(r => !r.success);
+
+            const message = `Wrote ${successCount}/${writeResults.length} tags`;
+            const fullSuccess = failed.length === 0;
+
+            if (!fullSuccess) {
+                console.warn("Some writes failed:", failed);
+            }
+
+            return {
+                success: fullSuccess,
+                message,
+                details: {
+                    total: writeResults.length,
+                    success: successCount,
+                    failed: failed.length,
+                    errors: failed
+                }
+            };
+
+        } catch (error) {
+            const msg = error instanceof Error ? error.message : String(error);
+            console.error(`writeNestedObject failed for ${baseTag}:`, msg);
+            return { success: false, message: `Critical failure: ${msg}` };
+        }
+    }
+
     async writeTag(tag: string, value: any, dataType: DataType = DataType.Int16): Promise<{ success: boolean; message: string }> {
         try {
             //console.log('hi jake');
             //console.log(`Writing value to node ${tag}:`, value, `with dataType ${DataType[dataType]}`);
             const nodeId = this.addNodePrefix(tag);
             const variant = new Variant({ dataType, value });
-            
+
             await this.session.write({
                 nodeId,
                 attributeId: AttributeIds.Value,
@@ -143,7 +275,15 @@ export default class CodesysOpcuaDriver {
 
             // Verify write
             const readValue = await this.readTag(tag, dataType);
-            if (readValue !== value) {
+
+            // if readValue is a number and value is a number, compare with tolerance for floating point, otherwise compare directly
+            const isNumber = (val: any): val is number => typeof val === 'number';
+            const tolerance = 0.0001;
+            const valuesMatch = isNumber(readValue) && isNumber(value)
+                ? Math.abs(readValue - value) < tolerance
+                : readValue === value;
+
+            if (!valuesMatch) {
                 console.error(`Verification failed for node ${tag}: expected ${value}, got ${readValue}. Type of written value: ${typeof value}, Type of read value: ${typeof readValue}`);
                 return {
                     success: false,
@@ -190,7 +330,7 @@ export default class CodesysOpcuaDriver {
         }
 
         //console.log(`We have control of device ${targetDeviceId}, proceeding with action request`);
-       
+
         //console.log(`Writing sts to WRITING`);
         const stsTag = `${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.Sts`;
 

@@ -64,7 +64,7 @@ export default class CodesysOpcuaDriver {
             if (data.statusCode === StatusCodes.Good) {
                 return value;
             } else {
-                console.warn(`Failed to read OPC UA value from ${nodeId}: ${data.statusCode}`);
+                console.warn(`Failed to read OPC UA value from ${tag}: ${data.statusCode}`);
                 return null;
             }
         } catch (error) {
@@ -94,7 +94,7 @@ export default class CodesysOpcuaDriver {
                 }
                 return dataValue.value.value.value as DataType;
             } else {
-                console.warn(`Failed to read OPC UA data type from ${nodeId}: ${dataValue.statusCode}`);
+                console.warn(`Failed to read OPC UA data type from ${tag}: ${dataValue.statusCode}`);
                 return null;
             }
         } catch (error) {

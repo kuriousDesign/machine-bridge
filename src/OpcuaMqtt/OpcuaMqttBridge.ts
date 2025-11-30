@@ -89,7 +89,7 @@ const connectionStrategy: ConnectionStrategyOptions = {
 };
 
 const opcuaOptions: OPCUAClientOptions = {
-    applicationName: 'OpcuaMqttBridgeV2',
+    applicationName: 'OpcuaMqttBridge',
     connectionStrategy: connectionStrategy,
     securityMode: MessageSecurityMode.None,
     securityPolicy: SecurityPolicy.None,
@@ -120,7 +120,7 @@ const optionsGroup: MonitoringParametersOptions = {
     filter
 };
 
-class OpcuaMqttBridgeV2 {
+class OpcuaMqttBridge {
     private mqttClient: MqttClient | null = null;
     private opcuaClient: OPCUAClient | null = null;
     private opcuaSession: ClientSession | null = null;
@@ -151,7 +151,7 @@ class OpcuaMqttBridgeV2 {
     private publishRate: number = 0;
 
     constructor(mqttBrokerUrl: string, mqttOptions: unknown, opcuaEndpoint: string, opcuaControllerName: string) {
-        console.log('Initializing OpcuaMqttBridgeV2...');
+        console.log('Initializing OpcuaMqttBridge...');
         this.mqttOptions = mqttOptions;
         this.opcuaEndpoint = opcuaEndpoint;
         this.mqttBrokerUrl = mqttBrokerUrl;
@@ -789,7 +789,7 @@ class OpcuaMqttBridgeV2 {
             return;
         }
         this.shuttingDown = true;
-        console.log('Shutting down OpcuaMqttBridgeV2...');
+        console.log('Shutting down OpcuaMqttBridge...');
 
         // 1) stop the connection status timer
         try {
@@ -901,8 +901,8 @@ class OpcuaMqttBridgeV2 {
         this.mqttBrokerIsConnected = false;
         this.bridgeHealthIsOk = false;
 
-        console.log('OpcuaMqttBridgeV2 shutdown finished');
+        console.log('OpcuaMqttBridge shutdown finished');
     }
 }
 
-export default OpcuaMqttBridgeV2;
+export default OpcuaMqttBridge;

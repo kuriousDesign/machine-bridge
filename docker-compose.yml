@@ -4,13 +4,11 @@ services:
     build:
       context: .
       dockerfile: .devcontainer/Dockerfile
-    # ports:
-    #   - "3000:3000"
-    # environment:
-    #   # Use the MongoDB service name (mongo) as the host
-    #   MONGODB_URI: mongodb://mongo:27017/yourdbname
-    # depends_on:
-    #   - db
+
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+      
     networks:
       - app-network
     # Use an anonymous volume for node_modules to avoid issues with host OS mismatches

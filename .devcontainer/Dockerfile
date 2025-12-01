@@ -1,23 +1,24 @@
-# .devcontainer/Dockerfile
-# Use the official Microsoft Dev Container image (includes node, git, zsh, etc.)
-FROM mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm
+# Use Node LTS slim image with basic utilities
+FROM node:20-bookworm-slim
 
-# Set working directory to the standard Dev Container path
-# VS Code will open this folder as the workspace
-WORKDIR /workspaces/machine-bridge
+# Install network utilities for testing
+RUN apt-get update && apt-get install -y \
+    iputils-ping curl wget netcat && rm -rf /var/lib/apt/lists/*
 
-# Copy package files first (for Docker layer caching)
+# Set working directory
+WORKDIR /app
+
+# Copy package files first (for layer caching)
 COPY package*.json ./
 
-# Install dependencies (npm, pnpm, yarn – whatever you use)
-# If you use pnpm (recommended), replace with: RUN corepack enable && corepack prepare pnpm@latest --activate && pnpm install
+# Install dependencies
 RUN npm install
 
-# Copy the entire project (since your repo root IS the Next.js app)
-COPY . .
+# Copy source code
+COPY src ./src
 
-# Optional: Expose port (VS Code does this anyway)
-# EXPOSE 3000
+# Copy nodemon config
+COPY nodemon.json ./
 
-# Default command — overridden by docker-compose.yml (sleep infinity) when using Dev Containers
-CMD ["npm", "run", "dev"]
+# Set default command for dev
+CMD ["npx", "nodemon", "--watch", "src", "--exec", "ts-node", "src/index.ts"]

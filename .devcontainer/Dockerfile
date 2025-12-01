@@ -1,10 +1,9 @@
-# Use Node LTS slim image with basic utilities
-FROM node:20-bookworm-slim
+# Use Microsoft's official Dev Container Ubuntu base image (22.04 LTS Jammy Jellyfish)
+FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 
-# Install network utilities for testing
-RUN apt-get update && apt-get install -y \
-    iputils-ping curl wget netcat && rm -rf /var/lib/apt/lists/*
-
+# Install Node.js, npm, and TypeScript compiler using standard apt commands
+RUN apt-get update && apt-get install -y nodejs npm typescript \
+    && rm -rf /var/lib/apt/lists/*
 # Set working directory
 WORKDIR /app
 

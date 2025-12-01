@@ -1,5 +1,5 @@
 services:
-  nextjs-app:
+  machine-bridge:
     # Rename service from 'app' to 'nextjs-app' for clarity, if needed (or keep 'app' if you prefer, but be consistent)
     build:
       context: .

@@ -1,13 +1,11 @@
 {
-	"name": "Next.js with Mongo Compose",
+	"name": "Machine Bridge",
 	// Reference the Docker Compose file
 	"dockerComposeFile": "../docker-compose.yml",
 	// Specify which service VS Code should attach to for development
-	"service": "app",
+	"service": "machine-bridge",
 	// Specify the workspace path inside that service's container
-	"workspaceFolder": "/workspaces/machine-ui",   // ← MUST match
-    // Forward the necessary ports to your local machine
-    "forwardPorts": [3000, 27017],
+	"workspaceFolder": "/workspaces/machine-bridge",   // ← MUST match
     // Run commands after the container is up and attached
-	"postCreateCommand": "npm run dev"
+	//"postCreateCommand": "npm run dev"
 }

@@ -1,9 +1,14 @@
 # Use Microsoft's official Dev Container Ubuntu base image (22.04 LTS Jammy Jellyfish)
 FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 
-# Install Node.js, npm, and TypeScript compiler using standard apt commands
-RUN apt-get update && apt-get install -y nodejs npm typescript \
+# Install base Node.js and npm using standard apt commands
+RUN apt-get update && apt-get install -y nodejs npm \
     && rm -rf /var/lib/apt/lists/*
+
+# Install TypeScript globally using npm (this is the key change)
+# The 'npm install -g' command should be its own RUN step after apt installs are finished
+RUN npm install -g typescript
+
 # Set working directory
 WORKDIR /app
 

@@ -1,0 +1,30 @@
+services:
+  nextjs-app:
+    # Rename service from 'app' to 'nextjs-app' for clarity, if needed (or keep 'app' if you prefer, but be consistent)
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    # ports:
+    #   - "3000:3000"
+    # environment:
+    #   # Use the MongoDB service name (mongo) as the host
+    #   MONGODB_URI: mongodb://mongo:27017/yourdbname
+    # depends_on:
+    #   - db
+    networks:
+      - app-network
+    # Use an anonymous volume for node_modules to avoid issues with host OS mismatches
+    volumes:
+      # Keep the bind mount for development
+      - .:/workspaces/machine-bridge
+      # Hide the host's node_modules
+      - /workspaces/machine-bridge/node_modules
+
+
+networks:
+  app-network:
+    driver: bridge
+
+# volumes:
+#   mongo-data:
+#     driver: local

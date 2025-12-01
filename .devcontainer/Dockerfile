@@ -1,12 +1,14 @@
-# Use Microsoft's official Dev Container Ubuntu base image (22.04 LTS Jammy Jellyfish)
-FROM node:20-bookworm-slim
+# Use the official Canonical Ubuntu image with Node 22 pre-installed
+FROM ubuntu/node:22
 
-# Install base Node.js and npm using standard apt commands
-RUN apt-get update && apt-get install -y nodejs npm \
-    && rm -rf /var/lib/apt/lists/*
+# The base image already has Node.js, npm, curl, wget, and basic tools installed.
 
-# Install TypeScript globally using npm (this is the key change)
-# The 'npm install -g' command should be its own RUN step after apt installs are finished
+# Install additional network utilities needed for testing on Ubuntu
+# Note: Ubuntu uses 'netcat-openbsd' just like Debian
+RUN apt-get update && apt-get install -y \
+    iputils-ping netcat-openbsd && rm -rf /var/lib/apt/lists/*
+
+# The 'typescript' installation via 'npm install -g' is fine on Ubuntu too
 RUN npm install -g typescript
 
 # Set working directory
@@ -15,7 +17,8 @@ WORKDIR /app
 # Copy package files first (for layer caching)
 COPY package*.json ./
 
-# Install dependencies
+# Install local project dependencies
+# This leverages the caching and the pre-installed Node 22
 RUN npm install
 
 # Copy source code
@@ -24,6 +27,5 @@ COPY src ./src
 # Copy nodemon config
 COPY nodemon.json ./
 
-# Set default command for dev
-#CMD ["npx", "nodemon", "--watch", "src", "--exec", "ts-node", "src/index.ts"]
+# Set default command for development using the ESM loader fix
 CMD ["npx", "nodemon", "--watch", "src", "--exec", "node", "--loader", "ts-node/esm", "src/index.ts"]

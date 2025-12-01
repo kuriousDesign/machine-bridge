@@ -1,31 +1,25 @@
-# Use the official Canonical Ubuntu image with Node 22 pre-installed
-FROM ubuntu/node:22
+# Use the reliable Debian-based Node 22 slim image
+FROM node:22-bookworm-slim
 
-# The base image already has Node.js, npm, curl, wget, and basic tools installed.
-
-# Install additional network utilities needed for testing on Ubuntu
-# Note: Ubuntu uses 'netcat-openbsd' just like Debian
+# Install essential network utilities needed for testing on Debian/Bookworm
 RUN apt-get update && apt-get install -y \
-    iputils-ping netcat-openbsd && rm -rf /var/lib/apt/lists/*
+    iputils-ping curl wget netcat-openbsd && rm -rf /var/lib/apt/lists/*
 
-# The 'typescript' installation via 'npm install -g' is fine on Ubuntu too
-RUN npm install -g typescript
+# The dependencies section in your package.json ensures these dev tools get installed locally:
+# "typescript": "^5.9.2", "nodemon": "^3.1.7", "ts-node": "^10.9.2"
 
-# Set working directory
-WORKDIR /app
+# Set working directory to the standard path
+WORKDIR /workspaces/machine-bridge
 
-# Copy package files first (for layer caching)
+# Copy package files first (for Docker layer caching)
 COPY package*.json ./
 
-# Install local project dependencies
-# This leverages the caching and the pre-installed Node 22
+# Install dependencies (Node 22 is compatible with all engines)
 RUN npm install
 
-# Copy source code
+# Copy source code and config
 COPY src ./src
-
-# Copy nodemon config
 COPY nodemon.json ./
 
-# Set default command for development using the ESM loader fix
-CMD ["npx", "nodemon", "--watch", "src", "--exec", "node", "--loader", "ts-node/esm", "src/index.ts"]
+# Set default command for development using the 'dev' script from package.json
+CMD ["npm", "run", "dev"]

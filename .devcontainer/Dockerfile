@@ -1,5 +1,5 @@
 # Use Microsoft's official Dev Container Ubuntu base image (22.04 LTS Jammy Jellyfish)
-FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
+FROM node:20-bookworm-slim
 
 # Install base Node.js and npm using standard apt commands
 RUN apt-get update && apt-get install -y nodejs npm \

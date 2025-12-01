@@ -25,4 +25,5 @@ COPY src ./src
 COPY nodemon.json ./
 
 # Set default command for dev
-CMD ["npx", "nodemon", "--watch", "src", "--exec", "ts-node", "src/index.ts"]
+#CMD ["npx", "nodemon", "--watch", "src", "--exec", "ts-node", "src/index.ts"]
+CMD ["npx", "nodemon", "--watch", "src", "--exec", "node", "--loader", "ts-node/esm", "src/index.ts"]

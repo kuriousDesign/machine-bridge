@@ -382,8 +382,8 @@ class OpcuaMqttBridge {
                     payload: newValue
                 };
                 this.mqttClient.publish(topic, JSON.stringify(message));
-                if (topic === "machine/heartbeatplc") {
-                    //console.log('Machine.heartbeatPlc:', newValue);
+                if (topic === "machine/heartbeatplc" && newValue % 30 === 0) {
+                    console.log('Machine.heartbeatPlc:', newValue);
                 }
             } else if (!this.bridgeHealthIsOk) {
                 // not publishing when bridge health is not ok

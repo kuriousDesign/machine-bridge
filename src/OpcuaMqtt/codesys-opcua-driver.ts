@@ -1,5 +1,5 @@
 import { ClientSession, Variant, AttributeIds, DataType, VariantArrayType, ReadValueIdOptions, StatusCodes, DataValue } from "node-opcua";
-import { ActionTypes, initialApiOpcuaReqData, DeviceCmds, States, ApiOpcuaReqData, DeviceActionRequestData, ApiReqRespStates, AxisProcesses, DeviceConstants, PlcNamespaces, MachineTags, apiReqRespStateToString } from "@kuriousdesign/machine-sdk";
+import { ActionTypes, initialApiOpcuaReqData, DeviceCmds, States, ApiOpcuaReqData, DeviceActionRequestData, ApiReqRespStates, AxisProcesses, DeviceConstants, PlcNamespaces, MachineTags, apiReqRespStateToString, Device } from "@kuriousdesign/machine-sdk";
 
 // Debug: Log the imported ApiReqRespStates to verify its structure
 console.log('ApiReqRespStates:', ApiReqRespStates);
@@ -155,6 +155,11 @@ export default class CodesysOpcuaDriver {
             console.error(`Failed to read node ${tag}:`, error);
             return null;
         }
+    }
+
+    async writeDeviceDataToPlc(deviceId: number, data: Partial<Device>): Promise<{ success: boolean; message: string; details?: any }> {
+        const baseTag = this.getDeviceNodeId(deviceId);
+        return await this.writeNestedObject(baseTag, data);
     }
 
     async writeNestedObject(

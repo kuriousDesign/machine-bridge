@@ -65,6 +65,7 @@ const opcuaOptions: OPCUAClientOptions = {
     securityPolicy: SecurityPolicy.None,
     endpointMustExist: true,
     keepSessionAlive: true,
+    //requestedSessionTimeout: 300000, 
 };
 
 const PUBLISHING_INTERVAL = 1000; // in ms
@@ -73,9 +74,11 @@ const subscriptionOptions: CreateSubscriptionRequestOptions = {
     maxNotificationsPerPublish: 2000,
     publishingEnabled: true,
     requestedLifetimeCount: 100,
-    requestedMaxKeepAliveCount: 10,
+    requestedMaxKeepAliveCount: 47,
     requestedPublishingInterval: PUBLISHING_INTERVAL, //affects lag, decrease to reduce lag
+
 };
+
 
 const filter = new DataChangeFilter({
     trigger: DataChangeTrigger.StatusValueTimestamp, // Report on any of Status, Value, or Timestamp
@@ -178,6 +181,7 @@ async function subscribeToMonitoredItems(opcuaSession: ClientSession): Promise<v
                 if (data && data.statusCode && data.statusCode === StatusCodes.Good) {
                     // good to monitor
                     validatedItems.push(item);
+                    console.log(`Node validated for monitoring: ${item.nodeId}`);
                 } else {
                     console.warn(`Skipping invalid/unsupported node for monitoring: ${item.nodeId} (status=${data?.statusCode?.toString()})`);
                 }
@@ -214,8 +218,8 @@ async function subscribeToMonitoredItems(opcuaSession: ClientSession): Promise<v
 
             // ensure reporting mode is set (forces notifications)
             try {
-                await monitoredGroup.setMonitoringMode(MonitoringMode.Reporting);
-                console.log(`Monitored group ${groupIndex} set to Reporting mode`);
+                await monitoredGroup.setMonitoringMode(MonitoringMode.Sampling);
+                console.log(`Monitored group ${groupIndex} set to Sampling mode`);
             } catch (setModeErr) {
                 console.warn(`Failed to set Reporting mode for group ${groupIndex}:`, setModeErr);
             }
@@ -253,10 +257,7 @@ async function handleMonitoredItemChange(monitoredItem: ClientMonitoredItemBase,
 // --- ADDED CODE TO KEEP ALIVE & RUN MAIN FUNCTION ---
 
 // Add a simple heartbeat logger to confirm the script is active
-setInterval(() => {
-    // console.log(`[HEARTBEAT] Script is alive at ${new Date().toISOString()}`);
-    process.stdout.write('.'); // Print a dot to keep terminal active without spamming lines
-}, 1000);
+
 
 
 async function main() {
@@ -267,6 +268,12 @@ async function main() {
     if (session) {
         // 3. NOW you can call the subscription function with the valid session object
         await subscribeToMonitoredItems(session);
+        setInterval(() => {
+            // print the status of the session every 5 seconds
+            console.log(`OPC UA Session active: ${session.lastResponseReceivedTime ? session.lastResponseReceivedTime.toString() : 'N/A'}`);
+            // show subscription count
+            console.log(`Current subscriptions: ${session.subscriptionCount}`);
+        }, 5000);
         // The script will now stay alive due to the open session/subscriptions
     } else {
         console.error("Main execution stopped because OPC UA session could not be established.");

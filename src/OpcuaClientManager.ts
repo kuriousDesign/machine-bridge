@@ -15,16 +15,19 @@ import {
 
 import "dotenv/config"; // auto-loads .env
 
-import { MachineTags, PlcNamespaces, initialMachine, nodeListString } from '@kuriousdesign/machine-sdk';
+import { BridgeCmds, DeviceRegistration, DeviceTags, MachineTags, MqttTopics, PlcNamespaces, TopicData, buildFullTopicPath, initialMachine, nodeListString } from '@kuriousdesign/machine-sdk';
+import MqttClientManager from './MqttClientManager';
 
 // --- Feature Flag & Configuration ---
 const ENABLE_DIAGNOSTICS = process.env.ENABLE_DIAGNOSTICS === 'true' || false;
 const opcuaControllerName = process.env.OPCUA_CONTROLLER_NAME || "DefaultController";
 const opcuaEndpoint = `opc.tcp://${process.env.OPCUA_SERVER_IP_ADDRESS}:${process.env.OPCUA_PORT}`;
 const nodeListPrefix = nodeListString + opcuaControllerName + '.Application.';
-const POLLING_RATE_MS = 200;
+const POLLING_RATE_MS = 300;
+const LOOP_DELAY_MS = 10; // Small delay to prevent tight loop
 const DIAG_READS_TO_SKIP_AT_START = 10;
 const RECONNECT_DELAY_MS = 3000; // Time to wait before attempting reconnection
+const CHUNK_SIZE = 100; // Number of nodes to read per chunk
 
 const opcuaOptions: OPCUAClientOptions = {
     applicationName: 'OpcuaMqttBridge',
@@ -71,12 +74,27 @@ function concatNodeId(namespace: string, tag: string): string {
 }
 
 class OpcuaClientManager {
+    private mqttClientManager: MqttClientManager;
     private state: OpcuaState = OpcuaState.Disconnected;
     private client: OPCUAClient | null = null;
     private session: ClientSession | null = null;
-    private itemsToRead: ReadItemInfo[] = getMachineReadItems();
+    private machinePollingItems: ReadItemInfo[] = getMachineReadItems();
+    private devicePollingItems: ReadItemInfo[] = [];
+    private allPollingItems: ReadItemInfo[] = this.machinePollingItems;
+    private allPollingValues: any[] = [];
     private shutdownRequested: boolean = false;
     private heartbeatPlcValue: number = 0;
+    private heartbeatHmiValue: number = 0;
+    private heartbeatHmiNodeId = concatNodeId(PlcNamespaces.Machine, MachineTags.HeartbeatHMI);
+    private heartbeatPlcNodeId = concatNodeId(PlcNamespaces.Machine, MachineTags.HeartbeatPLC);
+    private registeredDevices: DeviceRegistration[] = []
+    private deviceMap: Map<number, DeviceRegistration> = new Map();
+
+    // constructor 
+    constructor() {
+        this.mqttClientManager = new MqttClientManager();
+        this.mqttClientManager.manageConnectionLoop();
+    }
 
     public requestShutdown(): void {
         this.shutdownRequested = true;
@@ -87,11 +105,21 @@ class OpcuaClientManager {
         let prevHeartbeatPlcValue = -1;
         let lastUpdateTime = Date.now();
         while (!this.shutdownRequested) {
-            console.log(`\nSTATE: ${OpcuaState[this.state]}`);
+            if (this.state !== this.lastPublishedState) {
+                console.log(`\nSTATE: ${OpcuaState[this.state]}`);
+            }
+            this.publishBridgeConnectionStatus();
             switch (this.state) {
                 case OpcuaState.Disconnected:
                 case OpcuaState.Reconnecting:
                     await this.handleConnection();
+                    await this.updateRegisteredDevices();
+                    this.allPollingItems = this.machinePollingItems.concat(this.getDeviceReadItems());
+                    console.log("Total polling items after device update:", this.allPollingItems.length);
+                    // subscribe to device HMI action request topic
+                    Array.from(this.deviceMap.values()).map(async device =>
+                        await this.subscribeToMqttTopicDeviceHmiActionRequest(device)
+                    );
                     break;
 
                 case OpcuaState.Connected:
@@ -115,9 +143,10 @@ class OpcuaClientManager {
                     return; // Exit loop after graceful disconnect
             }
             // Small delay to prevent tight blocking loop if state transitions rapidly
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await new Promise(resolve => setTimeout(resolve, LOOP_DELAY_MS));
         }
         await this.handleDisconnect();
+        await this.mqttClientManager.requestShutdown();
     }
 
     private async handleConnection(): Promise<void> {
@@ -148,15 +177,113 @@ class OpcuaClientManager {
         }
     }
 
+    private getDeviceReadItems(): ReadItemInfo[] {
+        const readIteams: ReadItemInfo[] = [];
+        this.registeredDevices.forEach((device) => {
+            const deviceNodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceStore + '[' + device.id + ']';
+            const deviceTopic = buildFullTopicPath(device, this.deviceMap);
+
+
+            Object.values(DeviceTags).map((tag: string) => {
+                const nodeId = deviceNodeId + '.' + tag;
+                const topic = deviceTopic + '/' + tag.toLowerCase().replace('.', '/');
+
+                if (tag !== DeviceTags.Log) {
+                    //this.nodeIdToMqttTopicMap.set(nodeId, topic);
+                    readIteams.push({ nodeId: nodeId, mqttTopic: topic });
+                }
+
+            });
+
+            // device log
+            const deviceLogNodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceLogs + '[' + device.id + ']';
+            const deviceLogTopic = deviceTopic + '/log';
+            //this.nodeIdToMqttTopicMap.set(deviceLogNodeId, deviceLogTopic);
+            readIteams.push({ nodeId: deviceLogNodeId, mqttTopic: deviceLogTopic });
+
+            // device sts
+            const deviceStsNodeId = PlcNamespaces.Machine + '.' + device.mnemonic.toLowerCase() + 'Sts';
+            const deviceStsTopic = deviceTopic + '/sts';
+            if (!(device.mnemonic === 'SYS' || device.mnemonic === 'CON' || device.mnemonic === 'HMI')) {
+                //this.nodeIdToMqttTopicMap.set(deviceStsNodeId, deviceStsTopic);
+                readIteams.push({ nodeId: deviceStsNodeId, mqttTopic: deviceStsTopic });
+            }
+        });
+        this.devicePollingItems = readIteams;
+        return readIteams;
+    }
+
+    private async updateRegisteredDevices(): Promise<void> {
+
+        console.log("Retrieving registered devices from OPC UA...");
+        const registeredDevicesNodeId = concatNodeId(PlcNamespaces.Machine, MachineTags.registeredDevices);
+        const registeredDevices = await this.readOpcuaValue(registeredDevicesNodeId) as DeviceRegistration[];
+
+        this.registeredDevices = (registeredDevices || []).filter((device: DeviceRegistration) => device.id !== 0);
+        this.registeredDevices.forEach(deviceReg => {
+            const topicPath = buildFullTopicPath(deviceReg, this.deviceMap);
+            const devicePath = topicPath.split('/');
+            deviceReg.devicePath = devicePath;
+            this.deviceMap.set(deviceReg.id, deviceReg);
+            console.log("adding device to map:", deviceReg.id, "with parent id:", deviceReg.parentId);
+            // this.devicePollingItems.push({
+            //     nodeId: concatNodeId(PlcNamespaces.Machine, `Device${deviceReg.id}.Status`),
+            //     mqttTopic: `devices/device${deviceReg.id}/status`
+            // });
+        });
+        console.log("Retrieved registered devices, count:", this.registeredDevices.length);
+    }
+
+    private async subscribeToMqttTopicDeviceHmiActionRequest(device: DeviceRegistration): Promise<void> {
+        if (!this.session) {
+            throw new Error("OPC UA session is not initialized");
+        }
+        if (!this.mqttClientManager) {
+            throw new Error("MQTT client is not initialized");
+        }
+        if (!this.deviceMap || this.deviceMap.size === 0) {
+            throw new Error("Device map is not initialized or empty");
+        }
+
+        const deviceTopic = buildFullTopicPath(device, this.deviceMap);
+        const topic = deviceTopic + '/apiOpcua/hmiReq';
+        console.log('Subscribing to device action request topic:', topic);
+
+        await this.mqttClientManager.subscribe(topic, async (recvTopic: string, message: Buffer) => {
+            console.log(`Received message on topic ${recvTopic}: ${message.toString()}`);
+        });
+    }
+
+    private async publishTags(chunkIndex: number): Promise<void> {
+        const startingIndex = chunkIndex * CHUNK_SIZE;
+        const endingIndex = Math.min(startingIndex + CHUNK_SIZE, this.allPollingItems.length);
+        await Promise.all(this.allPollingItems.slice(startingIndex, endingIndex).map((item, index) => {
+            return this.mqttClientManager.publish(item.mqttTopic, this.allPollingValues[startingIndex + index]);
+        }));
+    }
+
     private async handlePolling(): Promise<void> {
-        this.state = OpcuaState.Polling;
 
         try {
             // Your polling logic from the previous script
-            await this.pollAllTags();
+            const timeStart = process.hrtime();
+            const numChunks = Math.ceil(this.allPollingItems.length / CHUNK_SIZE);
+            for (let chunkIndex = 0; chunkIndex < numChunks; chunkIndex++) {
+                await this.pollAllTags(chunkIndex);
+                await this.publishTags(chunkIndex);
+            }
+
+            await this.updateHeartbeat();
+            const timeEnd = process.hrtime(timeStart);
+            const durationMs = (timeEnd[0] * 1000) + (timeEnd[1] / 1e6);
+
             // Go back to connected state to loop again after POLLING_RATE_MS delay
-            this.state = OpcuaState.Polling;
-            await new Promise(resolve => setTimeout(resolve, POLLING_RATE_MS));
+            if (this.state === OpcuaState.WaitingForHeartbeat) {
+                this.state = OpcuaState.Reconnecting;
+            } else {
+                this.state = OpcuaState.Polling;
+            }
+            await new Promise(resolve => setTimeout(resolve, Math.max(0, POLLING_RATE_MS - durationMs - LOOP_DELAY_MS)));
 
         } catch (error) {
             // A read error likely means the session or connection is bad.
@@ -230,40 +357,105 @@ class OpcuaClientManager {
         }
     }
 
+    private lastPublishedState: OpcuaState | null = null;
+    private lastPublishTime: number = 0;
+
+    private async handleBridgeCommand(message: TopicData): Promise<void> {
+        const cmdData = message.payload as { cmd: BridgeCmds };
+        console.log('Received bridge command:', cmdData.cmd);
+
+        switch (cmdData.cmd) {
+            case BridgeCmds.CONNECT:
+                if (this.deviceMap.size > 0) {
+                    //console.log("Publishing deviceMap to bridge");
+                    this.mqttClientManager.publish(MqttTopics.DEVICE_MAP, Array.from(this.deviceMap.entries()));
+                } else {
+                    console.log("DeviceMap not yet available, cannot publish to bridge/deviceMap");
+                }
+                break;
+            case BridgeCmds.DISCONNECT:
+                break;
+            default:
+                console.warn('Unknown bridge command:', cmdData.cmd);
+        }
+    }
+
+
+    private async publishBridgeConnectionStatus(): Promise<void> {
+        const now = Date.now();
+        const stateChanged = this.state !== this.lastPublishedState;
+        const secondElapsed = now - this.lastPublishTime >= 3000;
+
+        if (!stateChanged && !secondElapsed) {
+            return;
+        }
+
+        let payload: string;
+        if (this.state === OpcuaState.Polling) {
+            payload = "Running";
+        } else {
+            payload = "Opcua Server Disconnected";
+        }
+
+        this.mqttClientManager.publish(MqttTopics.BRIDGE_STATUS, payload);
+
+        if (this.deviceMap.size > 0) {
+            //console.log("Publishing deviceMap to bridge");
+            this.mqttClientManager.publish(MqttTopics.DEVICE_MAP, Array.from(this.deviceMap.entries()));
+        } else {
+            console.log("DeviceMap not yet available, cannot publish to bridge/deviceMap");
+        }
+        this.lastPublishedState = this.state;
+        this.lastPublishTime = now;
+    }
+
+    private async updateHeartbeat(): Promise<void> {
+        this.heartbeatPlcValue = await this.readOpcuaValue(this.heartbeatPlcNodeId);
+        if (this.heartbeatPlcValue !== this.heartbeatHmiValue) {
+            //console.log(`Heartbeat PLC Value: ${this.heartbeatPlcValue}`);
+            this.heartbeatHmiValue = this.heartbeatPlcValue;
+            await this.writeOpcuaValue(this.heartbeatHmiNodeId, this.heartbeatPlcValue, DataType.Byte);
+        }
+    }
     /**
      * Reads all specified tags once, measuring performance if diagnostics are enabled.
      */
-    private async pollAllTags(): Promise<void> {
+    private async pollAllTags(chunkIndex: number): Promise<void> {
         if (!this.session) throw new Error("Session is not active during poll operation.");
-
+        let timeBetweenMs = 0;
         if (ENABLE_DIAGNOSTICS) {
             const now = process.hrtime();
             if (lastScanTime !== null) {
                 const timeBetweenHr = process.hrtime(lastScanTime);
-                const timeBetweenMs = (timeBetweenHr[0] * 1000) + (timeBetweenHr[1] / 1e6);
+                timeBetweenMs = (timeBetweenHr[0] * 1000) + (timeBetweenHr[1] / 1e6);
 
                 if (totalReads >= DIAG_READS_TO_SKIP_AT_START) {
                     if (timeBetweenMs > maxTimeBetweenScansMs) {
                         maxTimeBetweenScansMs = timeBetweenMs;
-                        // console.log(`\n⏱️ New Max Time Between Scans Recorded: ${maxTimeBetweenScansMs.toFixed(2)}ms`);
+                        console.log(`\n⏱️ New Max Time Between Scans Recorded: ${maxTimeBetweenScansMs.toFixed(2)}ms`);
                     }
                 }
             }
             lastScanTime = now;
         }
-
-        const nodesToRead: ReadValueIdOptions[] = this.itemsToRead.map(item => ({
-            nodeId: item.nodeId,
+        //const fullNodeId = `${nodeListPrefix}${relativeNodeId}`;
+        const nodesToRead: ReadValueIdOptions[] = this.allPollingItems.map(item => ({
+            nodeId: `${nodeListPrefix}${item.nodeId}`,
             attributeId: AttributeIds.Value,
         }));
 
         const startTimeRead = process.hrtime();
 
-        const dataValues: DataValue[] = await this.session.read(nodesToRead);
-        // get index to print the node that ends in heartbeatPlc
-        const heartbeatPlcIndex = this.itemsToRead.findIndex(item => item.nodeId.endsWith("heartbeatPlc"));
-        this.heartbeatPlcValue = decipherOpcuaValue(dataValues[heartbeatPlcIndex]);
-        console.log(`Heartbeat PLC Value: ${this.heartbeatPlcValue}`);
+        const maxIndex = nodesToRead.length;
+        const startingIndex = chunkIndex * CHUNK_SIZE;
+        const endingIndex = Math.min(startingIndex + CHUNK_SIZE, maxIndex);
+        const nodeChunk = nodesToRead.slice(startingIndex, endingIndex);
+
+        const dataValues: DataValue[] = await this.session.read(nodeChunk);
+        dataValues.map((dataValue, index) => {
+            this.allPollingValues[startingIndex + index] = decipherOpcuaValue(dataValue);
+        });
+
 
         const durationReadHr = process.hrtime(startTimeRead);
         const durationMs = (durationReadHr[0] * 1000) + (durationReadHr[1] / 1e6);
@@ -281,22 +473,9 @@ class OpcuaClientManager {
             totalReads++;
             if (totalReads > DIAG_READS_TO_SKIP_AT_START) {
                 const avgDurationMs = totalDurationMs / (totalReads - DIAG_READS_TO_SKIP_AT_START);
-                console.log(`--- Read Duration: ${durationMs.toFixed(2)}ms | Avg Read Duration: ${avgDurationMs.toFixed(2)}ms | Max Time Between Scans: ${maxTimeBetweenScansMs.toFixed(2)}ms ---`);
+                console.log(`--- Read Duration: ${durationMs.toFixed(2)}ms | Avg Read Duration: ${avgDurationMs.toFixed(2)}ms |Time Between Scans: ${timeBetweenMs.toFixed(2)}ms ---`);
             }
         }
-        const heartbeatHmiIndex = this.itemsToRead.findIndex(item => item.nodeId.endsWith("heartbeatHmi"));
-        const heartbeatHmiNodeId = concatNodeId(PlcNamespaces.Machine, MachineTags.HeartbeatHMI);
-    
-        this.writeOpcuaValue(heartbeatHmiNodeId, this.heartbeatPlcValue, DataType.Byte);
-  
-
-        // Process and display the results (MQTT logic goes here)
-        // Example:
-        // dataValues.forEach((dataValue, index) => {
-        //     if (dataValue.statusCode === StatusCodes.Good) {
-        //         // console.log(`${this.itemsToRead[index].mqttTopic}: ${dataValue.value.value}`);
-        //     }
-        // });
     }
 }
 
@@ -307,10 +486,10 @@ function getMachineReadItems(): ReadItemInfo[] {
     Object.entries(initialMachine).forEach(([key, value]) => {
         const tag = key;
         const relativeNodeId = PlcNamespaces.Machine + '.' + tag;
-        const fullNodeId = `${nodeListPrefix}${relativeNodeId}`;
+
         const topic = PlcNamespaces.Machine.toLowerCase() + '/' + tag.toLowerCase();
         itemsToRead.push({
-            nodeId: fullNodeId,
+            nodeId: relativeNodeId,
             mqttTopic: topic
         });
     });

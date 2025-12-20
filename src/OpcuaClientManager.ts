@@ -15,8 +15,9 @@ import {
 
 import "dotenv/config"; // auto-loads .env
 
-import { BridgeCmds, DeviceRegistration, DeviceTags, MachineTags, MqttTopics, PlcNamespaces, TopicData, buildFullTopicPath, initialMachine, nodeListString } from '@kuriousdesign/machine-sdk';
+import { BridgeCmds, DeviceActionRequestData, DeviceId, DeviceRegistration, DeviceTags, MachineTags, MqttTopics, PlcNamespaces, TopicData, buildFullTopicPath, initialMachine, nodeListString } from '@kuriousdesign/machine-sdk';
 import MqttClientManager from './MqttClientManager';
+import CodesysOpcuaDriver from './OpcuaMqtt/codesys-opcua-driver';
 
 // --- Feature Flag & Configuration ---
 const ENABLE_DIAGNOSTICS = process.env.ENABLE_DIAGNOSTICS === 'true' || false;
@@ -89,6 +90,7 @@ class OpcuaClientManager {
     private heartbeatPlcNodeId = concatNodeId(PlcNamespaces.Machine, MachineTags.HeartbeatPLC);
     private registeredDevices: DeviceRegistration[] = []
     private deviceMap: Map<number, DeviceRegistration> = new Map();
+    private codesysOpcuaDriver: CodesysOpcuaDriver | null = null;
 
     // constructor 
     constructor() {
@@ -106,13 +108,14 @@ class OpcuaClientManager {
         let lastUpdateTime = Date.now();
         while (!this.shutdownRequested) {
             if (this.state !== this.lastPublishedState) {
-                console.log(`\nSTATE: ${OpcuaState[this.state]}`);
+                console.log(`[OPCUA] STATE: ${OpcuaState[this.state]}`);
             }
             this.publishBridgeConnectionStatus();
             switch (this.state) {
                 case OpcuaState.Disconnected:
                 case OpcuaState.Reconnecting:
                     await this.handleConnection();
+                    
                     await this.updateRegisteredDevices();
                     this.allPollingItems = this.machinePollingItems.concat(this.getDeviceReadItems());
                     console.log("Total polling items after device update:", this.allPollingItems.length);
@@ -162,6 +165,7 @@ class OpcuaClientManager {
             await this.client.connect(opcuaEndpoint);
             this.session = await this.client.createSession();
             console.log("✅ Connection successful. Session created.");
+            this.codesysOpcuaDriver = new CodesysOpcuaDriver(DeviceId.HMI, this.session, opcuaControllerName);
             this.state = OpcuaState.Connected;
 
         } catch (err) {
@@ -192,6 +196,7 @@ class OpcuaClientManager {
                     //this.nodeIdToMqttTopicMap.set(nodeId, topic);
                     readIteams.push({ nodeId: nodeId, mqttTopic: topic });
                 }
+                console.log(`[OPCUA] Added device tag for polling, NodeId: ${nodeId}, Topic: ${topic}`);
 
             });
 
@@ -220,16 +225,13 @@ class OpcuaClientManager {
         const registeredDevices = await this.readOpcuaValue(registeredDevicesNodeId) as DeviceRegistration[];
 
         this.registeredDevices = (registeredDevices || []).filter((device: DeviceRegistration) => device.id !== 0);
+        console.log("[OPCUA] BUILDING DEVICE MAP");
         this.registeredDevices.forEach(deviceReg => {
             const topicPath = buildFullTopicPath(deviceReg, this.deviceMap);
             const devicePath = topicPath.split('/');
             deviceReg.devicePath = devicePath;
             this.deviceMap.set(deviceReg.id, deviceReg);
-            console.log("adding device to map:", deviceReg.id, "with parent id:", deviceReg.parentId);
-            // this.devicePollingItems.push({
-            //     nodeId: concatNodeId(PlcNamespaces.Machine, `Device${deviceReg.id}.Status`),
-            //     mqttTopic: `devices/device${deviceReg.id}/status`
-            // });
+            console.log("Adding", deviceReg.mnemonic, "to deviceMap, id:", deviceReg.id, "with path:", deviceReg.devicePath);
         });
         console.log("Retrieved registered devices, count:", this.registeredDevices.length);
     }
@@ -249,9 +251,28 @@ class OpcuaClientManager {
         const topic = deviceTopic + '/apiOpcua/hmiReq';
         console.log('Subscribing to device action request topic:', topic);
 
-        await this.mqttClientManager.subscribe(topic, async (recvTopic: string, message: Buffer) => {
-            console.log(`Received message on topic ${recvTopic}: ${message.toString()}`);
+        this.mqttClientManager.subscribe(topic, async (topic: string, message: Buffer) => {
+            this.handleHmiActionRequest(topic, JSON.parse(message.toString()) as DeviceActionRequestData);
         });
+    }
+
+    private async handleHmiActionRequest(topic: string, hmiActionReqData: DeviceActionRequestData): Promise<void> {
+        //const hmiActionReqData = JSON.parse(message.toString()) as DeviceActionRequestData;
+        const topicParts = topic.split('/');
+        const deviceIdStr = topicParts[topicParts.length - 3];
+        const deviceId = Number(deviceIdStr);
+        if (isNaN(deviceId)) {
+            console.error('Invalid deviceId extracted from topic:', topic);
+            return;
+        }
+        const device = this.deviceMap.get(deviceId);
+        if (!device) {
+            console.error('No device found for deviceId:', deviceId);
+            return;
+        }
+        console.log('Handling HMI Action Request for device:', device, 'with data:', hmiActionReqData);
+        this.codesysOpcuaDriver?.requestAction(device.id, hmiActionReqData.ActionType, hmiActionReqData.ActionId, hmiActionReqData.ParamArray);
+
     }
 
     private async publishTags(chunkIndex: number): Promise<void> {
@@ -444,6 +465,8 @@ class OpcuaClientManager {
             attributeId: AttributeIds.Value,
         }));
 
+        //console.log('nodeListPrefix:', nodeListPrefix);
+
         const startTimeRead = process.hrtime();
 
         const maxIndex = nodesToRead.length;
@@ -454,7 +477,13 @@ class OpcuaClientManager {
         const dataValues: DataValue[] = await this.session.read(nodeChunk);
         dataValues.map((dataValue, index) => {
             this.allPollingValues[startingIndex + index] = decipherOpcuaValue(dataValue);
+            // if (this.allPollingItems[startingIndex + index].nodeId.endsWith("Is")) {
+            //     console.log("is tag:", JSON.stringify(decipherOpcuaValue(dataValue)));
+            // }
         });
+
+
+        //console.log(this.allPollingValues[startingIndex + 3]);
 
 
         const durationReadHr = process.hrtime(startTimeRead);

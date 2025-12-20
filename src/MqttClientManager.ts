@@ -2,7 +2,7 @@
 
 import { TopicData } from '@kuriousdesign/machine-sdk';
 import * as mqtt from 'mqtt';
-import { MqttClient, connect, IClientOptions, MqttProtocol } from 'mqtt';
+import { MqttClient, connect, MqttProtocol } from 'mqtt';
 
 // --- Configuration ---
 
@@ -130,6 +130,7 @@ export default class MqttClientManager {
 
             try {
                 this.client.publish(topic, JSON.stringify(message));
+                //console.log(`[MQTT] Published to ${topic}: ${JSON.stringify(message)}`);
             } catch (err) {
                 console.error(`[MQTT] ❌ Error publishing to ${topic}: ${err instanceof Error ? err.message : String(err)}`);
                 // set state to reconnect on publish error

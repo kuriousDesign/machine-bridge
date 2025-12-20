@@ -13,30 +13,15 @@ import {
     WriteValueOptions,
 } from 'node-opcua';
 
-import "dotenv/config"; // auto-loads .env
+import Config from './config'; // <--- Use the central config
 
 import { BridgeCmds, DeviceActionRequestData, DeviceId, DeviceRegistration, DeviceTags, MachineTags, MqttTopics, PlcNamespaces, TopicData, buildFullTopicPath, initialMachine, nodeListString } from '@kuriousdesign/machine-sdk';
 import MqttClientManager from './MqttClientManager';
 import CodesysOpcuaDriver from './OpcuaMqtt/codesys-opcua-driver';
 
-// --- Feature Flag & Configuration ---
-const ENABLE_DIAGNOSTICS = process.env.ENABLE_DIAGNOSTICS === 'true' || false;
-const opcuaControllerName = process.env.OPCUA_CONTROLLER_NAME || "DefaultController";
-const opcuaEndpoint = `opc.tcp://${process.env.OPCUA_SERVER_IP_ADDRESS}:${process.env.OPCUA_PORT}`;
-const nodeListPrefix = nodeListString + opcuaControllerName + '.Application.';
-const POLLING_RATE_MS = 300;
-const LOOP_DELAY_MS = 10; // Small delay to prevent tight loop
-const DIAG_READS_TO_SKIP_AT_START = 10;
-const RECONNECT_DELAY_MS = 3000; // Time to wait before attempting reconnection
-const CHUNK_SIZE = 100; // Number of nodes to read per chunk
 
-const opcuaOptions: OPCUAClientOptions = {
-    applicationName: 'OpcuaMqttBridge',
-    securityMode: MessageSecurityMode.None,
-    securityPolicy: SecurityPolicy.None,
-    endpointMustExist: true,
-    keepSessionAlive: true, // Let node-opcua handle internal session heartbeat
-};
+
+
 
 interface ReadItemInfo {
     nodeId: string;
@@ -71,10 +56,10 @@ function decipherOpcuaValue(data: any): any {
 }
 
 function concatNodeId(namespace: string, tag: string): string {
-    return `${nodeListPrefix}${namespace}.${tag}`;
+    return `${Config.NODE_LIST_PREFIX}${namespace}.${tag}`;
 }
 
-class OpcuaClientManager {
+export default class OpcuaClientManager {
     private mqttClientManager: MqttClientManager;
     private state: OpcuaState = OpcuaState.Disconnected;
     private client: OPCUAClient | null = null;
@@ -91,9 +76,15 @@ class OpcuaClientManager {
     private registeredDevices: DeviceRegistration[] = []
     private deviceMap: Map<number, DeviceRegistration> = new Map();
     private codesysOpcuaDriver: CodesysOpcuaDriver | null = null;
+    //private nodeListPrefix = nodeListString + Config.OPCUA_CONTROLLER_NAME + '.Application.';
 
     // constructor 
     constructor() {
+        if (Config.ENABLE_DIAGNOSTICS) {
+            console.log(`Diagnostics ENABLED. Skipping stats for the first ${Config.DIAG_READS_TO_SKIP_AT_START} scans.`);
+        } else {
+            console.log(`Diagnostics DISABLED.`);
+        }
         this.mqttClientManager = new MqttClientManager();
         this.mqttClientManager.manageConnectionLoop();
     }
@@ -115,7 +106,7 @@ class OpcuaClientManager {
                 case OpcuaState.Disconnected:
                 case OpcuaState.Reconnecting:
                     await this.handleConnection();
-                    
+
                     await this.updateRegisteredDevices();
                     this.allPollingItems = this.machinePollingItems.concat(this.getDeviceReadItems());
                     console.log("Total polling items after device update:", this.allPollingItems.length);
@@ -146,7 +137,7 @@ class OpcuaClientManager {
                     return; // Exit loop after graceful disconnect
             }
             // Small delay to prevent tight blocking loop if state transitions rapidly
-            await new Promise(resolve => setTimeout(resolve, LOOP_DELAY_MS));
+            await new Promise(resolve => setTimeout(resolve, Config.LOOP_DELAY_MS));
         }
         await this.handleDisconnect();
         await this.mqttClientManager.requestShutdown();
@@ -154,30 +145,30 @@ class OpcuaClientManager {
 
     private async handleConnection(): Promise<void> {
         this.state = OpcuaState.Connecting;
-        console.log(`Connecting to endpoint: ${opcuaEndpoint}`);
+        console.log(`[OPCUA]Connecting to endpoint: ${Config.OPCUA_ENDPOINT}`);
 
         try {
-            this.client = OPCUAClient.create(opcuaOptions);
+            this.client = OPCUAClient.create(Config.OPCUA_OPTIONS);
             // Attach built-in handlers for automatic reconnection messages
-            this.client.on("connection_lost", () => console.warn("OPC UA connection lost (handled by internal mechanism)"));
-            this.client.on("after_reconnection", () => console.log("✅ OPC UA client reconnected internally"));
+            this.client.on("connection_lost", () => console.warn("[OPCUA] OPC UA connection lost (handled by internal mechanism)"));
+            this.client.on("after_reconnection", () => console.log("[OPCUA] ✅ OPC UA client reconnected internally"));
 
-            await this.client.connect(opcuaEndpoint);
+            await this.client.connect(Config.OPCUA_ENDPOINT);
             this.session = await this.client.createSession();
-            console.log("✅ Connection successful. Session created.");
-            this.codesysOpcuaDriver = new CodesysOpcuaDriver(DeviceId.HMI, this.session, opcuaControllerName);
+            console.log("[OPCUA] ✅ Connected to server and session created.");
+            this.codesysOpcuaDriver = new CodesysOpcuaDriver(DeviceId.HMI, this.session, Config.OPCUA_CONTROLLER_NAME);
             this.state = OpcuaState.Connected;
 
         } catch (err) {
-            console.error(`❌ Failed to connect/create session: ${err instanceof Error ? err.message : String(err)}`);
+            console.error(`[OPCUA] ❌ Failed to connect/create session: ${err instanceof Error ? err.message : String(err)}`);
             if (this.client) {
                 await this.client.disconnect();
             }
             this.client = null;
             this.session = null;
-            console.log(`Will retry in ${RECONNECT_DELAY_MS}ms...`);
+            console.log(`[OPCUA] Will retry in ${Config.RECONNECT_DELAY_MS}ms...`);
             this.state = OpcuaState.Reconnecting;
-            await new Promise(resolve => setTimeout(resolve, RECONNECT_DELAY_MS));
+            await new Promise(resolve => setTimeout(resolve, Config.RECONNECT_DELAY_MS));
         }
     }
 
@@ -276,8 +267,8 @@ class OpcuaClientManager {
     }
 
     private async publishTags(chunkIndex: number): Promise<void> {
-        const startingIndex = chunkIndex * CHUNK_SIZE;
-        const endingIndex = Math.min(startingIndex + CHUNK_SIZE, this.allPollingItems.length);
+        const startingIndex = chunkIndex * Config.CHUNK_SIZE;
+        const endingIndex = Math.min(startingIndex + Config.CHUNK_SIZE, this.allPollingItems.length);
         await Promise.all(this.allPollingItems.slice(startingIndex, endingIndex).map((item, index) => {
             return this.mqttClientManager.publish(item.mqttTopic, this.allPollingValues[startingIndex + index]);
         }));
@@ -288,7 +279,7 @@ class OpcuaClientManager {
         try {
             // Your polling logic from the previous script
             const timeStart = process.hrtime();
-            const numChunks = Math.ceil(this.allPollingItems.length / CHUNK_SIZE);
+            const numChunks = Math.ceil(this.allPollingItems.length / Config.CHUNK_SIZE);
             for (let chunkIndex = 0; chunkIndex < numChunks; chunkIndex++) {
                 await this.pollAllTags(chunkIndex);
                 await this.publishTags(chunkIndex);
@@ -304,7 +295,7 @@ class OpcuaClientManager {
             } else {
                 this.state = OpcuaState.Polling;
             }
-            await new Promise(resolve => setTimeout(resolve, Math.max(0, POLLING_RATE_MS - durationMs - LOOP_DELAY_MS)));
+            await new Promise(resolve => setTimeout(resolve, Math.max(0, Config.POLLING_RATE_MS - durationMs - Config.LOOP_DELAY_MS)));
 
         } catch (error) {
             // A read error likely means the session or connection is bad.
@@ -444,13 +435,13 @@ class OpcuaClientManager {
     private async pollAllTags(chunkIndex: number): Promise<void> {
         if (!this.session) throw new Error("Session is not active during poll operation.");
         let timeBetweenMs = 0;
-        if (ENABLE_DIAGNOSTICS) {
+        if (Config.ENABLE_DIAGNOSTICS) {
             const now = process.hrtime();
             if (lastScanTime !== null) {
                 const timeBetweenHr = process.hrtime(lastScanTime);
                 timeBetweenMs = (timeBetweenHr[0] * 1000) + (timeBetweenHr[1] / 1e6);
 
-                if (totalReads >= DIAG_READS_TO_SKIP_AT_START) {
+                if (totalReads >= Config.DIAG_READS_TO_SKIP_AT_START) {
                     if (timeBetweenMs > maxTimeBetweenScansMs) {
                         maxTimeBetweenScansMs = timeBetweenMs;
                         console.log(`\n⏱️ New Max Time Between Scans Recorded: ${maxTimeBetweenScansMs.toFixed(2)}ms`);
@@ -461,7 +452,7 @@ class OpcuaClientManager {
         }
         //const fullNodeId = `${nodeListPrefix}${relativeNodeId}`;
         const nodesToRead: ReadValueIdOptions[] = this.allPollingItems.map(item => ({
-            nodeId: `${nodeListPrefix}${item.nodeId}`,
+            nodeId: `${Config.NODE_LIST_PREFIX}${item.nodeId}`,
             attributeId: AttributeIds.Value,
         }));
 
@@ -470,8 +461,8 @@ class OpcuaClientManager {
         const startTimeRead = process.hrtime();
 
         const maxIndex = nodesToRead.length;
-        const startingIndex = chunkIndex * CHUNK_SIZE;
-        const endingIndex = Math.min(startingIndex + CHUNK_SIZE, maxIndex);
+        const startingIndex = chunkIndex * Config.CHUNK_SIZE;
+        const endingIndex = Math.min(startingIndex + Config.CHUNK_SIZE, maxIndex);
         const nodeChunk = nodesToRead.slice(startingIndex, endingIndex);
 
         const dataValues: DataValue[] = await this.session.read(nodeChunk);
@@ -489,8 +480,8 @@ class OpcuaClientManager {
         const durationReadHr = process.hrtime(startTimeRead);
         const durationMs = (durationReadHr[0] * 1000) + (durationReadHr[1] / 1e6);
 
-        if (ENABLE_DIAGNOSTICS) {
-            if (totalReads >= DIAG_READS_TO_SKIP_AT_START) {
+        if (Config.ENABLE_DIAGNOSTICS) {
+            if (totalReads >= Config.DIAG_READS_TO_SKIP_AT_START) {
                 totalDurationMs += durationMs;
                 minReadDurationMs = Math.min(minReadDurationMs, durationMs);
 
@@ -500,8 +491,8 @@ class OpcuaClientManager {
                 }
             }
             totalReads++;
-            if (totalReads > DIAG_READS_TO_SKIP_AT_START) {
-                const avgDurationMs = totalDurationMs / (totalReads - DIAG_READS_TO_SKIP_AT_START);
+            if (totalReads > Config.DIAG_READS_TO_SKIP_AT_START) {
+                const avgDurationMs = totalDurationMs / (totalReads - Config.DIAG_READS_TO_SKIP_AT_START);
                 console.log(`--- Read Duration: ${durationMs.toFixed(2)}ms | Avg Read Duration: ${avgDurationMs.toFixed(2)}ms |Time Between Scans: ${timeBetweenMs.toFixed(2)}ms ---`);
             }
         }
@@ -531,11 +522,7 @@ function getMachineReadItems(): ReadItemInfo[] {
  */
 async function main() {
     console.log("Application starting...");
-    if (ENABLE_DIAGNOSTICS) {
-        console.log(`Diagnostics ENABLED. Skipping stats for the first ${DIAG_READS_TO_SKIP_AT_START} scans.`);
-    } else {
-        console.log(`Diagnostics DISABLED.`);
-    }
+
 
     const manager = new OpcuaClientManager();
 
@@ -552,4 +539,4 @@ async function main() {
     // Script finishes here after disconnection is complete.
 }
 
-main().catch(console.error);
+//main().catch(console.error);

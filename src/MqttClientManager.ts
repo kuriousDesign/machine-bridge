@@ -1,12 +1,9 @@
 // MqttClientManager.ts
 
 import { TopicData } from '@kuriousdesign/machine-sdk';
-import * as mqtt from 'mqtt';
+import Config from './config';
 import { MqttClient, connect, MqttProtocol } from 'mqtt';
 
-// --- Configuration ---
-
-const RECONNECT_DELAY_MS = 3000;
 
 enum MqttState {
     Disconnected,
@@ -16,42 +13,18 @@ enum MqttState {
     Disconnecting,
 }
 
-  const mqttLocalUrl = process.env.MQTT_LOCAL_BROKER_URL || "ws://localhost:9002/mqtt"; //process.env.MQTT_BROKER_URL || "wss://9c4d3c046b704d16a1d64328cc4e4604.s1.eu.hivemq.cloud:8884/mqtt";
-  const mqttCloudUrl = process.env.MQTT_CLOUD_BROKER_URL || "wss://9c4d3c046b704d16a1d64328cc4e4604.s1.eu.hivemq.cloud:8884/mqtt";
 
-  const mqttOptionsHiveMQ = {
-    username: process.env.MQTT_BROKER_USERNAME || "admin",
-    password: process.env.MQTT_BROKER_PASSWORD || "Admin1234",
-    reconnectPeriod: 1000,
-    keepalive: 60,
-    protocol: "wss" as MqttProtocol,
-    //port: 8884,
-    rejectUnauthorized: true,
-    // ca: [Buffer.from('-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----', 'utf8')],
-  };
-
-  const mqttLocalOptions = {
-    username: process.env.MQTT_BROKER_USERNAME || "admin",
-    password: process.env.MQTT_BROKER_PASSWORD || "Admin1234",
-    reconnectPeriod: 1000,
-    keepalive: 60,
-    protocol: "ws" as MqttProtocol,
-    //port: 9002,
-    rejectUnauthorized: false,
-    // ca: [Buffer.from('-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----', 'utf8')],
-  };
-  let mqttUrl = mqttLocalUrl;
-  let mqttOptions = mqttLocalOptions;
-  if (process.env.MQTT_BROKER_TYPE === "cloud") {
-    mqttUrl = mqttCloudUrl;
-    mqttOptions = mqttOptionsHiveMQ;
-  }
+// Define the type for the handler function
+type MessageHandler = (topic: string, message: Buffer) => void;
 
 export default class MqttClientManager {
     private state: MqttState = MqttState.Disconnected;
     private client: MqttClient | null = null;
     private shutdownRequested: boolean = false;
     private previousState: MqttState = MqttState.Disconnected;
+    // Map to store all registered handlers centrally
+    private handlers = new Map<string, MessageHandler>(); 
+
 
     public requestShutdown(): void {
         this.shutdownRequested = true;
@@ -85,11 +58,15 @@ export default class MqttClientManager {
     private async handleConnection(): Promise<void> {
         this.state = MqttState.Connecting;
         try {
-            console.log(`[MQTT] Attempting to connect to MQTT broker at ${mqttUrl}...`);
-            this.client = connect(mqttUrl, mqttOptions);
+            console.log(`[MQTT] Attempting to connect to MQTT broker at ${Config.MQTT_URL}...`);
+            this.client = connect(Config.MQTT_URL, Config.MQTT_OPTIONS);
 
             await new Promise<void>((resolve, reject) => {
-                this.client!.on('connect', () => { this.state = MqttState.Connected; resolve(); });
+                this.client!.on('connect', () => { 
+                    this.state = MqttState.Connected; 
+                    this.setupSingleMessageHandler(); // Call the new setup function once
+                    resolve(); 
+                });
                 this.client!.once('error', (error) => { reject(error); });
             });
 
@@ -107,15 +84,38 @@ export default class MqttClientManager {
             if (this.client) this.client.end(true);
             this.client = null;
             this.state = MqttState.Reconnecting;
-            await new Promise(resolve => setTimeout(resolve, RECONNECT_DELAY_MS));
+            await new Promise(resolve => setTimeout(resolve, Config.RECONNECT_DELAY_MS));
         }
     }
 
     private async handleDisconnect(): Promise<void> {
         this.state = MqttState.Disconnecting;
         if (this.client) {
+            // Remove all handlers upon disconnect to prevent memory leaks if client instance changes
+            this.client.removeAllListeners('message'); 
             await new Promise<void>(resolve => { this.client!.end(true, () => { this.client = null; this.state = MqttState.Disconnected; resolve(); }); });
         }
+    }
+
+    /**
+     * Set up a SINGLE 'message' listener that routes all incoming messages internally.
+     */
+    private setupSingleMessageHandler(): void {
+        if (!this.client) return;
+        
+        // This attaches ONE listener to the client instance, resolving the MaxListeners issue.
+        this.client.on('message', (recvTopic, message) => {
+            // Use the stored handlers map to find the correct function for this topic
+            // Note: This simple lookup works best for exact topic matches, not wildcards efficiently.
+            const handler = this.handlers.get(recvTopic);
+            if (handler) {
+                handler(recvTopic, message);
+            } else {
+                // If you use wildcards (e.g., # or +), this logic needs to be more sophisticated 
+                // to match the incoming topic against registered wildcard topics.
+                // console.log(`[MQTT] Received message for unsubscribed topic or topic without handler: ${recvTopic}`);
+            }
+        });
     }
 
     /**
@@ -130,7 +130,7 @@ export default class MqttClientManager {
 
             try {
                 this.client.publish(topic, JSON.stringify(message));
-                //console.log(`[MQTT] Published to ${topic}: ${JSON.stringify(message)}`);
+                //console.log(`[MQTT] Published to ${topic}:`);
             } catch (err) {
                 console.error(`[MQTT] ❌ Error publishing to ${topic}: ${err instanceof Error ? err.message : String(err)}`);
                 // set state to reconnect on publish error
@@ -146,21 +146,22 @@ export default class MqttClientManager {
         }
     }
 
-    public async subscribe(topic: string, messageHandler: (topic: string, message: Buffer) => void): Promise<void> {
+    /**
+     * Register a new topic to subscribe to and store its associated handler function.
+     */
+    public async subscribe(topic: string, messageHandler: MessageHandler): Promise<void> {
         if (this.state === MqttState.Connected && this.client && this.client.connected) {
             this.client.subscribe(topic, { qos: 1 }, (err) => {
                 if (err) {
                     console.error(`[MQTT] ❌ Failed to subscribe to topic ${topic}: ${err.message}`);
                 } else {
-                    console.log(`[MQTT] Subscribed to topic: ${topic}`);
+                    //console.log(`[MQTT] Subscribed to topic: ${topic}`);
+                    // Store the handler in our local map
+                    this.handlers.set(topic, messageHandler); 
                 }
             });
-
-            this.client.on('message', (recvTopic, message) => {
-                if (recvTopic === topic) {
-                    messageHandler(recvTopic, message);
-                }
-            });
+            // CRITICAL CHANGE: Removed this.client.on('message', ...) from this function
+            // The single listener set up in handleConnection() handles the routing now.
         } else {
             console.warn(`[MQTT] Cannot subscribe to ${topic}, MQTT client not operational.`);
         }

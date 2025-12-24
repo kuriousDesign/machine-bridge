@@ -15,7 +15,7 @@ import {
 
 import Config from './config'; // <--- Use the central config
 
-import { BridgeCmds, DeviceActionRequestData, DeviceId, DeviceRegistration, DeviceTags, MachineTags, MqttTopics, PlcNamespaces, TopicData, buildFullTopicPath, initialMachine, nodeListString } from '@kuriousdesign/machine-sdk';
+import { BridgeCmds, DeviceActionRequestData, DeviceId, DeviceRegistration, DeviceTags, MachineTags, MqttTopics, PlcNamespaces, TopicData, buildFullTopicPath, initialMachine, nodeListString, Device } from '@kuriousdesign/machine-sdk';
 import MqttClientManager from './MqttClientManager';
 import CodesysOpcuaDriver from './OpcuaMqtt/codesys-opcua-driver';
 
@@ -108,7 +108,8 @@ export default class OpcuaClientManager {
                     await this.handleConnection();
 
                     await this.updateRegisteredDevices();
-                    this.allPollingItems = this.machinePollingItems.concat(this.getDeviceReadItems());
+                    this.devicePollingItems = this.getDeviceReadItems();
+                    this.allPollingItems = this.machinePollingItems.concat(this.devicePollingItems);
                     console.log("Total polling items after device update:", this.allPollingItems.length);
                     // subscribe to device HMI action request topic
                     Array.from(this.deviceMap.values()).map(async device =>
@@ -157,6 +158,7 @@ export default class OpcuaClientManager {
             this.session = await this.client.createSession();
             console.log("[OPCUA] ✅ Connected to server and session created.");
             this.codesysOpcuaDriver = new CodesysOpcuaDriver(DeviceId.HMI, this.session, Config.OPCUA_CONTROLLER_NAME);
+            
             this.state = OpcuaState.Connected;
 
         } catch (err) {
@@ -178,31 +180,45 @@ export default class OpcuaClientManager {
             const deviceNodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceStore + '[' + device.id + ']';
             const deviceTopic = buildFullTopicPath(device, this.deviceMap);
 
-
-            Object.values(DeviceTags).map((tag: string) => {
-                const nodeId = deviceNodeId + '.' + tag;
-                const topic = deviceTopic + '/' + tag.toLowerCase().replace('.', '/');
-
-                if (tag !== DeviceTags.Log) {
-                    //this.nodeIdToMqttTopicMap.set(nodeId, topic);
+            if (device.isExternalService) {
+                console.log(`[OPCUA] Skipping external service device for polling, Device ID: ${device.id}, Mnemonic: ${device.mnemonic}`);
+                let nodeId = deviceNodeId + '.' + DeviceTags.ApiOpcuaPlcReq;
+                let topic = deviceTopic + '/' + DeviceTags.ApiOpcuaPlcReq.toLowerCase().replace('.', '/');
+                let readItemInfo : ReadItemInfo = {
+                    nodeId: nodeId,
+                    mqttTopic: topic
+                };
+                readIteams.push(readItemInfo);
+                // registration
+                nodeId = deviceNodeId + '.' + DeviceTags.Registration;
+                topic = deviceTopic + '/' + DeviceTags.Registration.toLowerCase().replace('.', '/');
+                readItemInfo = {
+                    nodeId: nodeId,
+                    mqttTopic: topic
+                };
+                readIteams.push(readItemInfo);
+                return; // skip external service devices
+            } else {
+                Object.values(DeviceTags).map((tag: string) => {
+                    const nodeId = deviceNodeId + '.' + tag;
+                    const topic = deviceTopic + '/' + tag.toLowerCase().replace('.', '/');
                     readIteams.push({ nodeId: nodeId, mqttTopic: topic });
+                    console.log(`[OPCUA] Added device tag for polling, NodeId: ${nodeId}, Topic: ${topic}`);
+                });
+
+                // device log
+                const deviceLogNodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceLogs + '[' + device.id + ']';
+                const deviceLogTopic = deviceTopic + '/log';
+                //this.nodeIdToMqttTopicMap.set(deviceLogNodeId, deviceLogTopic);
+                readIteams.push({ nodeId: deviceLogNodeId, mqttTopic: deviceLogTopic });
+
+                // device sts
+                const deviceStsNodeId = PlcNamespaces.Machine + '.' + device.mnemonic.toLowerCase() + 'Sts';
+                const deviceStsTopic = deviceTopic + '/sts';
+                if (!(device.mnemonic === 'SYS' || device.mnemonic === 'CON' || device.mnemonic === 'HMI')) {
+                    //this.nodeIdToMqttTopicMap.set(deviceStsNodeId, deviceStsTopic);
+                    readIteams.push({ nodeId: deviceStsNodeId, mqttTopic: deviceStsTopic });
                 }
-                console.log(`[OPCUA] Added device tag for polling, NodeId: ${nodeId}, Topic: ${topic}`);
-
-            });
-
-            // device log
-            const deviceLogNodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceLogs + '[' + device.id + ']';
-            const deviceLogTopic = deviceTopic + '/log';
-            //this.nodeIdToMqttTopicMap.set(deviceLogNodeId, deviceLogTopic);
-            readIteams.push({ nodeId: deviceLogNodeId, mqttTopic: deviceLogTopic });
-
-            // device sts
-            const deviceStsNodeId = PlcNamespaces.Machine + '.' + device.mnemonic.toLowerCase() + 'Sts';
-            const deviceStsTopic = deviceTopic + '/sts';
-            if (!(device.mnemonic === 'SYS' || device.mnemonic === 'CON' || device.mnemonic === 'HMI')) {
-                //this.nodeIdToMqttTopicMap.set(deviceStsNodeId, deviceStsTopic);
-                readIteams.push({ nodeId: deviceStsNodeId, mqttTopic: deviceStsTopic });
             }
         });
         this.devicePollingItems = readIteams;
@@ -238,8 +254,8 @@ export default class OpcuaClientManager {
             throw new Error("Device map is not initialized or empty");
         }
 
-        const deviceTopic = buildFullTopicPath(device, this.deviceMap);
-        const topic = deviceTopic + '/apiOpcua/hmiReq';
+        //const deviceTopic = buildFullTopicPath(device, this.deviceMap);
+        const topic = MqttTopics.HMI_ACTION_REQ + '/' + device.id.toString();
         console.log('Subscribing to device action request topic:', topic);
 
         this.mqttClientManager.subscribe(topic, async (topic: string, message: Buffer) => {
@@ -250,7 +266,7 @@ export default class OpcuaClientManager {
     private async handleHmiActionRequest(topic: string, hmiActionReqData: DeviceActionRequestData): Promise<void> {
         //const hmiActionReqData = JSON.parse(message.toString()) as DeviceActionRequestData;
         const topicParts = topic.split('/');
-        const deviceIdStr = topicParts[topicParts.length - 3];
+        const deviceIdStr = topicParts[topicParts.length - 1];
         const deviceId = Number(deviceIdStr);
         if (isNaN(deviceId)) {
             console.error('Invalid deviceId extracted from topic:', topic);
@@ -427,6 +443,9 @@ export default class OpcuaClientManager {
             //console.log(`Heartbeat PLC Value: ${this.heartbeatPlcValue}`);
             this.heartbeatHmiValue = this.heartbeatPlcValue;
             await this.writeOpcuaValue(this.heartbeatHmiNodeId, this.heartbeatPlcValue, DataType.Byte);
+            if (this.codesysOpcuaDriver){
+                await this.codesysOpcuaDriver.writeCurrentTimeToCodesys();
+            }
         }
     }
     /**

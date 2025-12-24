@@ -1,5 +1,6 @@
 import { ClientSession, Variant, AttributeIds, DataType, VariantArrayType, ReadValueIdOptions, StatusCodes, DataValue } from "node-opcua";
 import { ActionTypes, initialApiOpcuaReqData, DeviceCmds, States, ApiOpcuaReqData, DeviceActionRequestData, ApiReqRespStates, AxisProcesses, DeviceConstants, PlcNamespaces, MachineTags, apiReqRespStateToString, Device } from "@kuriousdesign/machine-sdk";
+import { read } from "fs";
 
 // Debug: Log the imported ApiReqRespStates to verify its structure
 console.log('ApiReqRespStates:', ApiReqRespStates);
@@ -289,10 +290,10 @@ export default class CodesysOpcuaDriver {
                 : readValue === value;
 
             if (!valuesMatch) {
-                console.error(`Verification failed for node ${tag}: expected ${value}, got ${readValue}. Type of written value: ${typeof value}, Type of read value: ${typeof readValue}`);
+                console.error(`Verification failed for tag ${tag}: expected ${value}, got ${readValue}. Type of written value: ${typeof value}, Type of read value: ${typeof readValue}`);
                 return {
                     success: false,
-                    message: `Failed to verify write to node ${tag}: expected ${value}, got ${readValue}`
+                    message: `Failed to verify write to tag ${tag}: expected ${value}, got ${readValue}`
                 };
             }
 
@@ -637,5 +638,49 @@ export default class CodesysOpcuaDriver {
 
     clearLogMsg(): void {
         this.logMsg = "";
+    }
+
+    private timeSyncWasPerformed: boolean = false;
+
+    async writeCurrentTimeToCodesys(): Promise<void> {
+        // 1. Get the current time in milliseconds since the Unix epoch (Jan 1, 1970 UTC).
+        // JavaScript Date.now() provides time in milliseconds UTC by default.
+
+        const plcTimeMsTag = "machine.utilities.currentTimeMs";
+        const reqTag = "machine.syncClockReq";
+        const timeTag = "machine.syncClockTime";
+        const respTag = "machine.syncClockDone";
+        let millisecondsSinceEpoch = Date.now();
+        let secondsSinceEpoch = Math.floor(millisecondsSinceEpoch / 1000);
+
+        const currentPlcTimeSec = await this.readTag(plcTimeMsTag, DataType.UInt64) / 1000;
+        if (Math.abs(currentPlcTimeSec - secondsSinceEpoch) > 5 || !this.timeSyncWasPerformed) {
+            await this.writeTag(reqTag, false, DataType.Boolean);
+            // 2. Convert milliseconds to seconds and ensure it's an integer value, as required by the DWORD type.
+            millisecondsSinceEpoch = Date.now();
+            secondsSinceEpoch = Math.floor(millisecondsSinceEpoch / 1000);
+            await this.writeTag(timeTag, secondsSinceEpoch, DataType.UInt32);
+            console.log("[DRIVER] Writing current time to PLC:", secondsSinceEpoch, " discrepancy is ", Math.abs(currentPlcTimeSec - secondsSinceEpoch), " seconds");
+
+            await this.writeTag(reqTag, true, DataType.Boolean);
+
+            let respReceived = false;
+            const timeoutTime = Date.now() + 5000; // 5 second timeout
+            while (!respReceived) {
+                const resp = await this.readTag(respTag, DataType.Boolean);
+                if (resp) {
+                    respReceived = true;
+                    await this.writeTag(reqTag, false, DataType.Boolean);
+                    this.timeSyncWasPerformed = true;
+                    console.log("[DRIVER] PLC time sync completed");
+                } else {
+                    if (Date.now() > timeoutTime) {
+                        console.error("[DRIVER] Timed out waiting for PLC time sync response");
+                        break;
+                    }
+                    await this.sleep(5);
+                }
+            }
+        }
     }
 }

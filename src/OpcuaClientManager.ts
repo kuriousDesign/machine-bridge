@@ -158,7 +158,7 @@ export default class OpcuaClientManager {
             this.session = await this.client.createSession();
             console.log("[OPCUA] ✅ Connected to server and session created.");
             this.codesysOpcuaDriver = new CodesysOpcuaDriver(DeviceId.HMI, this.session, Config.OPCUA_CONTROLLER_NAME);
-            
+
             this.state = OpcuaState.Connected;
 
         } catch (err) {
@@ -180,11 +180,11 @@ export default class OpcuaClientManager {
             const deviceNodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceStore + '[' + device.id + ']';
             const deviceTopic = buildFullTopicPath(device, this.deviceMap);
 
-            if (device.isExternalService) {
+            if (false && device.isExternalService) {
                 console.log(`[OPCUA] Skipping external service device for polling, Device ID: ${device.id}, Mnemonic: ${device.mnemonic}`);
                 let nodeId = deviceNodeId + '.' + DeviceTags.ApiOpcuaPlcReq;
                 let topic = deviceTopic + '/' + DeviceTags.ApiOpcuaPlcReq.toLowerCase().replace('.', '/');
-                let readItemInfo : ReadItemInfo = {
+                let readItemInfo: ReadItemInfo = {
                     nodeId: nodeId,
                     mqttTopic: topic
                 };
@@ -255,13 +255,47 @@ export default class OpcuaClientManager {
         }
 
         //const deviceTopic = buildFullTopicPath(device, this.deviceMap);
-        const topic = MqttTopics.HMI_ACTION_REQ + '/' + device.id.toString();
-        console.log('Subscribing to device action request topic:', topic);
 
-        this.mqttClientManager.subscribe(topic, async (topic: string, message: Buffer) => {
-            this.handleHmiActionRequest(topic, JSON.parse(message.toString()) as DeviceActionRequestData);
-        });
+
+
+        if (device.isExternalService) {
+            const topic = device.mnemonic.toLowerCase() + '/';
+            const deviceTags = DeviceTags;
+            Object.values(deviceTags).map((tag: string) => {
+                const fullTopic = topic + tag.toLowerCase();
+                console.log('External Device, Subscribing to', fullTopic, "and relaying to plc");
+           
+                this.mqttClientManager.subscribe(topic, async (topic: string, message: Buffer) => {
+                    const parsedMessage = JSON.parse(message.toString());
+                    this.handleExternalServiceDeviceTagRelayToPlc(device, topic, parsedMessage as TopicData);
+                });
+            });
+        }
+        else {
+            const topic = MqttTopics.HMI_ACTION_REQ + '/' + device.id.toString();
+            console.log('Subscribing to device action request topic:', topic);
+            this.mqttClientManager.subscribe(topic, async (topic: string, message: Buffer) => {
+                this.handleHmiActionRequest(topic, JSON.parse(message.toString()) as DeviceActionRequestData);
+            });
+        }
     }
+
+    private async handleExternalServiceDeviceTagRelayToPlc(device: DeviceRegistration, topic: string, message: TopicData): Promise<void> {
+        const tagData = message.payload;
+        const topicParts = topic.split('/');
+        const tagName = topicParts[topicParts.length - 1];
+        console.log(`Relaying tag ${tagName} with data ${tagData} to PLC for external service device ${device.mnemonic}`);
+        let nodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceStore + '[' + device.id + '].' + tagName;
+        try {
+            // Attempt to parse as JSON first
+            //const parsedData = JSON.parse(tagData);
+            //await this.codesysOpcuaDriver?.writeNestedObject(tagData, parsedData)
+        } catch (e) {
+            // Fallback to string write if JSON parsing fails
+            //await this.writeOpcuaValue(nodeId, tagData, DataType.String);
+        }
+    }
+
 
     private async handleHmiActionRequest(topic: string, hmiActionReqData: DeviceActionRequestData): Promise<void> {
         //const hmiActionReqData = JSON.parse(message.toString()) as DeviceActionRequestData;
@@ -443,7 +477,7 @@ export default class OpcuaClientManager {
             //console.log(`Heartbeat PLC Value: ${this.heartbeatPlcValue}`);
             this.heartbeatHmiValue = this.heartbeatPlcValue;
             await this.writeOpcuaValue(this.heartbeatHmiNodeId, this.heartbeatPlcValue, DataType.Byte);
-            if (this.codesysOpcuaDriver){
+            if (this.codesysOpcuaDriver) {
                 await this.codesysOpcuaDriver.writeCurrentTimeToCodesys();
             }
         }

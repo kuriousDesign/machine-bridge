@@ -3,7 +3,7 @@ import OpcuaClientManager from './OpcuaPollingManager';
 
 
 async function main() {
-    console.log('🚀 Starting OPC UA ↔ MQTT Bridge');
+    console.log('🚀 Starting Opcua Polling Manager');
 
 
     const manager = new OpcuaClientManager();

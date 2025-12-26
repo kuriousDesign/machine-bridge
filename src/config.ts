@@ -7,7 +7,7 @@ import { MessageSecurityMode, SecurityPolicy } from 'node-opcua';
 
 // Centralized configuration object
 export const Config: any = {
-    ENABLE_DIAGNOSTICS: process.env.ENABLE_DIAGNOSTICS === 'true' || false,
+    ENABLE_DIAGNOSTICS: process.env.ENABLE_DIAGNOSTICS === 'true' || true,
     OPCUA_CONTROLLER_NAME: process.env.OPCUA_CONTROLLER_NAME || "DefaultController",
     OPCUA_SERVER_IP_ADDRESS: process.env.OPCUA_SERVER_IP_ADDRESS,
     OPCUA_PORT: process.env.OPCUA_PORT,
@@ -22,11 +22,11 @@ export const Config: any = {
 Config.OPCUA_ENDPOINT = `opc.tcp://${Config.OPCUA_SERVER_IP_ADDRESS}:${Config.OPCUA_PORT}`;
 Config.NODE_LIST_PREFIX = nodeListString + Config.OPCUA_CONTROLLER_NAME + '.Application.';
 
-Config.POLLING_RATE_MS = 300;
+Config.POLLING_RATE_MS = 150;
 Config.LOOP_DELAY_MS = 10; // Small delay to prevent tight loop
 Config.DIAG_READS_TO_SKIP_AT_START = 10;
 Config.RECONNECT_DELAY_MS = 3000; // Time to wait before attempting reconnection
-Config.CHUNK_SIZE = 100; // Number of nodes to read per chunk
+Config.CHUNK_SIZE = 50; // Number of nodes to read per chunk
 
 Config.OPCUA_OPTIONS = {
     applicationName: 'OpcuaMqttBridge',

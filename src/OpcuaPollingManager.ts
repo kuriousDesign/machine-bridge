@@ -9,6 +9,7 @@ import {
     ReadValueIdOptions,
     SecurityPolicy,
     StatusCodes,
+    TimestampsToReturn,
     VariantArrayType,
     WriteValueOptions,
 } from 'node-opcua';
@@ -18,9 +19,6 @@ import Config from './config'; // <--- Use the central config
 import { BridgeCmds, DeviceActionRequestData, DeviceId, DeviceRegistration, DeviceTags, MachineTags, MqttTopics, PlcNamespaces, TopicData, buildFullTopicPath, initialMachine, nodeListString, Device } from '@kuriousdesign/machine-sdk';
 import MqttClientManager from './MqttClientManager';
 import CodesysOpcuaDriver from './OpcuaMqtt/codesys-opcua-driver';
-
-
-
 
 
 interface ReadItemInfo {
@@ -113,9 +111,9 @@ export default class OpcuaClientManager {
                     this.allPollingItems = this.machinePollingItems.concat(this.devicePollingItems);
                     console.log("Total polling items after device update:", this.allPollingItems.length);
                     // subscribe to device HMI action request topic
-                    Array.from(this.deviceMap.values()).map(async device =>
-                        await this.subscribeToMqttTopicDeviceHmiActionRequest(device)
-                    );
+                    // Array.from(this.deviceMap.values()).map(async device =>
+                    //     //await this.subscribeToMqttTopicDeviceHmiActionRequest(device)
+                    // );
                     break;
 
                 case OpcuaState.Connected:
@@ -250,7 +248,7 @@ export default class OpcuaClientManager {
 
         // Handle External Service Device Updates
         this.mqttClientManager.subscribe(topic, async (topic: string, message: Buffer) => {
-            this.handleExternalServiceDeviceTagRelayToPlc(topic, JSON.parse(message.toString()) as TopicData)
+                this.handleExternalServiceDeviceTagRelayToPlc(topic, JSON.parse(message.toString()) as TopicData)
         });
     }
 
@@ -298,7 +296,7 @@ export default class OpcuaClientManager {
         let deviceStoreTag = PlcNamespaces.Machine + '.' + MachineTags.deviceStore + '[' + deviceId + ']';
         let deviceStsTag = PlcNamespaces.Machine + '.' + deviceReg.mnemonic.toLowerCase() + 'Sts';
         const deviceErrorsTag = deviceStoreTag + '.errors';
-
+        
         //remove the sts property from completeDeviceData
         const deviceDataStrippedOfSts = { ...completeDeviceData };
         delete deviceDataStrippedOfSts.sts;
@@ -347,21 +345,20 @@ export default class OpcuaClientManager {
 
     private async handlePolling(): Promise<void> {
         if (!this.session) throw new Error("Session is not active during poll operation.");
-
+     
         const readTimeStartMs = Date.now();
 
         try {
             // Your polling logic from the previous script
-
+            
             const numChunks = Math.ceil(this.allPollingItems.length / Config.CHUNK_SIZE);
-
             await Promise.all([
-                ...Array.from({ length: 1 }, (_, chunkIndex) =>
+                ...Array.from({ length: 1 }, (_, chunkIndex) => 
                     this.readAndPublishChunkValues(chunkIndex)
                 ),
                 this.updateHeartbeat()
             ]);
-
+   
 
             // Go back to connected state to loop again after POLLING_RATE_MS delay
             if (this.state === OpcuaState.WaitingForHeartbeat) {
@@ -372,12 +369,12 @@ export default class OpcuaClientManager {
             const readTimeEndMs = Date.now();
             const readDurationMs = readTimeEndMs - readTimeStartMs;
             const pollScanTimeMs = readTimeStartMs - this.lastPollTimeMs;
-            if (pollScanTimeMs > Config.POLLING_RATE_MS * 1.10 && this.lastPollTimeMs !== 0) {
+            if (pollScanTimeMs > Config.POLLING_RATE_MS*1.10 && this.lastPollTimeMs !== 0) {
                 console.warn(`⚠️ Polling delay detected! Time since last poll: ${readTimeStartMs - this.lastPollTimeMs} ms`);
             }
             this.lastPollTimeMs = readTimeStartMs;
             const timeToWaitms = Math.max(0, Config.POLLING_RATE_MS - readDurationMs - Config.LOOP_DELAY_MS);
-            await new Promise(resolve => setTimeout(resolve, timeToWaitms));
+            //await new Promise(resolve => setTimeout(resolve, timeToWaitms));
 
         } catch (error) {
             // A read error likely means the session or connection is bad.
@@ -518,12 +515,13 @@ export default class OpcuaClientManager {
      * Reads all specified tags once, measuring performance if diagnostics are enabled.
      */
     private async pollChunkOfAllTags(chunkIndex: number): Promise<void> {
-        if (!this.session) throw new Error("Session is not active during poll operation.");
-
+        if(!this.session) throw new Error("Session is not active during poll operation.");
+   
         //const fullNodeId = `${nodeListPrefix}${relativeNodeId}`;
         const nodesToRead: ReadValueIdOptions[] = this.allPollingItems.map(item => ({
             nodeId: `${Config.NODE_LIST_PREFIX}${item.nodeId}`,
             attributeId: AttributeIds.Value,
+            timespampsToReturn: TimestampsToReturn.Neither
         }));
 
         //console.log('nodeListPrefix:', nodeListPrefix);
@@ -584,6 +582,7 @@ async function main() {
     });
 
     await manager.manageConnectionLoop();
+    console.log("Application shutdown complete.");
     // Script finishes here after disconnection is complete.
 }
 

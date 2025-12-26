@@ -650,19 +650,26 @@ export default class CodesysOpcuaDriver {
         const reqTag = "machine.syncClockReq";
         const timeTag = "machine.syncClockTime";
         const respTag = "machine.syncClockDone";
+        const currentTimeMs = Date.now();
         const currentPlcTimeMs = await this.readTag(plcTimeMsTag, DataType.UInt64);
-        let millisecondsSinceEpoch = Date.now();
+        
    
-        if (Math.abs(millisecondsSinceEpoch - currentPlcTimeMs) > 5 || !this.timeSyncWasPerformed) {
+        if (Math.abs(currentTimeMs - currentPlcTimeMs) > 7 || !this.timeSyncWasPerformed) {
+
+
             await this.writeTag(reqTag, false, DataType.Boolean);
             // 2. Convert milliseconds to seconds and ensure it's an integer value, as required by the DWORD type.
-            millisecondsSinceEpoch = Date.now();
-            const latencyOffsetMs: number = 30; // Estimated latency offset in milliseconds
+            const millisecondsSinceEpoch = Date.now();
+            const latencyOffsetMs: number = 10; // Estimated latency offset in milliseconds
+            const setTimeMs = millisecondsSinceEpoch + latencyOffsetMs;
             //secondsSinceEpoch = Math.floor(millisecondsSinceEpoch / 1000);
-            await this.writeTag(timeTag, millisecondsSinceEpoch + latencyOffsetMs, DataType.UInt64);
-            console.log("[DRIVER] Writing current time to PLC:", millisecondsSinceEpoch, " discrepancy is ", millisecondsSinceEpoch - currentPlcTimeMs, "ms");
-
+            await this.writeTag(timeTag, setTimeMs, DataType.UInt64);
             await this.writeTag(reqTag, true, DataType.Boolean);
+            if (!this.timeSyncWasPerformed) {
+                console.log("[DRIVER] Performing initial PLC time sync");
+            } else {
+                console.log("[DRIVER] Writing current time to PLC:", setTimeMs, " discrepancy is ", currentTimeMs - currentPlcTimeMs, "ms");
+            }
 
             let respReceived = false;
             const timeoutTime = Date.now() + 5000; // 5 second timeout

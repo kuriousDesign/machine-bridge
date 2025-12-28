@@ -88,10 +88,15 @@ export default class MqttClientManager {
         }
     }
 
+    public clearAllHandlers(): void {
+        this.handlers.clear();
+    }
+
     private async handleDisconnect(): Promise<void> {
         this.state = MqttState.Disconnecting;
         if (this.client) {
             // Remove all handlers upon disconnect to prevent memory leaks if client instance changes
+            this.clearAllHandlers();
             this.client.removeAllListeners('message'); 
             await new Promise<void>(resolve => { this.client!.end(true, () => { this.client = null; this.state = MqttState.Disconnected; resolve(); }); });
         }

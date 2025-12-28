@@ -180,6 +180,13 @@ export default class OpcuaClientManager {
         this.registeredDevices.forEach((device) => {
             const deviceNodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceStore + '[' + device.id + ']';
             const deviceTopic = buildFullTopicPath(device, this.deviceMap);
+            let readItemInfo: ReadItemInfo = {
+                nodeId: deviceNodeId,
+                mqttTopic: deviceTopic
+            };
+            //this.nodeIdToMqttTopicMap.set(deviceNodeId, deviceTopic);
+            readIteams.push(readItemInfo);
+            console.log(`[OPCUA] Added device for polling, NodeId: ${deviceNodeId}, Topic: ${deviceTopic}`);
 
             if (false && device.isExternalService) {
                 console.log(`[OPCUA] Adding external service device IExtService interface for polling, Device ID: ${device.id}, Mnemonic: ${device.mnemonic}`);
@@ -200,27 +207,28 @@ export default class OpcuaClientManager {
                 readIteams.push(readItemInfo);
                 
             } 
-            Object.values(DeviceTags).map((tag: string) => {
-                const nodeId = deviceNodeId + '.' + tag;
-                const topic = deviceTopic + '/' + tag.toLowerCase().replace('.', '/');
-                const readItemInfo: ReadItemInfo = {
-                    nodeId: nodeId,
-                    mqttTopic: topic,
-                    update_period: 3
-                };
-                // if tag is sts or is or task, set update period to 1
+            // Object.values(DeviceTags).map((tag: string) => {
+            //     const nodeId = deviceNodeId + '.' + tag;
+            //     const topic = deviceTopic + '/' + tag.toLowerCase().replace('.', '/');
+            //     const readItemInfo: ReadItemInfo = {
+            //         nodeId: nodeId,
+            //         mqttTopic: topic,
+            //         update_period: 3
+            //     };
+            //     // if tag is sts or is or task, set update period to 1
              
-                if ([DeviceTags.Is, DeviceTags.Task].includes(tag)) {
-                    readItemInfo.update_period = 1;
-                }
-                readIteams.push(readItemInfo);
-                console.log(`[OPCUA] Added device tag for polling, NodeId: ${nodeId}, Topic: ${topic}, Rate: ${readItemInfo.update_period}`);
-            });
+            //     if ([DeviceTags.Is, DeviceTags.Task].includes(tag)) {
+            //         readItemInfo.update_period = 1;
+            //     }
+            //     readIteams.push(readItemInfo);
+            //     console.log(`[OPCUA] Added device tag for polling, NodeId: ${nodeId}, Topic: ${topic}, Rate: ${readItemInfo.update_period}`);
+            // });
+
 
             // device log
             const deviceLogNodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceLogs + '[' + device.id + ']';
             const deviceLogTopic = deviceTopic + '/log';
-            const readItemInfo: ReadItemInfo = {
+            readItemInfo = {
                 nodeId: deviceLogNodeId,
                 mqttTopic: deviceLogTopic,
                 update_period: 5

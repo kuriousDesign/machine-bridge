@@ -1,9 +1,10 @@
 import { ClientSession, Variant, AttributeIds, DataType, VariantArrayType, ReadValueIdOptions, StatusCodes, DataValue } from "node-opcua";
-import { ActionTypes, initialApiOpcuaReqData, DeviceCmds, States, ApiOpcuaReqData, DeviceActionRequestData, ApiReqRespStates, AxisProcesses, DeviceConstants, PlcNamespaces, MachineTags, apiReqRespStateToString, Device } from "@kuriousdesign/machine-sdk";
+import { ActionTypes, initialApiOpcuaReqData, DeviceCmds, States, ApiOpcuaReqData, DeviceActionRequestData, ApiReqRespStates, AxisProcesses, DeviceConstants, PlcNamespaces, MachineTags, apiReqRespStateToString, Device, initialDevice, initialDeviceActionRequestData } from "@kuriousdesign/machine-sdk";
 import { read } from "fs";
+import { writeExtensionObject } from "./opcua-helpers";
 
 // Debug: Log the imported ApiReqRespStates to verify its structure
-console.log('ApiReqRespStates:', ApiReqRespStates);
+//console.log('ApiReqRespStates:', ApiReqRespStates);
 
 
 export default class CodesysOpcuaDriver {
@@ -74,7 +75,30 @@ export default class CodesysOpcuaDriver {
         }
     }
 
-    async readTagDataType(tag: string): Promise<DataType | null> {
+    public async writeTagV2(tag: string, value: any, dataType?: DataType): Promise<void> {
+        if (!this.session) {
+            throw new Error("OPC UA session is not initialized");
+        }
+        let dType: DataType | null = null;
+        if (dataType === undefined) {
+            dType = await this.readTagDataType(tag);
+            console.log(`Determined data type for tag ${tag}: ${dType}`);
+        } else {
+            dType = dataType;
+        }
+        if (dType === null) {
+            throw new Error(`Cannot determine data type for tag ${tag}`);
+        } else if (true || dType === DataType.ExtensionObject) {
+            console.log('writing extension object tag');
+            writeExtensionObject(this.session, this.addNodePrefix(tag), value);
+        } else {
+            console.log('writing simple tag');
+            //this.writeTag(tag, value, dType);
+        }
+    }
+
+
+    public async readTagDataType(tag: string): Promise<DataType | null> {
         if (!this.session) {
             console.error('OPC UA session is not initialized');
             return null;
@@ -163,11 +187,12 @@ export default class CodesysOpcuaDriver {
         return await this.writeNestedObject(baseTag, data);
     }
 
+    private writesToPerformMap: Map<string, any> = new Map();
     async writeNestedObject(
         baseTag: string,
-        value: any
+        value: any,
     ): Promise<{ success: boolean; message: string; details?: any }> {
-        const writesToPerform: Array<{ nodeId: string; value: any }> = [];
+        let writesToPerform: Array<{ nodeId: string; value: any }> = [];
 
         // 1. Flatten nested object/array → list of { nodeId, value }
         const traverseAndFlatten = (currentTag: string, currentValue: any) => {
@@ -189,13 +214,20 @@ export default class CodesysOpcuaDriver {
             }
         };
 
-        traverseAndFlatten(baseTag, value);
+        const cachedWritesToPerform = this.writesToPerformMap.get(baseTag);
+        if (!cachedWritesToPerform) {
+            traverseAndFlatten(baseTag, value);
+            this.writesToPerformMap.set(baseTag, writesToPerform);
+            console.log(`Cached writes for nested tag ${baseTag}`);
+        } else {
+            writesToPerform = cachedWritesToPerform;
+        }
 
         if (writesToPerform.length === 0) {
             return { success: true, message: "No values to write" };
         }
 
-        console.log(`Preparing to write ${writesToPerform.length} tags under ${baseTag}`);
+        //console.log(`Preparing to write ${writesToPerform.length} tags under ${baseTag}`);
 
         try {
             // 2. Read ALL data types in parallel
@@ -246,6 +278,8 @@ export default class CodesysOpcuaDriver {
             if (!fullSuccess) {
                 console.warn("Some writes failed:", failed);
             }
+
+            //console.log('.');
 
             return {
                 success: fullSuccess,
@@ -343,6 +377,8 @@ export default class CodesysOpcuaDriver {
         await this.writeTag(stsTag, ApiReqRespStates.WRITING, DataType.Int16);
         //console.log(`Set ${stsTag} to WRITING`);
 
+        //await this.writeTagV2(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData`, initialDeviceActionRequestData);
+        console.log("successfully wrote writeTagV2 for ActionRequestData");
         // 3. Fill action request data
 
         const paddedParamArray = Array(DeviceConstants.MAX_NUM_PARAMS).fill(0.0);
@@ -654,7 +690,7 @@ export default class CodesysOpcuaDriver {
         const currentPlcTimeMs = await this.readTag(plcTimeMsTag, DataType.UInt64);
         
    
-        if (Math.abs(currentTimeMs - currentPlcTimeMs) > 7 || !this.timeSyncWasPerformed) {
+        if (Math.abs(currentTimeMs - currentPlcTimeMs) > 7 && !this.timeSyncWasPerformed) {
 
 
             await this.writeTag(reqTag, false, DataType.Boolean);

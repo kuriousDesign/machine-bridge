@@ -1,9 +1,9 @@
 //import "dotenv/config"; // auto-loads .env
-import OpcuaClientManager from './OpcuaMonitoringDeviceManager';
+import OpcuaClientManager from './OpcuaHmiManager';
 
 
 async function main() {
-    console.log('🚀 Starting Opcua Polling Manager');
+    console.log('🚀 Starting Opcua Hmi Manager');
 
 
     const manager = new OpcuaClientManager();

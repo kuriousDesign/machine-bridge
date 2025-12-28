@@ -71,7 +71,7 @@ const subscriptionOptions: CreateSubscriptionRequestOptions = {
 };
 
 const filter = new DataChangeFilter({
-    trigger: DataChangeTrigger.StatusValueTimestamp, // Report on any of Status, Value, or Timestamp
+    trigger: DataChangeTrigger.StatusValue, // Report on any of Status, Value, or Timestamp
     deadbandType: DeadbandType.None,                 // No deadband suppression
     deadbandValue: 0
 });
@@ -88,7 +88,7 @@ interface MonitoredItemToMonitor {
     nodeId: string;
 }
 
-const MAX_ITEMS_PER_GROUP = 100; // you found 100 as the practical limit; keep here for easy adjust
+const MAX_ITEMS_PER_GROUP = 50; // you found 100 as the practical limit; keep here for easy adjust
 
 class OpcuaMqttBridge {
     private mqttClient: MqttClient | null = null;
@@ -158,10 +158,6 @@ class OpcuaMqttBridge {
                     Object.values(DeviceTags).map((tag: string) => {
                         const nodeId = deviceNodeId + '.' + tag;
                         const topic = deviceTopic + '/' + tag.toLowerCase().replace('.', '/');
-
-                        if (tag !== DeviceTags.Log) {
-                            this.nodeIdToMqttTopicMap.set(nodeId, topic);
-                        }
                         everyOtherTag += 1;
                     });
 
@@ -343,6 +339,7 @@ class OpcuaMqttBridge {
             const strippedPrefix = this.nodeListPrefix.replace('ns=4;s=', '');
             const nodeId = fullNodeId.replace(this.nodeListPrefix, '');
             const topic = this.nodeIdToMqttTopicMap.get(nodeId);
+            console.log(`Monitored item changed: nodeId=${nodeId}, value=${newValue}, topic=${topic}`);
 
             if (!topic) {
                 console.error('No valid MQTT topic found for nodeId:', nodeId, 'full:', fullNodeId);

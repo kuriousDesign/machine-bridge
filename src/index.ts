@@ -1,5 +1,5 @@
 //import "dotenv/config"; // auto-loads .env
-import OpcuaClientManager from './OpcuaPollingManager';
+import OpcuaClientManager from './OpcuaMqttManager';
 
 
 async function main() {

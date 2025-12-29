@@ -24,10 +24,11 @@ Config.OPCUA_ENDPOINT = `opc.tcp://${Config.OPCUA_SERVER_IP_ADDRESS}:${Config.OP
 Config.NODE_LIST_PREFIX = nodeListString + Config.OPCUA_CONTROLLER_NAME + '.Application.';
 
 Config.POLLING_RATE_MS = 250;
-Config.LOOP_DELAY_MS = 10; // Small delay to prevent tight loop
+Config.REPUBLISH_RATE_MS = 500;
+Config.LOOP_DELAY_MS = 250; // Small delay to prevent tight loop
 Config.DIAG_READS_TO_SKIP_AT_START = 10;
 Config.RECONNECT_DELAY_MS = 3000; // Time to wait before attempting reconnection
-Config.CHUNK_SIZE = 20; // Number of nodes to read per chunk
+Config.CHUNK_SIZE = 100; // Number of nodes to read per chunk
 Config.PUBLISHING_INTERVAL = 500; // OPC UA Publishing Interval in ms
 
 Config.OPCUA_OPTIONS = {

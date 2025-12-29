@@ -1,6 +1,6 @@
 import { ClientSession, Variant, AttributeIds, DataType, VariantArrayType, ReadValueIdOptions, StatusCodes, DataValue } from "node-opcua";
 import { ActionTypes, initialApiOpcuaReqData, DeviceCmds, States, ApiOpcuaReqData, DeviceActionRequestData, ApiReqRespStates, AxisProcesses, DeviceConstants, PlcNamespaces, MachineTags, apiReqRespStateToString, Device, initialDevice, initialDeviceActionRequestData } from "@kuriousdesign/machine-sdk";
-import { read } from "fs";
+import { read, write } from "fs";
 import { writeExtensionObject } from "./opcua-helpers";
 
 // Debug: Log the imported ApiReqRespStates to verify its structure
@@ -187,79 +187,81 @@ export default class CodesysOpcuaDriver {
         return await this.writeNestedObject(baseTag, data);
     }
 
-    private writesToPerformMap: Map<string, any> = new Map();
-    async writeNestedObject(
-        baseTag: string,
-        value: any,
-    ): Promise<{ success: boolean; message: string; details?: any }> {
-        let writesToPerform: Array<{ nodeId: string; value: any }> = [];
+    // 1. Flatten nested object/array → list of { nodeId, value }
+    private traverseAndFlatten = (currentTag: string, currentValue: any, writeItems: Array<{ nodeId: string; value: any, dataType: any }>) => {
+        if (currentValue === null || typeof currentValue !== "object") {
+            const writeItem = { nodeId: currentTag, value: currentValue, dataType: null };
+            writeItems.push(writeItem);
+            return;
+        }
 
-        // 1. Flatten nested object/array → list of { nodeId, value }
-        const traverseAndFlatten = (currentTag: string, currentValue: any) => {
-            if (currentValue === null || typeof currentValue !== "object") {
-                writesToPerform.push({ nodeId: currentTag, value: currentValue });
-                return;
+        if (Array.isArray(currentValue)) {
+            for (let i = 0; i < currentValue.length; i++) {
+                this.traverseAndFlatten(`${currentTag}[${i}]`, currentValue[i], writeItems);
             }
-
-            if (Array.isArray(currentValue)) {
-                for (let i = 0; i < currentValue.length; i++) {
-                    traverseAndFlatten(`${currentTag}[${i}]`, currentValue[i]);
-                }
-            } else {
-                for (const key in currentValue) {
-                    if (Object.prototype.hasOwnProperty.call(currentValue, key)) {
-                        traverseAndFlatten(`${currentTag}.${key}`, currentValue[key]);
-                    }
-                }
-            }
-        };
-
-        const cachedWritesToPerform = this.writesToPerformMap.get(baseTag);
-        if (!cachedWritesToPerform) {
-            traverseAndFlatten(baseTag, value);
-            this.writesToPerformMap.set(baseTag, writesToPerform);
-            console.log(`Cached writes for nested tag ${baseTag}`);
         } else {
-            writesToPerform = cachedWritesToPerform;
-        }
-
-        if (writesToPerform.length === 0) {
-            return { success: true, message: "No values to write" };
-        }
-
-        //console.log(`Preparing to write ${writesToPerform.length} tags under ${baseTag}`);
-
-        try {
-            // 2. Read ALL data types in parallel
-            const dataTypePromises = writesToPerform.map(item =>
-                this.readTagDataType(item.nodeId)
-                    .then(type => ({ nodeId: item.nodeId, value: item.value, dataType: type }))
-                    .catch(err => ({
-                        nodeId: item.nodeId,
-                        value: item.value,
-                        dataType: null,
-                        error: err instanceof Error ? err.message : String(err)
-                    }))
-            );
-
-            const results = await Promise.all(dataTypePromises);
-
-            // 3. Write ALL valid items in parallel
-            const writePromises = results.map(async (result) => {
-                if (result.dataType === null) {
-                    return {
-                        nodeId: result.nodeId,
-                        success: false,
-                        error: 'error' in result ? result.error : "Unknown data type"
-                    };
+            for (const key in currentValue) {
+                if (Object.prototype.hasOwnProperty.call(currentValue, key)) {
+                    this.traverseAndFlatten(`${currentTag}.${key}`, currentValue[key], writeItems);
                 }
+            }
+        }
+    };
 
+    private cachedNestedTagDataTypesMap: Map<string, any> = new Map();
+
+    async createAndCacheNestedTagDataTypes(
+        baseTag: string,
+        value: any
+    ): Promise<any> {
+        const writeItems: Array<{ nodeId: string; value: any, dataType: any }> = [];
+        this.traverseAndFlatten(baseTag, value, writeItems);
+        const dataTypePromises = writeItems.map(item =>
+            this.readTagDataType(item.nodeId).then(dataType => {
+            item.dataType = dataType;
+            })
+        );
+        await Promise.all(dataTypePromises);
+        this.cachedNestedTagDataTypesMap.set(baseTag, writeItems);
+        console.log(`Cached writes for nested tag ${baseTag}`);
+        return writeItems;
+    }
+
+    async writeNestedObject(baseTag: string, value: any, skipValidation: boolean = false): Promise<{ success: boolean; message: string; details?: any }> {
+        let writeValues: Array<{ nodeId: string; value: any, dataType: any }> = [];
+        this.traverseAndFlatten(baseTag, value, writeValues);
+        if (writeValues.length === 0) {
+            return { success: false, message: "No values to write" };
+        }
+
+        let cachedWritesToPerform = this.cachedNestedTagDataTypesMap.get(baseTag);
+        if (!cachedWritesToPerform) {
+            cachedWritesToPerform = await this.createAndCacheNestedTagDataTypes(baseTag, value);
+        }
+
+        if (cachedWritesToPerform.length === 0) {
+            return { success: false, message: "No cached data types to write" };
+        }
+
+        //console.log(`Preparing to write ${cachedWritesToPerform.length} tags under ${baseTag}`);
+        try {
+            // 3. Write ALL valid items in parallel
+            const writePromises = cachedWritesToPerform.map(async (cachedItem: { nodeId: string; value: any; dataType: any }, index: number) => {
                 try {
-                    await this.writeTag(result.nodeId, result.value, result.dataType);
-                    return { nodeId: result.nodeId, success: true };
+                    const value = writeValues[index]?.value;
+                    if (value === undefined) {
+                        return {
+                            nodeId: cachedItem.nodeId,
+                            success: false,
+                            error: `No value found for node ${cachedItem.nodeId}`
+                        };
+                    }
+              
+                    await this.writeTag(cachedItem.nodeId, value, cachedItem.dataType, skipValidation);
+                    return { nodeId: cachedItem.nodeId, success: true };
                 } catch (err) {
                     return {
-                        nodeId: result.nodeId,
+                        nodeId: cachedItem.nodeId,
                         success: false,
                         error: err instanceof Error ? err.message : String(err)
                     };
@@ -299,7 +301,7 @@ export default class CodesysOpcuaDriver {
         }
     }
 
-    async writeTag(tag: string, value: any, dataType: DataType = DataType.Int16): Promise<{ success: boolean; message: string }> {
+    async writeTag(tag: string, value: any, dataType: DataType = DataType.Int16, skipValidation: boolean = false): Promise<{ success: boolean; message: string }> {
         try {
             //console.log('hi jake');
             //console.log(`Writing value to node ${tag}:`, value, `with dataType ${DataType[dataType]}`);
@@ -314,21 +316,23 @@ export default class CodesysOpcuaDriver {
             //console.log(`Wrote value to node ${tag}:`, value);
 
             // Verify write
-            const readValue = await this.readTag(tag, dataType);
+            if (!skipValidation) {
+                const readValue = await this.readTag(tag, dataType);
 
-            // if readValue is a number and value is a number, compare with tolerance for floating point, otherwise compare directly
-            const isNumber = (val: any): val is number => typeof val === 'number';
-            const tolerance = 0.0001;
-            const valuesMatch = isNumber(readValue) && isNumber(value)
-                ? Math.abs(readValue - value) < tolerance
-                : readValue === value;
+                // if readValue is a number and value is a number, compare with tolerance for floating point, otherwise compare directly
+                const isNumber = (val: any): val is number => typeof val === 'number';
+                const tolerance = 0.0001;
+                const valuesMatch = isNumber(readValue) && isNumber(value)
+                    ? Math.abs(readValue - value) < tolerance
+                    : readValue === value;
 
-            if (!valuesMatch) {
-                console.error(`Verification failed for tag ${tag}: expected ${value}, got ${readValue}. Type of written value: ${typeof value}, Type of read value: ${typeof readValue}`);
-                return {
-                    success: false,
-                    message: `Failed to verify write to tag ${tag}: expected ${value}, got ${readValue}`
-                };
+                if (!valuesMatch) {
+                    console.error(`Verification failed for tag ${tag}: expected ${value}, got ${readValue}. Type of written value: ${typeof value}, Type of read value: ${typeof readValue}`);
+                    return {
+                        success: false,
+                        message: `Failed to verify write to tag ${tag}: expected ${value}, got ${readValue}`
+                    };
+                }
             }
 
             //console.log(`Wrote ${value} to node ${tag}`);
@@ -378,7 +382,7 @@ export default class CodesysOpcuaDriver {
         //console.log(`Set ${stsTag} to WRITING`);
 
         //await this.writeTagV2(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData`, initialDeviceActionRequestData);
-        console.log("successfully wrote writeTagV2 for ActionRequestData");
+        //console.log("successfully wrote writeTagV2 for ActionRequestData");
         // 3. Fill action request data
 
         const paddedParamArray = Array(DeviceConstants.MAX_NUM_PARAMS).fill(0.0);
@@ -398,14 +402,14 @@ export default class CodesysOpcuaDriver {
 
 
         // 4. Write action request data
-        await this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.UniqueActionRequestId`, DeviceActionRequestData.UniqueActionRequestId);
-        await this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.SenderId`, DeviceActionRequestData.SenderId);
-        await this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.ActionType`, DeviceActionRequestData.ActionType);
-        await this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.ActionId`, DeviceActionRequestData.ActionId);
+        this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.UniqueActionRequestId`, DeviceActionRequestData.UniqueActionRequestId, DataType.Int32);
+        this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.SenderId`, DeviceActionRequestData.SenderId);
+        this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.ActionType`, DeviceActionRequestData.ActionType);
+        this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.ActionId`, DeviceActionRequestData.ActionId);
 
         // Write all parameters using the constant
         for (let i = 0; i < DeviceConstants.MAX_NUM_PARAMS; i++) {
-            await this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.ParamArray[${i}]`, DeviceActionRequestData.ParamArray[i], DataType.Double);
+            this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.ParamArray[${i}]`, DeviceActionRequestData.ParamArray[i], DataType.Double);
         }
 
         // 5. Fill API data
@@ -417,9 +421,9 @@ export default class CodesysOpcuaDriver {
         };
 
         // 6. Write API data
-        await this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.id`, this.request.id, DataType.Int32);
-        await this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.checkSum`, this.request.checkSum);
-        await this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.Sts`, this.request.sts);
+        this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.id`, this.request.id, DataType.Int32);
+        this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.checkSum`, this.request.checkSum);
+        this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.Sts`, this.request.sts);
 
         // 7. Wait for response
         return await this.awaitApiResponse(targetDeviceId, this.request.id);
@@ -453,7 +457,7 @@ export default class CodesysOpcuaDriver {
                 }
             }
 
-            await this.sleep(5);
+            await this.sleep(15);
         }
         console.warn(`Timeout waiting for API response for request ID: ${requestId}`);
 
@@ -688,8 +692,8 @@ export default class CodesysOpcuaDriver {
         const respTag = "machine.syncClockDone";
         const currentTimeMs = Date.now();
         const currentPlcTimeMs = await this.readTag(plcTimeMsTag, DataType.UInt64);
-        
-   
+
+
         if (Math.abs(currentTimeMs - currentPlcTimeMs) > 7 && !this.timeSyncWasPerformed) {
 
 

@@ -128,7 +128,6 @@ export async function getDeviceReadItems(registeredDevices: DeviceRegistration[]
         }
 
 
-
         // device log
         const deviceLogTag = PlcNamespaces.Machine + '.' + MachineTags.deviceLogs + '[' + device.id + ']';
         const deviceLogTopic = deviceTopic + '/log';
@@ -198,6 +197,31 @@ export async function getDeviceReadItems(registeredDevices: DeviceRegistration[]
 }
 
 
+export const MachineHwTagsApolloTubeLiner00251 = {
+    WeidmullerPlcIoRack: 'weidmullerPlcIoRack',
+};
+
+export function getMachineHwReadItems(tags: object): ReadItemInfo[] {
+    const itemsToRead: ReadItemInfo[] = [];
+    const baseTag = 'MachineHw';
+    const baseTopic = 'MachineHw'.toLowerCase() + '/';
+    Object.entries(tags).forEach(([key, subTag]) => {
+        const tag = baseTag + '.' + subTag;
+        const topic = baseTopic + subTag.toLowerCase();
+        itemsToRead.push({
+            tagId: tag,
+            nodeId: Config.NODE_LIST_PREFIX + tag,
+            mqttTopic: topic,
+            last_publish_time: 0,
+            update_period: 1,
+            value: null,
+            attributeId: AttributeIds.Value,
+        });
+    });
+    return itemsToRead;
+}
+
+
 export function getMachineReadItems(): ReadItemInfo[] {
     const itemsToRead: ReadItemInfo[] = [];
     Object.entries(initialMachine).forEach(([key, value]) => {
@@ -215,6 +239,8 @@ export function getMachineReadItems(): ReadItemInfo[] {
             attributeId: AttributeIds.Value,
         });
     });
+    const hwItems = getMachineHwReadItems(MachineHwTagsApolloTubeLiner00251);
+    hwItems.forEach((item) => itemsToRead.push(item));
     return itemsToRead;
 }
 

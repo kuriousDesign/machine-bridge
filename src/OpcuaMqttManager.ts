@@ -152,7 +152,11 @@ export default class OpcuaClientManager {
                         // Heartbeat is updating normally, stay in Polling state
                         lastUpdateTime = Date.now();
                         prevHeartbeatPlcValue = this.heartbeatPlcValue;
-                        this.state = OpcuaState.Polling;
+                        if (this.state === OpcuaState.WaitingForHeartbeat){
+                            this.state = OpcuaState.Reconnecting;
+                        } else{
+                            this.state = OpcuaState.Polling;
+                        }
                     } else if (Date.now() - lastUpdateTime > 5000) {
                         // Heartbeat not updating, transition to waiting state
                         if (this.state !== OpcuaState.WaitingForHeartbeat)

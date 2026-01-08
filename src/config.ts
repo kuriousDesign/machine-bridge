@@ -62,6 +62,7 @@ Config.OPTIONS_GROUP = {
 
 
 Config.BRIDGE_API_UPDATE_DEVICE = "bridge/api/update_device";
+Config.BRIDGE_API_WRITE_TAG = "bridge/api/write_tag";
 
 // Derive MQTT URL and Options based on Config settings
 Config.MQTT_URL = Config.MQTT_BROKER_TYPE === "cloud" ? Config.MQTT_CLOUD_BROKER_URL : Config.MQTT_LOCAL_BROKER_URL;

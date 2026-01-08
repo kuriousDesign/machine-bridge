@@ -140,6 +140,7 @@ export default class OpcuaClientManager {
                         await this.subscribeToExtDeviceUpdateDevice(device);
                         await this.subscribeToMqttTopicDeviceHmiActionRequest(device);
                     });
+                    await this.subscribeToMachineWriteTag();
                     break;
 
                 case OpcuaState.Connected:
@@ -364,6 +365,25 @@ export default class OpcuaClientManager {
             const deviceTag = PlcNamespaces.Machine + '.' + MachineTags.deviceStore + '[' + deviceId + ']' + '.' + tagName;
             //this.codesysOpcuaDriver?.writeNestedObject(deviceTag, message.payload);
         }
+    }
+
+    private async subscribeToMachineWriteTag(): Promise<void> {
+        if (!this.session) {
+            throw new Error("OPC UA session is not initialized");
+        }
+        if (!this.mqttClientManager) {
+            throw new Error("MQTT client is not initialized");
+        }
+        const topic = Config.BRIDGE_API_WRITE_TAG;
+        console.log('Subscribing to bridge api write_tag topic:', topic);
+            this.mqttClientManager.subscribe(topic, async (topic: string, message: Buffer) => {
+                await this.handleWriteTag(topic, JSON.parse(message.toString()) as any);
+            });
+    }
+
+    private async handleWriteTag(topic: string, writeTagData: { tag: string; value: any }): Promise<void> {
+        console.log('Handling write tag request for tag:', writeTagData.tag);
+        this.codesysOpcuaDriver?.writeNestedObject(writeTagData.tag, writeTagData.value, true);
     }
 
     private async subscribeToMqttTopicDeviceHmiActionRequest(device: DeviceRegistration): Promise<void> {

@@ -229,15 +229,18 @@ export function getMachineReadItems(): ReadItemInfo[] {
         const tag = PlcNamespaces.Machine + '.' + subTag;
 
         const topic = PlcNamespaces.Machine.toLowerCase() + '/' + subTag.toLowerCase();
-        itemsToRead.push({
-            tagId: tag,
-            nodeId: Config.NODE_LIST_PREFIX + tag,
-            mqttTopic: topic,
-            last_publish_time: 0,
-            update_period: 1,
-            value: null,
-            attributeId: AttributeIds.Value,
-        });
+        // verify that the tag hasn't already been pushed
+        if (!itemsToRead.some(item => item.tagId === tag)) {
+            itemsToRead.push({
+                tagId: tag,
+                nodeId: Config.NODE_LIST_PREFIX + tag,
+                mqttTopic: topic,
+                last_publish_time: 0,
+                update_period: 1,
+                value: null,
+                attributeId: AttributeIds.Value,
+            });
+        }
     });
     const hwItems = getMachineHwReadItems(MachineHwTagsApolloTubeLiner00251);
     hwItems.forEach((item) => itemsToRead.push(item));

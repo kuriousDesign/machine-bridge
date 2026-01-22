@@ -593,6 +593,7 @@ export default class OpcuaClientManager {
         this.lastPublishedState = this.state;
         this.lastPublishTime = now;
     }
+    private timeWasSynced: boolean = false;
 
     private async updateHeartbeat(): Promise<void> {
         this.heartbeatPlcValue = await this.readOpcuaValue(this.heartbeatPlcNodeId);
@@ -600,8 +601,9 @@ export default class OpcuaClientManager {
             //console.log(`Heartbeat PLC Value: ${this.heartbeatPlcValue}`);
             this.heartbeatHmiValue = this.heartbeatPlcValue;
             await this.writeOpcuaValue(this.heartbeatHmiNodeId, this.heartbeatPlcValue, DataType.Byte);
-            if (this.codesysOpcuaDriver) {
+            if (this.codesysOpcuaDriver && !this.timeWasSynced) {
                 await this.codesysOpcuaDriver.writeCurrentTimeToCodesys();
+                this.timeWasSynced = true;
             }
         }
     }

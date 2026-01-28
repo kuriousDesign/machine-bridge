@@ -21,5 +21,8 @@ RUN npm install
 COPY src ./src
 COPY nodemon.json ./
 
+RUN npm run build
+
 # Set default command for development using the 'dev' script from package.json
-CMD ["npm", "run", "dev"]
+#CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]

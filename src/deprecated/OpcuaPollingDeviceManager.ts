@@ -14,11 +14,11 @@ import {
     WriteValueOptions,
 } from 'node-opcua';
 
-import Config from './config'; // <--- Use the central config
+import Config from '../config'; // <--- Use the central config
 
 import { BridgeCmds, DeviceActionRequestData, DeviceId, DeviceRegistration, DeviceTags, MachineTags, MqttTopics, PlcNamespaces, TopicData, buildFullTopicPath, initialMachine, nodeListString, Device } from '@kuriousdesign/machine-sdk';
-import MqttClientManager from './MqttClientManager';
-import CodesysOpcuaDriver from './OpcuaMqtt/codesys-opcua-driver';
+import MqttClientManager from '../MqttClientManager';
+import CodesysOpcuaDriver from '../OpcuaMqtt/codesys-opcua-driver';
 
 
 interface ReadItemInfo {

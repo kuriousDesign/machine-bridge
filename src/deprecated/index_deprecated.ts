@@ -1,6 +1,6 @@
 import { MqttProtocol } from "mqtt";
 //import OpcuaMqttBridge from "./OpcuaMqtt/OpcuaMqttBridgeV1";
-import OpcuaMqttBridge from "./OpcuaMqtt/OpcuaMqttBridge";
+import OpcuaMqttBridge from "../OpcuaMqtt/OpcuaMqttBridge";
 import "dotenv/config"; // auto-loads .env
 
 // Feature flag: Set to 'v2' to use the new simplified bridge architecture

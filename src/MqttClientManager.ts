@@ -2,7 +2,7 @@
 
 import { TopicData } from '@kuriousdesign/machine-sdk';
 import Config from './config';
-import { MqttClient, connect, MqttProtocol } from 'mqtt';
+import { MqttClient, connect } from 'mqtt';
 
 
 enum MqttState {

@@ -1,9 +1,13 @@
 import {
     AttributeIds,
+    ClientMonitoredItemBase,
+    ClientMonitoredItemGroup,
     ClientSession,
+    ClientSubscription,
     DataType,
     DataValue,
     MessageSecurityMode,
+    MonitoringMode,
     OPCUAClient,
     OPCUAClientOptions,
     ReadValueIdOptions,
@@ -14,17 +18,21 @@ import {
     WriteValueOptions,
 } from 'node-opcua';
 
-import Config from './config'; // <--- Use the central config
+import Config from '../config'; // <--- Use the central config
 
-import { BridgeCmds, DeviceActionRequestData, DeviceId, DeviceRegistration, DeviceTags, MachineTags, MqttTopics, PlcNamespaces, TopicData, buildFullTopicPath, initialMachine, nodeListString, Device } from '@kuriousdesign/machine-sdk';
-import MqttClientManager from './MqttClientManager';
-import CodesysOpcuaDriver from './OpcuaMqtt/codesys-opcua-driver';
+import { BridgeCmds, DeviceActionRequestData, DeviceId, DeviceRegistration, DeviceTags, MachineTags, MqttTopics, PlcNamespaces, TopicData, buildFullTopicPath, initialMachine, nodeListString, Device, DeviceStatus } from '@kuriousdesign/machine-sdk';
+import MqttClientManager from '../MqttClientManager';
+import CodesysOpcuaDriver from '../OpcuaMqtt/codesys-opcua-driver';
 
 
 interface ReadItemInfo {
+    tagId: string;
     nodeId: string;
     mqttTopic: string;
-    update_period?: number;
+    attributeId: number; //AttributeIds.Value;
+    update_period: number;
+    last_publish_time: number;
+    value: any;
 }
 
 // --- Performance Tracking Variables ---
@@ -76,6 +84,12 @@ export default class OpcuaClientManager {
     private deviceMap: Map<number, DeviceRegistration> = new Map();
     private codesysOpcuaDriver: CodesysOpcuaDriver | null = null;
     private lastPollTimeMs: number = 0;
+    private opcuaSubscriptions: ClientSubscription[] = [];
+    private monitoredItemGroups: ClientMonitoredItemGroup[] = [];
+    //private deviceStore: Map<number, Device> = new Map();
+    //private deviceStsStore: Map<number, any> = new Map();
+    private tagReadInfoMap: Map<string, ReadItemInfo> = new Map();
+
     //private nodeListPrefix = nodeListString + Config.OPCUA_CONTROLLER_NAME + '.Application.';
 
     // constructor 
@@ -97,6 +111,7 @@ export default class OpcuaClientManager {
     public async manageConnectionLoop(): Promise<void> {
         let prevHeartbeatPlcValue = -1;
         let lastUpdateTime = Date.now();
+        let mode = MonitoringMode.Reporting;
         while (!this.shutdownRequested) {
             if (this.state !== this.lastPublishedState) {
                 console.log(`[OPCUA] STATE: ${OpcuaState[this.state]}`);
@@ -106,22 +121,27 @@ export default class OpcuaClientManager {
                 case OpcuaState.Disconnected:
                 case OpcuaState.Reconnecting:
                     await this.handleConnection();
-
                     await this.updateRegisteredDevices();
                     this.devicePollingItems = this.getDeviceReadItems();
                     this.allPollingItems = this.machinePollingItems.concat(this.devicePollingItems);
-                
+                    this.allPollingItems.map((item) => {
+                        this.tagReadInfoMap.set(item.tagId, item);
+                    });
+
                     console.log("Total polling items after device update:", this.allPollingItems.length);
                     // subscribe to device HMI action request topic
                     // Array.from(this.deviceMap.values()).map(async device =>
                     //     //await this.subscribeToMqttTopicDeviceHmiActionRequest(device)
                     // );
+                    this.terminateAllSubscriptions();
+                    this.subscribeToMonitoredItems();
                     break;
 
                 case OpcuaState.Connected:
                 case OpcuaState.Polling:
                 case OpcuaState.WaitingForHeartbeat:
-                    await this.handlePolling();
+                    //await this.handlePolling();
+                    await this.updateHeartbeat();
                     // i want to add some logic if the plc heartbeat isn't updating to go to waiting for heartbeat state
                     if (this.heartbeatPlcValue !== prevHeartbeatPlcValue) {
                         // Heartbeat is updating normally, stay in Polling state
@@ -132,6 +152,7 @@ export default class OpcuaClientManager {
                         this.state = OpcuaState.WaitingForHeartbeat;
                         console.warn(`⚠️ PLC heartbeat not updating. Waiting for heartbeat, last update was ${Date.now() - lastUpdateTime} ms ago`);
                     }
+                    this.checkAndPublishData();
                     break;
 
                 case OpcuaState.Disconnecting:
@@ -139,10 +160,22 @@ export default class OpcuaClientManager {
                     return; // Exit loop after graceful disconnect
             }
             // Small delay to prevent tight blocking loop if state transitions rapidly
-            await new Promise(resolve => setTimeout(resolve, Config.LOOP_DELAY_MS));
+            await new Promise(resolve => setTimeout(resolve, 50));
         }
         await this.handleDisconnect();
         await this.mqttClientManager.requestShutdown();
+    }
+
+    private async checkAndPublishData(): Promise<void> {
+        // Placeholder for any additional data checks or publications
+        this.tagReadInfoMap.forEach((readInfo, tag) => {
+            const now = Date.now();
+            if (now - readInfo.last_publish_time >= readInfo.update_period * Config.POLLING_RATE_MS) {
+                this.mqttClientManager.publish(readInfo.mqttTopic, readInfo.value);
+                readInfo.last_publish_time = now;
+                this.tagReadInfoMap.set(tag, readInfo);
+            }
+        });
     }
 
     private async handleConnection(): Promise<void> {
@@ -150,6 +183,7 @@ export default class OpcuaClientManager {
         console.log(`[OPCUA]Connecting to endpoint: ${Config.OPCUA_ENDPOINT}`);
 
         try {
+            this.terminateAllSubscriptions();
             this.client = OPCUAClient.create(Config.OPCUA_OPTIONS);
             // Attach built-in handlers for automatic reconnection messages
             this.client.on("connection_lost", () => console.warn("[OPCUA] OPC UA connection lost (handled by internal mechanism)"));
@@ -178,66 +212,113 @@ export default class OpcuaClientManager {
     private getDeviceReadItems(): ReadItemInfo[] {
         const readIteams: ReadItemInfo[] = [];
         this.registeredDevices.forEach((device) => {
-            const deviceNodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceStore + '[' + device.id + ']';
+            const deviceTag = PlcNamespaces.Machine + '.' + MachineTags.deviceStore + '[' + device.id + ']';
             const deviceTopic = buildFullTopicPath(device, this.deviceMap);
+            const USE_WHOLE_DEVICE = false;
+            let readItemInfo: ReadItemInfo;
+            if (USE_WHOLE_DEVICE) {
+                readItemInfo = {
+                    tagId: deviceTag,
+                    nodeId: Config.NODE_LIST_PREFIX + deviceTag,
+                    mqttTopic: deviceTopic,
+                    last_publish_time: 0,
+                    update_period: 1,
+                    value: null,
+                    attributeId: AttributeIds.Value
+                };
+                //this.nodeIdToMqttTopicMap.set(deviceNodeId, deviceTopic);
+                readIteams.push(readItemInfo);
+                console.log(`[OPCUA] Added device for polling, Tag: ${deviceTag}, Topic: ${deviceTopic}`);
+            } else {
+                Object.values(DeviceTags).map((subTag: string) => {
+                    const tag = deviceTag + '.' + subTag;
+                    const topic = deviceTopic + '/' + subTag.toLowerCase().replace('.', '/');
+                    readItemInfo = {
+                        tagId: tag,
+                        nodeId: Config.NODE_LIST_PREFIX + tag,
+                        mqttTopic: topic,
+                        update_period: 1,
+                        last_publish_time: 0,
+                        value: null,
+                        attributeId: AttributeIds.Value
+                    };
+                    // if tag is sts or is or task, set update period to 1
+
+                    if ([DeviceTags.Is, DeviceTags.Task].includes(tag)) {
+                        readItemInfo.update_period = 1;
+                    }
+                    readIteams.push(readItemInfo);
+                    console.log(`[OPCUA] Added device tag for polling, tag: ${tag}, Topic: ${topic}, Rate: ${readItemInfo.update_period}`);
+                });
+            }
+
+
 
             if (false && device.isExternalService) {
                 console.log(`[OPCUA] Adding external service device IExtService interface for polling, Device ID: ${device.id}, Mnemonic: ${device.mnemonic}`);
-                let nodeId = deviceNodeId + '.' + DeviceTags.ApiOpcuaPlcReq;
+                let nodeId = deviceTag + '.' + DeviceTags.ApiOpcuaPlcReq;
                 let topic = deviceTopic + '/' + DeviceTags.ApiOpcuaPlcReq.toLowerCase().replace('.', '/');
                 let readItemInfo: ReadItemInfo = {
-                    nodeId: nodeId,
-                    mqttTopic: topic
+                    tagId: nodeId,
+                    nodeId: Config.NODE_LIST_PREFIX + nodeId,
+                    mqttTopic: topic,
+                    last_publish_time: 0,
+                    update_period: 1,
+                    value: null,
+                    attributeId: AttributeIds.Value
                 };
                 readIteams.push(readItemInfo);
                 // registration
-                nodeId = deviceNodeId + '.' + DeviceTags.Registration;
+                nodeId = deviceTag + '.' + DeviceTags.Registration;
                 topic = deviceTopic + '/' + DeviceTags.Registration.toLowerCase().replace('.', '/');
                 readItemInfo = {
-                    nodeId: nodeId,
-                    mqttTopic: topic
-                };
-                readIteams.push(readItemInfo);
-                
-            } 
-            Object.values(DeviceTags).map((tag: string) => {
-                const nodeId = deviceNodeId + '.' + tag;
-                const topic = deviceTopic + '/' + tag.toLowerCase().replace('.', '/');
-                const readItemInfo: ReadItemInfo = {
-                    nodeId: nodeId,
+                    tagId: nodeId,
+                    nodeId: Config.NODE_LIST_PREFIX + nodeId,
                     mqttTopic: topic,
-                    update_period: 3
+                    last_publish_time: 0,
+                    update_period: 1,
+                    value: null,
+                    attributeId: AttributeIds.Value
                 };
-                // if tag is sts or is or task, set update period to 1
-             
-                if ([DeviceTags.Is, DeviceTags.Task].includes(tag)) {
-                    readItemInfo.update_period = 1;
-                }
                 readIteams.push(readItemInfo);
-                console.log(`[OPCUA] Added device tag for polling, NodeId: ${nodeId}, Topic: ${topic}, Rate: ${readItemInfo.update_period}`);
-            });
 
-            // device log
-            const deviceLogNodeId = PlcNamespaces.Machine + '.' + MachineTags.deviceLogs + '[' + device.id + ']';
+            }
+
+
+
+            // whole device log
+            const deviceLogTag = PlcNamespaces.Machine + '.' + MachineTags.deviceLogs + '[' + device.id + ']';
             const deviceLogTopic = deviceTopic + '/log';
-            const readItemInfo: ReadItemInfo = {
-                nodeId: deviceLogNodeId,
+            readItemInfo = {
+                tagId: deviceLogTag,
+                nodeId: Config.NODE_LIST_PREFIX + deviceLogTag,
                 mqttTopic: deviceLogTopic,
-                update_period: 5
+                last_publish_time: 0,
+                update_period: 5,
+                value: null,
+                attributeId: AttributeIds.Value
             };
-            //this.nodeIdToMqttTopicMap.set(deviceLogNodeId, deviceLogTopic);
+
             readIteams.push(readItemInfo);
-            console.log(`[OPCUA] Added device tag for polling, NodeId: ${deviceLogNodeId}, Topic: ${deviceLogTopic}`);
+            console.log(`[OPCUA] Added device tag for polling, Tag: ${deviceLogTag}, Topic: ${deviceLogTopic}`);
 
             // device sts
-            const deviceStsNodeId = PlcNamespaces.Machine + '.' + device.mnemonic.toLowerCase() + 'Sts';
+            const deviceStsTag = PlcNamespaces.Machine + '.' + device.mnemonic.toLowerCase() + 'Sts';
             const deviceStsTopic = deviceTopic + '/sts';
             if (!(device.mnemonic === 'SYS' || device.mnemonic === 'CON' || device.mnemonic === 'HMI')) {
-                //this.nodeIdToMqttTopicMap.set(deviceStsNodeId, deviceStsTopic);
-                readIteams.push({ nodeId: deviceStsNodeId, mqttTopic: deviceStsTopic });
-                console.log(`[OPCUA] Added device tag for polling, NodeId: ${deviceStsNodeId}, Topic: ${deviceStsTopic}`);
+                readItemInfo = {
+                    tagId: deviceStsTag,
+                    nodeId: Config.NODE_LIST_PREFIX + deviceStsTag,
+                    mqttTopic: deviceStsTopic,
+                    last_publish_time: 0,
+                    update_period: 5,
+                    value: null,
+                    attributeId: AttributeIds.Value
+                };
+                readIteams.push(readItemInfo);
+                console.log(`[OPCUA] Added device tag for polling, Tag: ${deviceStsTag}, Topic: ${deviceStsTopic}`);
             }
-            
+
         });
         this.devicePollingItems = readIteams;
         return readIteams;
@@ -270,7 +351,7 @@ export default class OpcuaClientManager {
     }
     private updateCtr: number = 0;
     private async readAndPublishChunkValues(chunkIndex: number): Promise<void> {
-     
+
         await this.pollChunkOfAllTags(chunkIndex);
         await this.publishTags(chunkIndex);
         this.updateCtr++;
@@ -278,20 +359,20 @@ export default class OpcuaClientManager {
 
     private async handlePolling(): Promise<void> {
         if (!this.session) throw new Error("Session is not active during poll operation.");
-     
+
         const readTimeStartMs = Date.now();
 
         try {
             // Your polling logic from the previous script
-            
+
             const numChunks = Math.ceil(this.allPollingItems.length / Config.CHUNK_SIZE);
             await Promise.all([
-                ...Array.from({ length: numChunks }, (_, chunkIndex) => 
+                ...Array.from({ length: numChunks }, (_, chunkIndex) =>
                     this.readAndPublishChunkValues(chunkIndex)
                 ),
                 this.updateHeartbeat()
             ]);
-   
+
 
             // Go back to connected state to loop again after POLLING_RATE_MS delay
             if (this.state === OpcuaState.WaitingForHeartbeat) {
@@ -302,7 +383,7 @@ export default class OpcuaClientManager {
             const readTimeEndMs = Date.now();
             const readDurationMs = readTimeEndMs - readTimeStartMs;
             const pollScanTimeMs = readTimeStartMs - this.lastPollTimeMs;
-            if (pollScanTimeMs > Config.POLLING_RATE_MS*1.10 && this.lastPollTimeMs !== 0) {
+            if (pollScanTimeMs > Config.POLLING_RATE_MS * 1.10 && this.lastPollTimeMs !== 0) {
                 console.warn(`⚠️ Polling delay detected! Time since last poll: ${readTimeStartMs - this.lastPollTimeMs} ms`);
             }
             this.lastPollTimeMs = readTimeStartMs;
@@ -317,65 +398,66 @@ export default class OpcuaClientManager {
         }
     }
 
-   private async handleDisconnect(): Promise<void> {
-    this.state = OpcuaState.Disconnecting;
-    console.log("Starting graceful OPC UA disconnection and cleanup...");
+    private async handleDisconnect(): Promise<void> {
+        this.state = OpcuaState.Disconnecting;
+        console.log("Starting graceful OPC UA disconnection and cleanup...");
 
-    // 1. Cleanup Codesys driver first (important!)
-    if (this.codesysOpcuaDriver) {
-        try {
-            //await this.codesysOpcuaDriver.dispose?.(); // if it has dispose/close method
-            // or at least null it
-            this.codesysOpcuaDriver = null;
-        } catch (e) {
-            console.warn("Error disposing CodesysOpcuaDriver:", e);
+        // 1. Cleanup Codesys driver first (important!)
+        if (this.codesysOpcuaDriver) {
+            try {
+                //await this.codesysOpcuaDriver.dispose?.(); // if it has dispose/close method
+                // or at least null it
+                this.codesysOpcuaDriver = null;
+            } catch (e) {
+                console.warn("Error disposing CodesysOpcuaDriver:", e);
+            }
         }
-    }
 
-    // 2. Close session with safety
-    if (this.session) {
-        try {
-            // Optional: force close if server is slow
-            const closePromise = this.session.close();
-            await Promise.race([
-                closePromise,
-                new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error("Session close timeout")), 8000)
-                )
-            ]);
-            console.log("✅ Session closed.");
-        } catch (err) {
-            console.warn("Session close failed (may be already closed):", err);
-        } finally {
-            this.session = null;
+        // 2. Close session with safety
+        if (this.session) {
+            try {
+                // Optional: force close if server is slow
+                this.terminateAllSubscriptions();
+                const closePromise = this.session.close();
+                await Promise.race([
+                    closePromise,
+                    new Promise((_, reject) =>
+                        setTimeout(() => reject(new Error("Session close timeout")), 8000)
+                    )
+                ]);
+                console.log("✅ Session closed.");
+            } catch (err) {
+                console.warn("Session close failed (may be already closed):", err);
+            } finally {
+                this.session = null;
+            }
         }
-    }
 
-    // 3. Disconnect client
-    if (this.client) {
-        try {
-            // Remove event listeners
-            this.client.removeAllListeners("connection_lost");
-            this.client.removeAllListeners("after_reconnection");
+        // 3. Disconnect client
+        if (this.client) {
+            try {
+                // Remove event listeners
+                this.client.removeAllListeners("connection_lost");
+                this.client.removeAllListeners("after_reconnection");
 
-            const disconnectPromise = this.client.disconnect();
-            await Promise.race([
-                disconnectPromise,
-                new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error("Client disconnect timeout")), 8000)
-                )
-            ]);
-            console.log("✅ Client disconnected.");
-        } catch (err) {
-            console.warn("Client disconnect failed:", err);
-        } finally {
-            this.client = null;
+                const disconnectPromise = this.client.disconnect();
+                await Promise.race([
+                    disconnectPromise,
+                    new Promise((_, reject) =>
+                        setTimeout(() => reject(new Error("Client disconnect timeout")), 8000)
+                    )
+                ]);
+                console.log("✅ Client disconnected.");
+            } catch (err) {
+                console.warn("Client disconnect failed:", err);
+            } finally {
+                this.client = null;
+            }
         }
-    }
 
-    this.state = OpcuaState.Disconnected;
-    console.log("✅ OPC UA fully disconnected.");
-}
+        this.state = OpcuaState.Disconnected;
+        console.log("✅ OPC UA fully disconnected.");
+    }
 
     private async readOpcuaValue(nodeId: string): Promise<any> {
         if (!this.session) {
@@ -489,13 +571,13 @@ export default class OpcuaClientManager {
     /**
      * Reads all specified tags once, measuring performance if diagnostics are enabled.
      */
-    
+
     private async pollChunkOfAllTags(chunkIndex: number): Promise<void> {
-        if(!this.session) throw new Error("Session is not active during poll operation.");
-   
+        if (!this.session) throw new Error("Session is not active during poll operation.");
+
         //const fullNodeId = `${nodeListPrefix}${relativeNodeId}`;
         const nodesToRead: ReadValueIdOptions[] = this.allPollingItems.map(item => ({
-            nodeId: `${Config.NODE_LIST_PREFIX}${item.nodeId}`,
+            nodeId: `${Config.NODE_LIST_PREFIX}${item.tagId}`,
             attributeId: AttributeIds.Value,
             timespampsToReturn: TimestampsToReturn.Neither
         }));
@@ -519,6 +601,154 @@ export default class OpcuaClientManager {
 
 
     }
+
+    // -----------------------------
+    // Terminate all subscriptions & monitored groups
+    // -----------------------------
+    private async terminateAllSubscriptions(): Promise<void> {
+        // terminate monitored item groups first
+        if (this.monitoredItemGroups && this.monitoredItemGroups.length > 0) {
+            for (const group of this.monitoredItemGroups) {
+                try {
+                    group.setMonitoringMode(MonitoringMode.Disabled);
+                    group.terminate();
+                } catch (err) {
+                    console.warn('Error terminating monitored group:', err);
+                }
+            }
+            this.monitoredItemGroups = [];
+        }
+
+        // then terminate subscriptions
+        if (this.opcuaSubscriptions && this.opcuaSubscriptions.length > 0) {
+            for (const sub of this.opcuaSubscriptions) {
+                try {
+                    sub.terminate();
+                } catch (err) {
+                    console.warn('Error terminating subscription:', err);
+                }
+            }
+            this.opcuaSubscriptions = [];
+        }
+
+        console.log('All OPC UA subscriptions and monitored groups terminated');
+    }
+
+    private async subscribeToMonitoredItems(): Promise<void> {
+        if (!this.session) {
+            throw new Error("OPC UA session is not initialized");
+        }
+
+        // First, clean up any existing subscriptions/groups if re-subscribing
+        await this.terminateAllSubscriptions();
+
+        //const allItems = this.createItemsToMonitor();
+        console.log('Subscribing to monitored items', this.allPollingItems.length, 'items to monitor...');
+
+        // Chunk items into groups of MAX_ITEMS_PER_GROUP
+        for (let i = 0; i < this.allPollingItems.length; i += Config.CHUNK_SIZE) {
+            const chunk = this.allPollingItems.slice(i, i + Config.CHUNK_SIZE);
+            const groupIndex = Math.floor(i / Config.CHUNK_SIZE) + 1;
+            console.log(`Creating subscription group ${groupIndex} with ${chunk.length} items...`);
+
+            // Validate nodes in chunk (read test). Build a filtered array of valid items.
+            const validatedItems: ReadItemInfo[] = [];
+            for (const item of chunk) {
+                try {
+                    const data = await this.session.read({
+                        nodeId: item.nodeId,
+                        attributeId: AttributeIds.Value,
+                    } as ReadValueIdOptions);
+
+                    if (data && data.statusCode && data.statusCode === StatusCodes.Good) {
+                        // good to monitor
+                        validatedItems.push(item);
+                    } else {
+                        console.warn(`Skipping invalid/unsupported node for monitoring: ${item.tagId} (status=${data?.statusCode?.toString()})`);
+                    }
+                } catch (err) {
+                    // If read fails with BadNotSupported or other issue, skip the item gracefully
+                    const errMsg = (err instanceof Error) ? err.message : String(err);
+                    console.warn(`Read test failed for ${item.tagId}: ${errMsg}. Skipping monitoring for this node.`);
+                }
+            }
+
+            if (validatedItems.length === 0) {
+                console.log(`No valid items in group ${groupIndex}, skipping subscription creation.`);
+                continue;
+            }
+
+            try {
+                const subscription = await this.session.createSubscription2(Config.SUBSCRIPTION_OPTIONS);
+                this.opcuaSubscriptions.push(subscription);
+
+                const monitoredGroup = ClientMonitoredItemGroup.create(
+                    subscription,
+                    validatedItems,
+                    Config.OPTIONS_GROUP,
+                    TimestampsToReturn.Neither
+                );
+
+                this.monitoredItemGroups.push(monitoredGroup);
+
+                monitoredGroup.on('initialized', () => {
+                    console.log(`Monitored group ${groupIndex} initialized with ${validatedItems.length} items`);
+                });
+
+                monitoredGroup.on('changed', (monitoredItem: ClientMonitoredItemBase, dataValue: DataValue) => {
+                    this.handleMonitoredItemChange(monitoredItem, dataValue);
+                });
+
+                // ensure reporting mode is set (forces notifications)
+                try {
+                    await monitoredGroup.setMonitoringMode(MonitoringMode.Reporting);
+                    console.log(`Monitored group ${groupIndex} set to Reporting mode`);
+                } catch (setModeErr) {
+                    console.warn(`Failed to set Reporting mode for group ${groupIndex}:`, setModeErr);
+                }
+
+            } catch (err) {
+                console.error(`Failed to create subscription/monitored group ${groupIndex}:`, err);
+            }
+        }
+
+        console.log(`✅ Subscribed via ${this.opcuaSubscriptions.length} subscriptions and ${this.monitoredItemGroups.length} monitored groups`);
+    }
+
+    private async handleMonitoredItemChange(monitoredItem: ClientMonitoredItemBase, dataValue: DataValue): Promise<void> {
+        try {
+            const newValue = decipherOpcuaValue(dataValue);
+            const newValueType = typeof newValue;
+            // monitoredItem.itemToMonitor.nodeId may be a NodeId object or string; ensure string
+            const fullNodeId = monitoredItem.itemToMonitor?.nodeId?.toString ? monitoredItem.itemToMonitor.nodeId.toString() : String(monitoredItem.itemToMonitor?.nodeId);
+            const tag = fullNodeId.replace(Config.NODE_LIST_PREFIX, '');
+            const readInfo = this.tagReadInfoMap.get(tag);
+
+            console.log(`Monitored item changed: tag=${tag}, monitoringMode=${monitoredItem.monitoringMode}`);
+
+            if (!readInfo) {
+                console.error('No valid MQTT topic found for tag:', tag, 'full:', fullNodeId);
+                return;
+            } else if (!newValue && newValueType !== 'boolean') {
+                console.error('No valid new value for monitored item change:', tag, 'full:', fullNodeId);
+                return;
+            }
+            const topic = readInfo.mqttTopic;
+            readInfo.value = newValue;
+            readInfo.last_publish_time = Date.now();
+            // update the tagReadInfoMap
+            this.tagReadInfoMap.set(tag, readInfo);
+
+            this.mqttClientManager.publish(topic, newValue);
+            if (topic === "machine/heartbeatplc" && newValue % 30 === 0) {
+                console.log('Machine.heartbeatPlc:', newValue);
+            }
+
+        } catch (error) {
+            console.error('Error processing monitored item change:', error);
+        }
+    }
+
 }
 
 // --- Helper Functions (remain external) ---
@@ -526,13 +756,18 @@ export default class OpcuaClientManager {
 function getMachineReadItems(): ReadItemInfo[] {
     const itemsToRead: ReadItemInfo[] = [];
     Object.entries(initialMachine).forEach(([key, value]) => {
-        const tag = key;
-        const relativeNodeId = PlcNamespaces.Machine + '.' + tag;
+        const subTag = key;
+        const tag = PlcNamespaces.Machine + '.' + subTag;
 
-        const topic = PlcNamespaces.Machine.toLowerCase() + '/' + tag.toLowerCase();
+        const topic = PlcNamespaces.Machine.toLowerCase() + '/' + subTag.toLowerCase();
         itemsToRead.push({
-            nodeId: relativeNodeId,
-            mqttTopic: topic
+            tagId: tag,
+            nodeId: Config.NODE_LIST_PREFIX + tag,
+            mqttTopic: topic,
+            last_publish_time: 0,
+            update_period: 1,
+            value: null,
+            attributeId: AttributeIds.Value,
         });
     });
     return itemsToRead;

@@ -114,6 +114,11 @@ export default class OpcuaClientManager {
                 case OpcuaState.Disconnected:
                 case OpcuaState.Reconnecting:
                     await this.handleConnection();
+                    if (!this.session) {
+                        console.log("Waiting for session to be active...");
+                        this.state = OpcuaState.Reconnecting;
+                        break;
+                    }
                     await this.updateRegisteredDevices();
                     const unvalidatedDeviceReadItems = await getDeviceReadItems(this.registeredDevices, this.deviceMap);
                     this.devicePollingItems = await validateReadItems(this.session!, unvalidatedDeviceReadItems);

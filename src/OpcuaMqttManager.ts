@@ -20,7 +20,7 @@ import {
 
 import Config from './config'; // <--- Use the central config
 
-import { BridgeCmds, DeviceActionRequestData, DeviceId, DeviceRegistration, DeviceTags, MachineTags, MqttTopics, PlcNamespaces, TopicData, buildFullTopicPath, initialMachine, nodeListString, Device, DeviceStatus } from '@kuriousdesign/machine-sdk';
+import { BridgeCmds, DeviceActionRequestData, DeviceId, DeviceRegistration, DeviceTags, MachineTags, MqttTopics, PlcNamespaces, TopicData, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
 import MqttClientManager from './MqttClientManager';
 import CodesysOpcuaDriver from './OpcuaMqtt/codesys-opcua-driver';
 import { getDeviceReadItems, getMachineReadItems, ReadItemInfo, validateReadItems } from './OpcuaMqtt/monitored-items';
@@ -404,7 +404,7 @@ export default class OpcuaClientManager {
 
         //const deviceTopic = buildFullTopicPath(device, this.deviceMap);
 
-        if (device.isExternalService) {
+        if (false && device.isExternalService) {
             const topic = device.mnemonic.toLowerCase() + '/';
             const deviceTags = DeviceTags;
             //this.subscribeToBridgeExternalServiceApi(device.id);

@@ -2,7 +2,7 @@
 import 'dotenv/config'; // Load .env FIRST
 import mqtt from 'mqtt';
 import { nodeListString } from '@kuriousdesign/machine-sdk';
-import { MessageSecurityMode, SecurityPolicy, CreateSubscriptionRequestOptions, DataChangeFilter, MonitoringParametersOptions, DataChangeTrigger, DeadbandType } from 'node-opcua';
+import { MessageSecurityMode, SecurityPolicy, OPCUAClientOptions, CreateSubscriptionRequestOptions, DataChangeFilter, MonitoringParametersOptions, DataChangeTrigger, DeadbandType } from 'node-opcua';
 
 
 // Centralized configuration object
@@ -27,7 +27,7 @@ Config.POLLING_RATE_MS = 250;
 Config.REPUBLISH_RATE_MS = 500;
 Config.LOOP_DELAY_MS = 250; // Small delay to prevent tight loop
 Config.DIAG_READS_TO_SKIP_AT_START = 10;
-Config.RECONNECT_DELAY_MS = 3000; // Time to wait before attempting reconnection
+Config.RECONNECT_DELAY_MS = 1000; // Time to wait before attempting reconnection
 Config.CHUNK_SIZE = 100; // Number of nodes to read per chunk
 Config.PUBLISHING_INTERVAL = 500; // OPC UA Publishing Interval in ms
 
@@ -37,7 +37,9 @@ Config.OPCUA_OPTIONS = {
     securityPolicy: SecurityPolicy.None,
     endpointMustExist: true,
     keepSessionAlive: true, // Let node-opcua handle internal session heartbeat
-};
+    requestedSessionTimeout: 60000,
+    defaultTransactionTimeout: 30000,
+} as OPCUAClientOptions;
 
 Config.SUBSCRIPTION_OPTIONS = {
     maxNotificationsPerPublish: 2000,

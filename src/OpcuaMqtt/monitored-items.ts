@@ -218,6 +218,9 @@ export function getMachineHwReadItems(tags: object): ReadItemInfo[] {
             attributeId: AttributeIds.Value,
         });
     });
+    itemsToRead.map((item) => {
+        console.log(`[OPCUA] Added MachineHw Polling Item - TagId: ${item.tagId}, MqttTopic: ${item.mqttTopic}, UpdatePeriod: ${item.update_period}`);
+    });
     return itemsToRead;
 }
 
@@ -242,8 +245,12 @@ export function getMachineReadItems(): ReadItemInfo[] {
             });
         }
     });
+    itemsToRead.map((item) => {
+        console.log(`[OPCUA] Added Machine Polling Item - TagId: ${item.tagId}, MqttTopic: ${item.mqttTopic}, UpdatePeriod: ${item.update_period}`);
+    });
     const hwItems = getMachineHwReadItems(MachineHwTagsApolloTubeLiner00251);
     hwItems.forEach((item) => itemsToRead.push(item));
+    
     return itemsToRead;
 }
 

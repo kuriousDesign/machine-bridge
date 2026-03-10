@@ -6,6 +6,7 @@ services:
       dockerfile: .devcontainer/Dockerfile
       network: host
 
+    restart: unless-stopped
     network_mode: host 
     volumes:
       # Keep the bind mount for development

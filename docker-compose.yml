@@ -13,3 +13,9 @@ services:
       - .:/workspaces/machine-bridge
       # Hide the host's node_modules
       - /workspaces/machine-bridge/node_modules
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"

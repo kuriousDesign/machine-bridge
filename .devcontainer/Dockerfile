@@ -8,18 +8,23 @@ RUN apt-get update && apt-get install -y \
 # The dependencies section in your package.json ensures these dev tools get installed locally:
 # "typescript": "^5.9.2", "nodemon": "^3.1.7", "ts-node": "^10.9.2"
 
-# Set working directory to the standard path
-WORKDIR /workspaces/machine-bridge
+# Use workspace root so machine-bridge can consume file:../machine-sdk
+WORKDIR /workspaces
+
+# Copy SDK first so file-based dependency exists during npm install
+COPY machine-sdk ./machine-sdk
 
 # Copy package files first (for Docker layer caching)
-COPY package*.json ./
+COPY machine-bridge/package*.json ./machine-bridge/
 
-# Install dependencies (Node 22 is compatible with all engines)
+# Install bridge dependencies (includes local file dependency ../machine-sdk)
+WORKDIR /workspaces/machine-bridge
 RUN npm install
 
 # Copy source code and config
-COPY src ./src
-COPY nodemon.json ./
+COPY machine-bridge/src ./src
+COPY machine-bridge/nodemon.json ./
+COPY machine-bridge/tsconfig.json ./
 
 RUN npm run build
 

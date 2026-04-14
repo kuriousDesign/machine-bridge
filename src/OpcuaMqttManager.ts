@@ -20,7 +20,7 @@ import {
 
 import Config from './config'; // <--- Use the central config
 
-import { BridgeCmds, DeviceActionRequestData, DeviceId, DeviceRegistration, DeviceTags, MachineTags, MqttTopics, PlcNamespaces, TopicData, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
+import { BridgeCmds, DeviceActionRequestData, DeviceId, DeviceRegistration, DeviceTags, initialKioskControlData, KioskControlData, MachineTags, MqttTopics, PlcNamespaces, TopicData, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
 import MqttClientManager from './MqttClientManager';
 import CodesysOpcuaDriver from './OpcuaMqtt/codesys-opcua-driver';
 import { getDeviceReadItems, getMachineReadItems, ReadItemInfo, validateReadItems } from './OpcuaMqtt/monitored-items';
@@ -79,6 +79,7 @@ export default class OpcuaClientManager {
     private lastPollTimeMs: number = 0;
     private opcuaSubscriptions: ClientSubscription[] = [];
     private monitoredItemGroups: ClientMonitoredItemGroup[] = [];
+    private kioskControlData: KioskControlData = { ...initialKioskControlData };
     //private deviceStore: Map<number, Device> = new Map();
     //private deviceStsStore: Map<number, any> = new Map();
     private tagReadInfoMap: Map<string, ReadItemInfo> = new Map();
@@ -146,6 +147,7 @@ export default class OpcuaClientManager {
                         await this.subscribeToMqttTopicDeviceHmiActionRequest(device);
                     });
                     await this.subscribeToMachineWriteTag();
+                    await this.subscribeToBridgeCommandTopic();
                     break;
 
                 case OpcuaState.Connected:
@@ -386,6 +388,17 @@ export default class OpcuaClientManager {
             });
     }
 
+    private async subscribeToBridgeCommandTopic(): Promise<void> {
+        if (!this.mqttClientManager) {
+            throw new Error("MQTT client is not initialized");
+        }
+
+        console.log('Subscribing to bridge command topic:', MqttTopics.BRIDGE_CMD);
+        this.mqttClientManager.subscribe(MqttTopics.BRIDGE_CMD, async (_topic: string, message: Buffer) => {
+            await this.handleBridgeCommand(JSON.parse(message.toString()) as TopicData);
+        });
+    }
+
     private async handleWriteTag(topic: string, writeTagData: { tag: string; value: any }): Promise<void> {
         console.log('Handling write tag request for tag:', writeTagData.tag);
         this.codesysOpcuaDriver?.writeNestedObject(writeTagData.tag, writeTagData.value, true);
@@ -551,9 +564,63 @@ export default class OpcuaClientManager {
     private lastPublishedState: OpcuaState | null = null;
     private lastPublishTime: number = 0;
 
+    private normalizeAllowedKioskIds(ids: string[] | undefined): string[] {
+        if (!Array.isArray(ids)) {
+            return [];
+        }
+
+        return Array.from(new Set(ids.map(id => id.trim()).filter(Boolean)));
+    }
+
+    private updateKioskControlData(patch: Partial<KioskControlData>): void {
+        const allowedKioskIds = patch.allowedKioskIds !== undefined
+            ? this.normalizeAllowedKioskIds(patch.allowedKioskIds)
+            : this.kioskControlData.allowedKioskIds;
+
+        this.kioskControlData = {
+            ...this.kioskControlData,
+            ...patch,
+            allowedKioskIds,
+        };
+    }
+
     private async handleBridgeCommand(message: TopicData): Promise<void> {
-        const cmdData = message.payload as { cmd: BridgeCmds };
+        const cmdData = message.payload as {
+            cmd: BridgeCmds;
+            requestControl?: boolean;
+            releaseControl?: boolean;
+            kioskId?: string;
+            allowedKioskIds?: string[];
+        };
         console.log('Received bridge command:', cmdData.cmd);
+
+        const kioskId = typeof cmdData.kioskId === 'string' ? cmdData.kioskId.trim() : '';
+
+        if (Array.isArray(cmdData.allowedKioskIds)) {
+            const normalizedAllowed = this.normalizeAllowedKioskIds(cmdData.allowedKioskIds);
+            this.updateKioskControlData({
+                controlMode: 'kiosk',
+                allowedKioskIds: normalizedAllowed,
+                isControlled: normalizedAllowed.length > 0,
+            });
+        }
+
+        if (cmdData.requestControl && kioskId) {
+            this.updateKioskControlData({
+                controlMode: 'kiosk',
+                isControlled: true,
+                allowedKioskIds: [...(this.kioskControlData.allowedKioskIds || []), kioskId],
+            });
+        }
+
+        if (cmdData.releaseControl && kioskId) {
+            const remainingKioskIds = (this.kioskControlData.allowedKioskIds || []).filter(id => id !== kioskId);
+            this.updateKioskControlData({
+                controlMode: 'kiosk',
+                isControlled: remainingKioskIds.length > 0,
+                allowedKioskIds: remainingKioskIds,
+            });
+        }
 
         switch (cmdData.cmd) {
             case BridgeCmds.CONNECT:
@@ -569,6 +636,13 @@ export default class OpcuaClientManager {
             default:
                 console.warn('Unknown bridge command:', cmdData.cmd);
         }
+
+        await this.publishKioskControlData(this.kioskControlData);
+    }
+
+    private async publishKioskControlData(controlData: KioskControlData): Promise<void> {
+        const topic = MqttTopics.KIOSK_CONTROL;
+        this.mqttClientManager.publish(topic, controlData);
     }
 
     private async publishBridgeConnectionStatus(): Promise<void> {
@@ -588,6 +662,7 @@ export default class OpcuaClientManager {
         }
 
         this.mqttClientManager.publish(MqttTopics.BRIDGE_STATUS, payload);
+        this.publishKioskControlData(this.kioskControlData);
 
         if (this.deviceMap.size > 0) {
             //console.log("Publishing deviceMap to bridge");

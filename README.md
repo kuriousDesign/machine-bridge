@@ -2,6 +2,91 @@
 run npm install to install all packages and dependencies
 run npm run dev to launch local server
 
+## Local SDK Development Flow (Option A)
+
+This project is configured to use the local SDK folder:
+
+- `@kuriousdesign/machine-sdk`: `file:../machine-sdk`
+
+### First-time setup
+
+1. Build the SDK:
+
+```bash
+cd ../machine-sdk
+npm install
+npm run build
+```
+
+2. Install bridge dependencies:
+
+```bash
+cd ../machine-bridge
+npm install
+```
+
+3. Run bridge:
+
+```bash
+npm run dev
+```
+
+### When you change SDK code
+
+Rebuild SDK, then restart bridge:
+
+```bash
+cd ../machine-sdk && npm run build
+cd ../machine-bridge && npm run dev
+```
+
+### Docker Compose with local SDK
+
+This repository uses a local file dependency (`file:../machine-sdk`), so Docker must build with a context that includes both folders.
+
+Current compose setup already does this by using:
+
+- build context: `..`
+- dockerfile: `machine-bridge/.devcontainer/Dockerfile`
+
+Run with rebuild when SDK changes:
+
+```bash
+cd ../machine-sdk && npm run build
+cd ../machine-bridge && docker compose up --build
+```
+
+If you use plain `docker compose up` after SDK changes, the container may keep an older built SDK layer.
+
+## Switch Back To npm Package (Production)
+
+1. Update dependency in `package.json`:
+
+```json
+"@kuriousdesign/machine-sdk": "^1.0.97"
+```
+
+2. Install clean dependencies:
+
+```bash
+rm -rf node_modules
+npm install
+```
+
+3. Build and verify:
+
+```bash
+npm run build
+```
+
+4. If running in Docker, rebuild image with the npm dependency setting:
+
+```bash
+docker compose up --build
+```
+
+Note: publish the required SDK version first, then bump the version here.
+
 # DESCRIPTION
 This websocket server provides a cloud-based server to facilitate communication between a plc (machine) with internet connection and an HMI and/or remote monitoring dashboard UIs
 

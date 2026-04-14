@@ -2,8 +2,8 @@ services:
   machine-bridge:
     # Rename service from 'app' to 'nextjs-app' for clarity, if needed (or keep 'app' if you prefer, but be consistent)
     build:
-      context: .
-      dockerfile: .devcontainer/Dockerfile
+      context: ..
+      dockerfile: machine-bridge/.devcontainer/Dockerfile
       network: host
 
     restart: unless-stopped
@@ -11,8 +11,14 @@ services:
     volumes:
       # Keep the bind mount for development
       - .:/workspaces/machine-bridge
+      # Mount local SDK so dependency updates are available to the container
+      - ../machine-sdk:/workspaces/machine-sdk
       # Hide the host's node_modules
       - /workspaces/machine-bridge/node_modules
+
+    # Reinstall deps and rebuild local SDK on start so latest SDK changes are used
+    command: >-
+      sh -lc "npm install && npm --prefix /workspaces/machine-sdk run build && npm start"
 
     logging:
       driver: "json-file"

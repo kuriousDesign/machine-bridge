@@ -26,8 +26,7 @@ COPY machine-bridge/src ./src
 COPY machine-bridge/nodemon.json ./
 COPY machine-bridge/tsconfig.json ./
 
-RUN npm run build
-
-# Set default command for development using the 'dev' script from package.json
+# Build happens at container start (via compose command) so volume-mounted
+# source is compiled, not the image-layer copy.
 #CMD ["npm", "run", "dev"]
 CMD ["npm", "start"]

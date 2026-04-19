@@ -8,6 +8,8 @@ services:
 
     restart: unless-stopped
     network_mode: host 
+    env_file:
+      - .env
     volumes:
       # Keep the bind mount for development
       - .:/workspaces/machine-bridge
@@ -18,7 +20,7 @@ services:
 
     # Reinstall deps and rebuild local SDK on start so latest SDK changes are used
     command: >-
-      sh -lc "npm install && npm --prefix /workspaces/machine-sdk run build && npm start"
+      sh -lc "npm install && npm --prefix /workspaces/machine-sdk run build && npm run build && npm start"
 
     logging:
       driver: "json-file"

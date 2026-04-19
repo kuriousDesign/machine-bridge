@@ -83,6 +83,7 @@ export default class OpcuaClientManager {
     //private deviceStore: Map<number, Device> = new Map();
     //private deviceStsStore: Map<number, any> = new Map();
     private tagReadInfoMap: Map<string, ReadItemInfo> = new Map();
+    private writeQueue: Promise<void> = Promise.resolve();
 
     //private nodeListPrefix = nodeListString + Config.OPCUA_CONTROLLER_NAME + '.Application.';
 
@@ -238,8 +239,12 @@ export default class OpcuaClientManager {
         const registeredDevicesNodeId = concatNodeId(PlcNamespaces.Machine, MachineTags.registeredDevices);
         const registeredDevices = await this.readOpcuaValue(registeredDevicesNodeId) as DeviceRegistration[];
 
+        console.log("[OPCUA] Raw OPC UA registeredDevices count:", registeredDevices?.length ?? 0,
+            "| ids:", (registeredDevices || []).map(d => d.id).join(','));
+
         this.registeredDevices = (registeredDevices || []).filter((device: DeviceRegistration) => device.id !== 0);
-        console.log("[OPCUA] BUILDING DEVICE MAP");
+        console.log("[OPCUA] BUILDING DEVICE MAP (clearing previous map)");
+        this.deviceMap.clear();
         this.registeredDevices.forEach(deviceReg => {
             const topicPath = buildFullTopicPath(deviceReg, this.deviceMap);
             const devicePath = topicPath.split('/');
@@ -247,7 +252,8 @@ export default class OpcuaClientManager {
             this.deviceMap.set(deviceReg.id, deviceReg);
             console.log("Adding", deviceReg.mnemonic, "to deviceMap, id:", deviceReg.id, "with path:", deviceReg.devicePath);
         });
-        console.log("Retrieved registered devices, count:", this.registeredDevices.length);
+        console.log("Retrieved registered devices, count:", this.registeredDevices.length,
+            "| deviceMap ids:", Array.from(this.deviceMap.keys()).sort((a, b) => a - b).join(','));
     }
 
     private async publishTags(chunkIndex: number): Promise<void> {
@@ -367,11 +373,26 @@ export default class OpcuaClientManager {
                 //console.log('incoming stepNum:', (completeData as Record<string, any>)['iExtService']?.['i']?.['stepNum']);
             }
 
-            this.codesysOpcuaDriver?.writeNestedObject(deviceTag, completeData, true);
+            await this.enqueueOpcuaWrite(async () => {
+                const result = await this.codesysOpcuaDriver?.writeNestedObject(deviceTag, completeData, true);
+                if (result && !result.success) {
+                    console.warn(`[OPCUA] External service write failed for ${deviceTag}: ${result.message}`);
+                }
+            });
         } else {
             const deviceTag = PlcNamespaces.Machine + '.' + MachineTags.deviceStore + '[' + deviceId + ']' + '.' + tagName;
             //this.codesysOpcuaDriver?.writeNestedObject(deviceTag, message.payload);
         }
+    }
+
+    private async enqueueOpcuaWrite(operation: () => Promise<void>): Promise<void> {
+        this.writeQueue = this.writeQueue
+            .then(operation)
+            .catch((error) => {
+                console.error('[OPCUA] Queued write operation failed:', error);
+            });
+
+        await this.writeQueue;
     }
 
     private async subscribeToMachineWriteTag(): Promise<void> {
@@ -401,7 +422,12 @@ export default class OpcuaClientManager {
 
     private async handleWriteTag(topic: string, writeTagData: { tag: string; value: any }): Promise<void> {
         console.log('Handling write tag request for tag:', writeTagData.tag);
-        this.codesysOpcuaDriver?.writeNestedObject(writeTagData.tag, writeTagData.value, true);
+        await this.enqueueOpcuaWrite(async () => {
+            const result = await this.codesysOpcuaDriver?.writeNestedObject(writeTagData.tag, writeTagData.value, true);
+            if (result && !result.success) {
+                console.warn(`[OPCUA] Write tag request failed for ${writeTagData.tag}: ${result.message}`);
+            }
+        });
     }
 
     private async subscribeToMqttTopicDeviceHmiActionRequest(device: DeviceRegistration): Promise<void> {

@@ -47,6 +47,11 @@ enum OpcuaState {
     Disconnecting,
 }
 
+// add a struct to define bridge connection status
+interface BridgeConnectionStatus {
+    opcuaState: OpcuaState;
+}
+
 function decipherOpcuaValue(data: any): any {
     const decipheredValue =
         data?.value?.arrayType === VariantArrayType.Array
@@ -680,19 +685,16 @@ export default class OpcuaClientManager {
             return;
         }
 
-        let payload: string;
-        if (this.state === OpcuaState.Polling) {
-            payload = "Running";
-        } else {
-            payload = "Opcua Server Disconnected";
-        }
+        const payload: BridgeConnectionStatus = {
+            opcuaState: this.state,
+        };
 
-        this.mqttClientManager.publish(MqttTopics.BRIDGE_STATUS, payload);
+        this.mqttClientManager.publish(MqttTopics.BRIDGE_STATUS, payload, true);
         this.publishKioskControlData(this.kioskControlData);
 
         if (this.deviceMap.size > 0) {
             //console.log("Publishing deviceMap to bridge");
-            this.mqttClientManager.publish(MqttTopics.DEVICE_MAP, Array.from(this.deviceMap.entries()));
+            this.mqttClientManager.publish(MqttTopics.DEVICE_MAP, Array.from(this.deviceMap.entries()), true);
         } else {
             console.log("DeviceMap not yet available, cannot publish to bridge/deviceMap");
         }

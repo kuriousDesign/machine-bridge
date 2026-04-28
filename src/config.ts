@@ -73,17 +73,21 @@ Config.MQTT_OPTIONS = Config.MQTT_BROKER_TYPE === "cloud" ? {
     //cloud
     username: Config.MQTT_BROKER_USERNAME,
     password: Config.MQTT_BROKER_PASSWORD,
+    clean: true,
     reconnectPeriod: 1000,
     keepalive: 60,
     protocol: "wss" as mqtt.MqttProtocol,
+    queueQoSZero: false,
     rejectUnauthorized: true,
 } : { 
     //local
     username: Config.MQTT_BROKER_USERNAME,
     password: Config.MQTT_BROKER_PASSWORD,
+    clean: true,
     reconnectPeriod: 1000,
     keepalive: 60,
     protocol: "ws" as mqtt.MqttProtocol,
+    queueQoSZero: false,
     rejectUnauthorized: false,
 };
 

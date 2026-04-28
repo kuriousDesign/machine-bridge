@@ -17,6 +17,11 @@ enum MqttState {
 // Define the type for the handler function
 type MessageHandler = (topic: string, message: Buffer) => void;
 
+type PublishOptions = {
+    retain?: boolean;
+    qos?: 0 | 1;
+};
+
 export default class MqttClientManager {
     private state: MqttState = MqttState.Disconnected;
     private client: MqttClient | null = null;
@@ -126,15 +131,23 @@ export default class MqttClientManager {
     /**
      * The method the OpcuaClientManager will call to send data.
      */
-    public async publish(topic: string, payload: any): Promise<void> {
+    public async publish(topic: string, payload: any, retainOrOptions: boolean | PublishOptions = false): Promise<void> {
         if (this.state === MqttState.Connected && this.client && this.client.connected) {
             const message: TopicData = {
                 timestamp: Date.now(),
                 payload: payload
             };
 
+            const publishOptions: PublishOptions =
+                typeof retainOrOptions === 'boolean'
+                    ? { retain: retainOrOptions, qos: 0 }
+                    : { retain: retainOrOptions.retain ?? false, qos: retainOrOptions.qos ?? 0 };
+
             try {
-                this.client.publish(topic, JSON.stringify(message));
+                this.client.publish(topic, JSON.stringify(message), {
+                    retain: publishOptions.retain,
+                    qos: publishOptions.qos,
+                });
                 //console.log(`[MQTT] Published to ${topic}:`);
             } catch (err) {
                 console.error(`[MQTT] ❌ Error publishing to ${topic}: ${err instanceof Error ? err.message : String(err)}`);

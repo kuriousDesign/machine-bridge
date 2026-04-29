@@ -243,12 +243,16 @@ export default class CodesysOpcuaDriver {
             return { success: false, message: "No cached data types to write" };
         }
 
+        const writeValuesByNodeId = new Map(
+            writeValues.map((item) => [item.nodeId, item.value])
+        );
+
         //console.log(`Preparing to write ${cachedWritesToPerform.length} tags under ${baseTag}`);
         try {
             // 3. Write ALL valid items in parallel
-            const writePromises = cachedWritesToPerform.map(async (cachedItem: { nodeId: string; value: any; dataType: any }, index: number) => {
+            const writePromises = cachedWritesToPerform.map(async (cachedItem: { nodeId: string; value: any; dataType: any }) => {
                 try {
-                    const value = writeValues[index]?.value;
+                    const value = writeValuesByNodeId.get(cachedItem.nodeId);
                     if (value === undefined) {
                         return {
                             nodeId: cachedItem.nodeId,

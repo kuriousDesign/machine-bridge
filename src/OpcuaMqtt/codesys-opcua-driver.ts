@@ -23,6 +23,16 @@ export default class CodesysOpcuaDriver {
     private devicesNodeId = `${PlcNamespaces.Machine}.${MachineTags.deviceStore}`;
     private uniqueActionRequestCtr: number = 0;
 
+    private isOpcuaConnectionClosedError(message: string): boolean {
+        const normalizedMessage = message.toLowerCase();
+
+        return normalizedMessage.includes("badconnectionclosed")
+            || normalizedMessage.includes("invalid channel")
+            || normalizedMessage.includes("session has been closed")
+            || normalizedMessage.includes("socket has been closed")
+            || normalizedMessage.includes("transaction has been canceled");
+    }
+
     constructor(id: number, session: ClientSession, opcuaControllerName: string = "CODESYS Control for Linux SL") {
         this.id = id;
         this.session = session;
@@ -249,30 +259,39 @@ export default class CodesysOpcuaDriver {
 
         //console.log(`Preparing to write ${cachedWritesToPerform.length} tags under ${baseTag}`);
         try {
-            // 3. Write ALL valid items in parallel
-            const writePromises = cachedWritesToPerform.map(async (cachedItem: { nodeId: string; value: any; dataType: any }) => {
-                try {
-                    const value = writeValuesByNodeId.get(cachedItem.nodeId);
-                    if (value === undefined) {
-                        return {
-                            nodeId: cachedItem.nodeId,
-                            success: false,
-                            error: `No value found for node ${cachedItem.nodeId}`
-                        };
-                    }
-              
-                    await this.writeTag(cachedItem.nodeId, value, cachedItem.dataType, skipValidation);
-                    return { nodeId: cachedItem.nodeId, success: true };
-                } catch (err) {
-                    return {
+            const writeResults: Array<{ nodeId: string; success: boolean; error?: string }> = [];
+
+            // Write sequentially so a dropped OPC UA channel only produces one local failure
+            // instead of a full fan-out of BadConnectionClosed errors.
+            for (const cachedItem of cachedWritesToPerform) {
+                const value = writeValuesByNodeId.get(cachedItem.nodeId);
+                if (value === undefined) {
+                    writeResults.push({
                         nodeId: cachedItem.nodeId,
                         success: false,
-                        error: err instanceof Error ? err.message : String(err)
-                    };
+                        error: `No value found for node ${cachedItem.nodeId}`
+                    });
+                    continue;
                 }
-            });
 
-            const writeResults = await Promise.all(writePromises);
+                const result = await this.writeTag(cachedItem.nodeId, value, cachedItem.dataType, skipValidation);
+                if (!result.success) {
+                    writeResults.push({
+                        nodeId: cachedItem.nodeId,
+                        success: false,
+                        error: result.message
+                    });
+
+                    if (this.isOpcuaConnectionClosedError(result.message)) {
+                        console.warn(`Stopping nested write for ${baseTag} because the OPC UA connection is unavailable.`);
+                        break;
+                    }
+
+                    continue;
+                }
+
+                writeResults.push({ nodeId: cachedItem.nodeId, success: true });
+            }
 
             // 4. Summarize results
             const successCount = writeResults.filter(r => r.success).length;
@@ -307,8 +326,6 @@ export default class CodesysOpcuaDriver {
 
     async writeTag(tag: string, value: any, dataType: DataType = DataType.Int16, skipValidation: boolean = false): Promise<{ success: boolean; message: string }> {
         try {
-            //console.log('hi jake');
-            //console.log(`Writing value to node ${tag}:`, value, `with dataType ${DataType[dataType]}`);
             const nodeId = this.addNodePrefix(tag);
             const variant = new Variant({ dataType, value });
 
@@ -317,13 +334,9 @@ export default class CodesysOpcuaDriver {
                 attributeId: AttributeIds.Value,
                 value: { value: variant }
             });
-            //console.log(`Wrote value to node ${tag}:`, value);
 
-            // Verify write
             if (!skipValidation) {
                 const readValue = await this.readTag(tag, dataType);
-
-                // if readValue is a number and value is a number, compare with tolerance for floating point, otherwise compare directly
                 const isNumber = (val: any): val is number => typeof val === 'number';
                 const tolerance = 0.0001;
                 const valuesMatch = isNumber(readValue) && isNumber(value)
@@ -339,18 +352,22 @@ export default class CodesysOpcuaDriver {
                 }
             }
 
-            //console.log(`Wrote ${value} to node ${tag}`);
-
             return {
-
                 success: true,
                 message: `Wrote ${value} to node ${tag}`
             };
         } catch (error) {
-            console.error(`Failed to write to node ${tag}:`, error);
+            const errorMessage = error instanceof Error ? error.message : String(error);
+
+            if (this.isOpcuaConnectionClosedError(errorMessage)) {
+                console.warn(`Skipped write to node ${tag} because the OPC UA connection is closed.`);
+            } else {
+                console.error(`Failed to write to node ${tag}:`, error);
+            }
+
             return {
                 success: false,
-                message: `Failed to write to node ${tag}: ${error}`
+                message: `Failed to write to node ${tag}: ${errorMessage}`
             };
         }
     }

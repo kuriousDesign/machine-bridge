@@ -22,6 +22,8 @@ type PublishOptions = {
     qos?: 0 | 1;
 };
 
+type ConnectHandler = () => void | Promise<void>;
+
 export default class MqttClientManager {
     private state: MqttState = MqttState.Disconnected;
     private client: MqttClient | null = null;
@@ -29,11 +31,28 @@ export default class MqttClientManager {
     private previousState: MqttState = MqttState.Disconnected;
     // Map to store all registered handlers centrally
     private handlers = new Map<string, MessageHandler>(); 
+    private connectHandlers = new Set<ConnectHandler>();
 
 
     public requestShutdown(): void {
         this.shutdownRequested = true;
         console.log("[MQTT] Shutdown requested. Transitioning to Disconnecting state.");
+    }
+
+    public registerOnConnect(handler: ConnectHandler): () => void {
+        this.connectHandlers.add(handler);
+
+        return () => {
+            this.connectHandlers.delete(handler);
+        };
+    }
+
+    private notifyConnectHandlers(): void {
+        this.connectHandlers.forEach((handler) => {
+            Promise.resolve(handler()).catch((error) => {
+                console.error('[MQTT] Connect handler failed:', error);
+            });
+        });
     }
 
     public async manageConnectionLoop(): Promise<void> {
@@ -70,6 +89,7 @@ export default class MqttClientManager {
                 this.client!.on('connect', () => { 
                     this.state = MqttState.Connected; 
                     this.setupSingleMessageHandler(); // Call the new setup function once
+                    this.notifyConnectHandlers();
                     resolve(); 
                 });
                 this.client!.once('error', (error) => { reject(error); });

@@ -90,6 +90,25 @@ export default class OpcuaClientManager {
     private tagReadInfoMap: Map<string, ReadItemInfo> = new Map();
     private writeQueue: Promise<void> = Promise.resolve();
 
+    private canPerformOpcuaWrites(): boolean {
+        return !!this.session
+            && !!this.codesysOpcuaDriver
+            && (
+                this.state === OpcuaState.Connected
+                || this.state === OpcuaState.Polling
+                || this.state === OpcuaState.WaitingForHeartbeat
+            );
+    }
+
+    private markOpcuaWritesUnavailable(reason: string): void {
+        console.warn(`[OPCUA] Writes disabled: ${reason}`);
+        this.codesysOpcuaDriver = null;
+
+        if (!this.shutdownRequested && this.state !== OpcuaState.Disconnecting) {
+            this.state = OpcuaState.Reconnecting;
+        }
+    }
+
     //private nodeListPrefix = nodeListString + Config.OPCUA_CONTROLLER_NAME + '.Application.';
 
     // constructor 
@@ -100,6 +119,9 @@ export default class OpcuaClientManager {
             console.log(`Diagnostics DISABLED.`);
         }
         this.mqttClientManager = new MqttClientManager();
+        this.mqttClientManager.registerOnConnect(() => {
+            void this.publishBridgeConnectionStatus(true);
+        });
         this.mqttClientManager.manageConnectionLoop();
     }
 
@@ -213,7 +235,9 @@ export default class OpcuaClientManager {
 
             this.client = OPCUAClient.create(Config.OPCUA_OPTIONS);
             // Attach built-in handlers for automatic reconnection messages
-            this.client.on("connection_lost", () => console.warn("[OPCUA] OPC UA connection lost (handled by internal mechanism)"));
+            this.client.on("connection_lost", () => {
+                this.markOpcuaWritesUnavailable("connection lost");
+            });
             this.client.on("after_reconnection", () => console.log("[OPCUA] ✅ OPC UA client reconnected internally"));
 
             await this.client.connect(Config.OPCUA_ENDPOINT);
@@ -353,6 +377,11 @@ export default class OpcuaClientManager {
     }
 
     private async handleExternalServiceDeviceTagRelayToPlc(topic: string, message: TopicData): Promise<void> {
+        if (!this.canPerformOpcuaWrites()) {
+            console.warn(`[OPCUA] Skipping external service write while OPC UA is unavailable: ${topic}`);
+            return;
+        }
+
         const completeData = message.payload as unknown;
         const topicParts = topic.split('/');
         const deviceId = topicParts[topicParts.length - 2];
@@ -427,6 +456,12 @@ export default class OpcuaClientManager {
 
     private async handleWriteTag(topic: string, writeTagData: { tag: string; value: any }): Promise<void> {
         console.log('Handling write tag request for tag:', writeTagData.tag);
+
+        if (!this.canPerformOpcuaWrites()) {
+            console.warn(`[OPCUA] Skipping write_tag for ${writeTagData.tag} while OPC UA is unavailable.`);
+            return;
+        }
+
         await this.enqueueOpcuaWrite(async () => {
             const result = await this.codesysOpcuaDriver?.writeNestedObject(writeTagData.tag, writeTagData.value, true);
             if (result && !result.success) {
@@ -463,6 +498,11 @@ export default class OpcuaClientManager {
     }
 
     private async handleHmiActionRequest(topic: string, hmiActionReqData: DeviceActionRequestData): Promise<void> {
+        if (!this.canPerformOpcuaWrites()) {
+            console.warn(`[OPCUA] Skipping HMI action request while OPC UA is unavailable: ${topic}`);
+            return;
+        }
+
         //const hmiActionReqData = JSON.parse(message.toString()) as DeviceActionRequestData;
         const topicParts = topic.split('/');
         const deviceIdStr = topicParts[topicParts.length - 1];
@@ -676,12 +716,12 @@ export default class OpcuaClientManager {
         this.mqttClientManager.publish(topic, controlData);
     }
 
-    private async publishBridgeConnectionStatus(): Promise<void> {
+    private async publishBridgeConnectionStatus(force = false): Promise<void> {
         const now = Date.now();
         const stateChanged = this.state !== this.lastPublishedState;
         const secondElapsed = now - this.lastPublishTime >= 3000;
 
-        if (!stateChanged && !secondElapsed) {
+        if (!force && !stateChanged && !secondElapsed) {
             return;
         }
 
@@ -757,7 +797,6 @@ export default class OpcuaClientManager {
         if (this.monitoredItemGroups && this.monitoredItemGroups.length > 0) {
             for (const group of this.monitoredItemGroups) {
                 try {
-                    group.setMonitoringMode(MonitoringMode.Disabled);
                     group.terminate();
                 } catch (err) {
                     console.warn('Error terminating monitored group:', err);
@@ -786,6 +825,8 @@ export default class OpcuaClientManager {
             throw new Error("OPC UA session is not initialized");
         }
 
+        const activeSession = this.session;
+
         // First, clean up any existing subscriptions/groups if re-subscribing
         await this.terminateAllSubscriptions();
 
@@ -804,16 +845,26 @@ export default class OpcuaClientManager {
             const groupIndex = chunkIdx + 1;
             console.log(`Creating subscription group ${groupIndex} with ${chunk.length} items...`);
 
+            if (this.session !== activeSession) {
+                console.warn(`Skipping subscription group ${groupIndex} because the OPC UA session changed.`);
+                return;
+            }
+
             // Validate nodes in chunk (read test). Build a filtered array of valid items.
-            const validatedItems = await validateReadItems(this.session!, chunk);
+            const validatedItems = await validateReadItems(activeSession, chunk);
    
             if (validatedItems.length === 0) {
                 console.warn(`No valid items in group ${groupIndex}, skipping subscription creation.`);
                 return;
             }
 
+            if (this.session !== activeSession) {
+                console.warn(`Skipping subscription group ${groupIndex} after validation because the OPC UA session changed.`);
+                return;
+            }
+
             try {
-                const subscription = await this.session?.createSubscription2(Config.SUBSCRIPTION_OPTIONS);
+                const subscription = await activeSession.createSubscription2(Config.SUBSCRIPTION_OPTIONS);
                 if (!subscription) {
                     console.error(`Failed to create subscription for group ${groupIndex}`);
                     return;
@@ -836,14 +887,6 @@ export default class OpcuaClientManager {
                 monitoredGroup.on('changed', (monitoredItem: ClientMonitoredItemBase, dataValue: DataValue) => {
                     this.handleMonitoredItemChange(monitoredItem, dataValue);
                 });
-
-                // ensure reporting mode is set (forces notifications)
-                try {
-                    await monitoredGroup.setMonitoringMode(MonitoringMode.Reporting);
-                    //console.log(`Monitored group ${groupIndex} set to Reporting mode`);
-                } catch (setModeErr) {
-                    console.warn(`Failed to set Reporting mode for group ${groupIndex}:`, setModeErr);
-                }
 
             } catch (err) {
                 console.error(`Failed to create subscription/monitored group ${groupIndex}:`, err);

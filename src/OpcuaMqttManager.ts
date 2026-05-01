@@ -89,6 +89,12 @@ export default class OpcuaClientManager {
     //private deviceStsStore: Map<number, any> = new Map();
     private tagReadInfoMap: Map<string, ReadItemInfo> = new Map();
     private writeQueue: Promise<void> = Promise.resolve();
+    private connectionFailureCount: number = 0;
+    private connectionFailureStartedAt: number | null = null;
+    private lastConnectionRetryLogAt: number = 0;
+    private connectionAttemptStartedAt: number | null = null;
+    private lastDisconnectedStatusLogAt: number = 0;
+    private connectionStatusLogTimer: NodeJS.Timeout | null = null;
 
     private canPerformOpcuaWrites(): boolean {
         return !!this.session
@@ -109,6 +115,132 @@ export default class OpcuaClientManager {
         }
     }
 
+    private isIgnorableOpcuaCleanupError(error: unknown): boolean {
+        const message = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
+
+        return message.includes('badconnectionclosed')
+            || message.includes('invalid channel')
+            || message.includes('session has been closed')
+            || message.includes('socket has been closed')
+            || message.includes('transaction has been canceled')
+            || message.includes('already been terminated')
+            || message.includes('already closed');
+    }
+
+    private logOpcuaConnectionFailure(error: unknown): void {
+        const now = Date.now();
+        const errorMessage = error instanceof Error ? error.message : String(error);
+
+        this.connectionFailureCount += 1;
+
+        if (this.connectionFailureStartedAt === null) {
+            this.connectionFailureStartedAt = now;
+        }
+
+        const shouldLogDetailedFailure = this.connectionFailureCount === 1
+            || now - this.lastConnectionRetryLogAt >= Config.OPCUA_CONNECT_LOG_INTERVAL_MS;
+
+        if (!shouldLogDetailedFailure) {
+            return;
+        }
+
+        const elapsedSeconds = Math.floor((now - this.connectionFailureStartedAt) / 1000);
+        console.error(`[OPCUA] ❌ Unable to connect to ${Config.OPCUA_ENDPOINT}. Attempt ${this.connectionFailureCount}. Last error: ${errorMessage}`);
+
+        if (this.connectionFailureCount > 1) {
+            console.warn(`[OPCUA] Still retrying OPC UA connection after ${elapsedSeconds}s. Retrying every ${Config.RECONNECT_DELAY_MS}ms.`);
+        }
+
+        this.lastConnectionRetryLogAt = now;
+    }
+
+    private resetOpcuaConnectionFailureTracking(): void {
+        if (this.connectionFailureStartedAt !== null && this.connectionFailureCount > 0) {
+            const elapsedSeconds = Math.floor((Date.now() - this.connectionFailureStartedAt) / 1000);
+            console.log(`[OPCUA] ✅ Connection established after ${this.connectionFailureCount} failed attempt(s) over ${elapsedSeconds}s.`);
+        }
+
+        this.connectionFailureCount = 0;
+        this.connectionFailureStartedAt = null;
+        this.connectionAttemptStartedAt = null;
+        this.lastConnectionRetryLogAt = 0;
+        this.lastDisconnectedStatusLogAt = 0;
+    }
+
+    private async teardownExistingOpcuaConnection(): Promise<void> {
+        await this.terminateAllSubscriptions();
+
+        if (this.session) {
+            try {
+                await this.session.close();
+            } catch (error) {
+                if (!this.isIgnorableOpcuaCleanupError(error)) {
+                    console.warn('[OPCUA] Error closing existing session before reconnect:', error);
+                }
+            } finally {
+                this.session = null;
+            }
+        }
+
+        if (this.client) {
+            try {
+                this.client.removeAllListeners("connection_lost");
+                this.client.removeAllListeners("after_reconnection");
+                await this.client.disconnect();
+            } catch (error) {
+                if (!this.isIgnorableOpcuaCleanupError(error)) {
+                    console.warn('[OPCUA] Error disconnecting existing client before reconnect:', error);
+                }
+            } finally {
+                this.client = null;
+            }
+        }
+
+        this.codesysOpcuaDriver = null;
+    }
+
+    private startConnectionStatusLogger(): void {
+        if (this.connectionStatusLogTimer) {
+            return;
+        }
+
+        this.connectionStatusLogTimer = setInterval(() => {
+            this.logOpcuaDisconnectedStatusIfNeeded();
+        }, 1000);
+    }
+
+    private stopConnectionStatusLogger(): void {
+        if (this.connectionStatusLogTimer) {
+            clearInterval(this.connectionStatusLogTimer);
+            this.connectionStatusLogTimer = null;
+        }
+    }
+
+    private logOpcuaDisconnectedStatusIfNeeded(): void {
+        if (this.state !== OpcuaState.Connecting && this.state !== OpcuaState.Reconnecting) {
+            return;
+        }
+
+        const startedAt = this.connectionAttemptStartedAt ?? this.connectionFailureStartedAt;
+        if (startedAt === null) {
+            return;
+        }
+
+        const now = Date.now();
+        const elapsedMs = now - startedAt;
+        if (elapsedMs < Config.OPCUA_CONNECT_LOG_INTERVAL_MS) {
+            return;
+        }
+
+        if (now - this.lastDisconnectedStatusLogAt < Config.OPCUA_CONNECT_LOG_INTERVAL_MS) {
+            return;
+        }
+
+        const elapsedSeconds = Math.floor(elapsedMs / 1000);
+        console.warn(`[OPCUA] Still disconnected after ${elapsedSeconds}s. Current state: ${OpcuaState[this.state]}. Endpoint: ${Config.OPCUA_ENDPOINT}`);
+        this.lastDisconnectedStatusLogAt = now;
+    }
+
     //private nodeListPrefix = nodeListString + Config.OPCUA_CONTROLLER_NAME + '.Application.';
 
     // constructor 
@@ -122,6 +254,7 @@ export default class OpcuaClientManager {
         this.mqttClientManager.registerOnConnect(() => {
             void this.publishBridgeConnectionStatus(true);
         });
+        this.startConnectionStatusLogger();
         this.mqttClientManager.manageConnectionLoop();
     }
 
@@ -227,11 +360,16 @@ export default class OpcuaClientManager {
 
     private async handleConnection(): Promise<void> {
         this.state = OpcuaState.Connecting;
-        console.log(`[OPCUA]Connecting to endpoint: ${Config.OPCUA_ENDPOINT}`);
+        if (this.connectionAttemptStartedAt === null) {
+            this.connectionAttemptStartedAt = Date.now();
+        }
+        if (this.connectionFailureCount === 0) {
+            console.log(`[OPCUA] Connecting to endpoint: ${Config.OPCUA_ENDPOINT}`);
+        }
         this.mqttClientManager.clearAllHandlers();
 
         try {
-            this.terminateAllSubscriptions();
+            await this.teardownExistingOpcuaConnection();
 
             this.client = OPCUAClient.create(Config.OPCUA_OPTIONS);
             // Attach built-in handlers for automatic reconnection messages
@@ -244,17 +382,16 @@ export default class OpcuaClientManager {
             this.session = await this.client.createSession();
             console.log("[OPCUA] ✅ Connected to server and session created.");
             this.codesysOpcuaDriver = new CodesysOpcuaDriver(DeviceId.HMI, this.session, Config.OPCUA_CONTROLLER_NAME);
+            this.resetOpcuaConnectionFailureTracking();
 
             this.state = OpcuaState.Connected;
 
         } catch (err) {
-            console.error(`[OPCUA] ❌ Failed to connect/create session: ${err instanceof Error ? err.message : String(err)}`);
-            if (this.client) {
-                await this.client.disconnect();
+            this.logOpcuaConnectionFailure(err);
+            await this.teardownExistingOpcuaConnection();
+            if (this.connectionFailureCount === 1 || Date.now() - this.lastConnectionRetryLogAt < 50) {
+                console.log(`[OPCUA] Will retry in ${Config.RECONNECT_DELAY_MS}ms...`);
             }
-            this.client = null;
-            this.session = null;
-            console.log(`[OPCUA] Will retry in ${Config.RECONNECT_DELAY_MS}ms...`);
             this.state = OpcuaState.Reconnecting;
             await new Promise(resolve => setTimeout(resolve, Config.RECONNECT_DELAY_MS));
         }
@@ -543,7 +680,7 @@ export default class OpcuaClientManager {
         if (this.session) {
             try {
                 // Optional: force close if server is slow
-                this.terminateAllSubscriptions();
+                await this.terminateAllSubscriptions();
                 const closePromise = this.session.close();
                 await Promise.race([
                     closePromise,
@@ -582,6 +719,7 @@ export default class OpcuaClientManager {
         }
 
         this.state = OpcuaState.Disconnected;
+        this.stopConnectionStatusLogger();
         console.log("✅ OPC UA fully disconnected.");
     }
 
@@ -793,28 +931,37 @@ export default class OpcuaClientManager {
     // Terminate all subscriptions & monitored groups
     // -----------------------------
     private async terminateAllSubscriptions(): Promise<void> {
+        const monitoredGroups = this.monitoredItemGroups.splice(0);
+        const subscriptions = this.opcuaSubscriptions.splice(0);
+
         // terminate monitored item groups first
-        if (this.monitoredItemGroups && this.monitoredItemGroups.length > 0) {
-            for (const group of this.monitoredItemGroups) {
+        if (monitoredGroups.length > 0) {
+            for (const group of monitoredGroups) {
                 try {
-                    group.terminate();
+                    await group.terminate();
                 } catch (err) {
-                    console.warn('Error terminating monitored group:', err);
+                    if (this.isIgnorableOpcuaCleanupError(err)) {
+                        console.warn('[OPCUA] Ignoring monitored group termination error after connection loss:', err instanceof Error ? err.message : err);
+                    } else {
+                        console.warn('Error terminating monitored group:', err);
+                    }
                 }
             }
-            this.monitoredItemGroups = [];
         }
 
         // then terminate subscriptions
-        if (this.opcuaSubscriptions && this.opcuaSubscriptions.length > 0) {
-            for (const sub of this.opcuaSubscriptions) {
+        if (subscriptions.length > 0) {
+            for (const sub of subscriptions) {
                 try {
-                    sub.terminate();
+                    await sub.terminate();
                 } catch (err) {
-                    console.warn('Error terminating subscription:', err);
+                    if (this.isIgnorableOpcuaCleanupError(err)) {
+                        console.warn('[OPCUA] Ignoring subscription termination error after connection loss:', err instanceof Error ? err.message : err);
+                    } else {
+                        console.warn('Error terminating subscription:', err);
+                    }
                 }
             }
-            this.opcuaSubscriptions = [];
         }
 
         console.log('All OPC UA subscriptions and monitored groups terminated');

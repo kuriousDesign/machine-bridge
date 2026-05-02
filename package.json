@@ -1,6 +1,9 @@
 {
   "name": "machine-websocket-server",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=22.16.0 <23"
+  },
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",

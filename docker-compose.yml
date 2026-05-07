@@ -6,7 +6,7 @@ services:
       context: ..
       dockerfile: machine-bridge/.devcontainer/Dockerfile
       network: host
-
+    container_name: machine-bridge
     restart: unless-stopped
     network_mode: host 
     env_file:

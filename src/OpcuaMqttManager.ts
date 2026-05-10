@@ -20,7 +20,9 @@ import {
 
 import Config from './config'; // <--- Use the central config
 
-import { BridgeCmds, DeviceActionRequestData, DeviceId, DeviceRegistration, DeviceTags, initialKioskControlData, KioskControlData, MachineTags, MqttTopics, PlcNamespaces, TopicData, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
+import { BridgeCmds, DeviceId, DeviceRegistration, DeviceTags, initialKioskControlData, KioskControlData, MachineTags, MqttTopics, PlcNamespaces, TopicData, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
+import ExternalServiceWriteManager from './ExternalServiceWriteManager';
+import HmiWriteManager from './HmiWriteManager';
 import MqttClientManager from './MqttClientManager';
 import CodesysOpcuaDriver from './OpcuaMqtt/codesys-opcua-driver';
 import { getDeviceReadItems, getMachineReadItems, ReadItemInfo, validateReadItems } from './OpcuaMqtt/monitored-items';
@@ -47,9 +49,50 @@ enum OpcuaState {
     Disconnecting,
 }
 
-// add a struct to define bridge connection status
-interface BridgeConnectionStatus {
+export enum PublishManagerStatus {
+    Idle = 'idle',
+    ConnectingSession = 'connectingSession',
+    LoadingBootstrapData = 'loadingBootstrapData',
+    CreatingSubscriptions = 'creatingSubscriptions',
+    ReadyForHmiHydration = 'readyForHmiHydration',
+    Polling = 'polling',
+    WaitingForHeartbeat = 'waitingForHeartbeat',
+    Reconnecting = 'reconnecting',
+    Disconnecting = 'disconnecting',
+    Disconnected = 'disconnected',
+}
+
+export interface OpcuaClientManagerCallbacks {
+    onStatusChange?: (status: PublishManagerStatus) => void;
+    onError?: (error: Error) => void;
+}
+
+export interface OpcuaClientManagerDependencies {
+    externalServiceWriteManager?: ExternalServiceWriteManager;
+    getBridgeStatusSnapshot?: () => Partial<BridgeStatusSnapshot>;
+    hmiWriteManager?: HmiWriteManager;
+    mqttClientManager?: MqttClientManager;
+}
+
+export interface WriterHealthSnapshot {
+    lastError: string | null;
+    lastResetAt: number | null;
+    lastResetReason: string | null;
+    resetCount: number;
+    state: string;
+}
+
+export interface BridgeStatusSnapshot {
+    mqttConnected: boolean;
     opcuaState: OpcuaState;
+    opcuaStateLabel: string;
+    publishManagerStatus: PublishManagerStatus;
+    registeredDeviceCount: number;
+    supervisorState?: string;
+    writeManagers?: {
+        externalService: WriterHealthSnapshot;
+        hmi: WriterHealthSnapshot;
+    };
 }
 
 function decipherOpcuaValue(data: any): any {
@@ -65,8 +108,14 @@ function concatNodeId(namespace: string, tag: string): string {
 }
 
 export default class OpcuaClientManager {
+    private externalServiceWriteManager: ExternalServiceWriteManager;
+    private getBridgeStatusSnapshot?: () => Partial<BridgeStatusSnapshot>;
     private mqttClientManager: MqttClientManager;
+    private ownsMqttClientManager: boolean;
+    private hmiWriteManager: HmiWriteManager;
+    private readonly callbacks: OpcuaClientManagerCallbacks;
     private state: OpcuaState = OpcuaState.Disconnected;
+    private publishStatus: PublishManagerStatus = PublishManagerStatus.Idle;
     private client: OPCUAClient | null = null;
     private session: ClientSession | null = null;
     private machinePollingItems: ReadItemInfo[] = [];
@@ -78,6 +127,7 @@ export default class OpcuaClientManager {
     private heartbeatHmiValue: number = 0;
     private heartbeatHmiNodeId = concatNodeId(PlcNamespaces.Machine, MachineTags.HeartbeatHMI);
     private heartbeatPlcNodeId = concatNodeId(PlcNamespaces.Machine, MachineTags.HeartbeatPLC);
+    private lastHeartbeatObservedAt: number = 0;
     private registeredDevices: DeviceRegistration[] = []
     private deviceMap: Map<number, DeviceRegistration> = new Map();
     private codesysOpcuaDriver: CodesysOpcuaDriver | null = null;
@@ -244,23 +294,38 @@ export default class OpcuaClientManager {
     //private nodeListPrefix = nodeListString + Config.OPCUA_CONTROLLER_NAME + '.Application.';
 
     // constructor 
-    constructor() {
+    constructor(
+        callbacks: OpcuaClientManagerCallbacks = {},
+        dependencies: OpcuaClientManagerDependencies = {},
+    ) {
+        this.callbacks = callbacks;
         if (Config.ENABLE_DIAGNOSTICS) {
             console.log(`Diagnostics ENABLED. Skipping stats for the first ${Config.DIAG_READS_TO_SKIP_AT_START} scans.`);
         } else {
             console.log(`Diagnostics DISABLED.`);
         }
-        this.mqttClientManager = new MqttClientManager();
+        this.ownsMqttClientManager = !dependencies.mqttClientManager;
+        this.mqttClientManager = dependencies.mqttClientManager ?? new MqttClientManager();
+        this.externalServiceWriteManager = dependencies.externalServiceWriteManager ?? new ExternalServiceWriteManager();
+        this.getBridgeStatusSnapshot = dependencies.getBridgeStatusSnapshot;
+        this.hmiWriteManager = dependencies.hmiWriteManager ?? new HmiWriteManager();
         this.mqttClientManager.registerOnConnect(() => {
             void this.publishBridgeConnectionStatus(true);
         });
         this.startConnectionStatusLogger();
-        this.mqttClientManager.manageConnectionLoop();
+        if (this.ownsMqttClientManager) {
+            void this.mqttClientManager.manageConnectionLoop();
+        }
     }
 
     public requestShutdown(): void {
         this.shutdownRequested = true;
         console.log("Shutdown requested. Transitioning to Disconnecting state.");
+        this.setPublishStatus(PublishManagerStatus.Disconnecting);
+    }
+
+    public getPublishStatus(): PublishManagerStatus {
+        return this.publishStatus;
     }
 
     public async manageConnectionLoop(): Promise<void> {
@@ -279,23 +344,37 @@ export default class OpcuaClientManager {
                     if (!this.session) {
                         console.log("Waiting for session to be active...");
                         this.state = OpcuaState.Reconnecting;
+                        this.setPublishStatus(PublishManagerStatus.Reconnecting);
                         break;
                     }
+                    this.setPublishStatus(PublishManagerStatus.LoadingBootstrapData);
+                    this.logBootstrapStep('1/6', 'Reading registeredDevices from OPC UA');
                     await this.updateRegisteredDevices();
+
+                    this.logBootstrapStep('2/6', 'Building unvalidated device polling tag list');
                     const unvalidatedDeviceReadItems = await getDeviceReadItems(this.registeredDevices, this.deviceMap);
+                    this.logReadItemBatch('Device polling candidates', unvalidatedDeviceReadItems);
+
+                    this.logBootstrapStep('3/6', 'Validating device polling tags against live OPC UA session');
                     this.devicePollingItems = await validateReadItems(this.session!, unvalidatedDeviceReadItems);
-                    console.log("validated device read items:", this.devicePollingItems.length, "from unvalidated:", unvalidatedDeviceReadItems.length);
+                    this.logValidatedReadItemBatch('Device polling tags', unvalidatedDeviceReadItems, this.devicePollingItems);
                     
+                    this.logBootstrapStep('4/6', 'Building unvalidated machine polling tag list');
                     const unvalidatedMachineReadItems = await getMachineReadItems();
+                    this.logReadItemBatch('Machine polling candidates', unvalidatedMachineReadItems);
+
+                    this.logBootstrapStep('5/6', 'Validating machine polling tags against live OPC UA session');
                     this.machinePollingItems = await validateReadItems(this.session!, unvalidatedMachineReadItems);
-                    console.log("validated machine read items:", this.machinePollingItems.length, "from unvalidated:", unvalidatedMachineReadItems.length);
+                    this.logValidatedReadItemBatch('Machine polling tags', unvalidatedMachineReadItems, this.machinePollingItems);
                     
                     this.allPollingItems = this.machinePollingItems.concat(this.devicePollingItems);
+                    this.logBootstrapStep('6/6', `Caching validated polling tags (${this.allPollingItems.length} total)`);
                     this.allPollingItems.map((item) => {
                         this.tagReadInfoMap.set(item.tagId, item);
                     });
 
                     console.log("Total all polling items:", this.allPollingItems.length);
+                    this.setPublishStatus(PublishManagerStatus.CreatingSubscriptions);
                     // subscribe to device HMI action request topic
                     // Array.from(this.deviceMap.values()).map(async device =>
                     //     //await this.subscribeToMqttTopicDeviceHmiActionRequest(device)
@@ -303,12 +382,18 @@ export default class OpcuaClientManager {
                     await this.terminateAllSubscriptions();
                     await this.subscribeToMonitoredItems();
                     console.log("Total validated polling items:", this.allPollingItems.length);
-                    Array.from(this.deviceMap.values()).map(async device => {
-                        await this.subscribeToExtDeviceUpdateDevice(device);
-                        await this.subscribeToMqttTopicDeviceHmiActionRequest(device);
+                    this.externalServiceWriteManager.configure({
+                        mqttClientManager: this.mqttClientManager,
+                        getDeviceMap: () => this.deviceMap,
                     });
-                    await this.subscribeToMachineWriteTag();
+                    this.hmiWriteManager.configure({
+                        mqttClientManager: this.mqttClientManager,
+                        getDeviceMap: () => this.deviceMap,
+                    });
+                    await this.externalServiceWriteManager.syncSubscriptions(this.deviceMap.values());
+                    await this.hmiWriteManager.syncSubscriptions(this.deviceMap.values());
                     await this.subscribeToBridgeCommandTopic();
+                    this.setPublishStatus(PublishManagerStatus.ReadyForHmiHydration);
                     break;
 
                 case OpcuaState.Connected:
@@ -323,19 +408,26 @@ export default class OpcuaClientManager {
                         prevHeartbeatPlcValue = this.heartbeatPlcValue;
                         if (this.state === OpcuaState.WaitingForHeartbeat){
                             this.state = OpcuaState.Reconnecting;
+                            this.setPublishStatus(PublishManagerStatus.Reconnecting);
                         } else{
                             this.state = OpcuaState.Polling;
+                            this.setPublishStatus(PublishManagerStatus.Polling);
                         }
-                    } else if (Date.now() - lastUpdateTime > 5000) {
+                    }
+
+                    const lastHeartbeatActivityTime = Math.max(lastUpdateTime, this.lastHeartbeatObservedAt);
+                    if (Date.now() - lastHeartbeatActivityTime > 5000) {
                         // Heartbeat not updating, transition to waiting state
                         if (this.state !== OpcuaState.WaitingForHeartbeat)
-                            console.warn(`⚠️ PLC heartbeat not updating. Waiting for heartbeat, last update was ${Date.now() - lastUpdateTime} ms ago`);
+                            console.warn(`⚠️ PLC heartbeat not updating. Waiting for heartbeat, last update was ${Date.now() - lastHeartbeatActivityTime} ms ago`);
                         this.state = OpcuaState.WaitingForHeartbeat;
+                        this.setPublishStatus(PublishManagerStatus.WaitingForHeartbeat);
                     }
                     this.checkAndPublishData();
                     break;
 
                 case OpcuaState.Disconnecting:
+                    this.setPublishStatus(PublishManagerStatus.Disconnecting);
                     await this.handleDisconnect();
                     return; // Exit loop after graceful disconnect
             }
@@ -343,7 +435,29 @@ export default class OpcuaClientManager {
             await new Promise(resolve => setTimeout(resolve, Config.LOOP_DELAY_MS));
         }
         await this.handleDisconnect();
-        await this.mqttClientManager.requestShutdown();
+        if (this.ownsMqttClientManager) {
+            this.mqttClientManager.requestShutdown();
+        }
+    }
+
+    public async syncWriterSubscriptions(): Promise<void> {
+        await this.externalServiceWriteManager.syncSubscriptions(this.deviceMap.values());
+        await this.hmiWriteManager.syncSubscriptions(this.deviceMap.values());
+    }
+
+    private setPublishStatus(nextStatus: PublishManagerStatus): void {
+        if (this.publishStatus === nextStatus) {
+            return;
+        }
+
+        this.publishStatus = nextStatus;
+        console.log(`[PUBLISH_MANAGER] STATUS: ${nextStatus}`);
+        this.callbacks.onStatusChange?.(nextStatus);
+    }
+
+    private reportError(error: unknown): void {
+        const normalizedError = error instanceof Error ? error : new Error(String(error));
+        this.callbacks.onError?.(normalizedError);
     }
 
     private async checkAndPublishData(): Promise<void> {
@@ -360,6 +474,7 @@ export default class OpcuaClientManager {
 
     private async handleConnection(): Promise<void> {
         this.state = OpcuaState.Connecting;
+        this.setPublishStatus(PublishManagerStatus.ConnectingSession);
         if (this.connectionAttemptStartedAt === null) {
             this.connectionAttemptStartedAt = Date.now();
         }
@@ -367,6 +482,8 @@ export default class OpcuaClientManager {
             console.log(`[OPCUA] Connecting to endpoint: ${Config.OPCUA_ENDPOINT}`);
         }
         this.mqttClientManager.clearAllHandlers();
+        this.externalServiceWriteManager.resetSubscriptions();
+        this.hmiWriteManager.resetSubscriptions();
 
         try {
             await this.teardownExistingOpcuaConnection();
@@ -387,12 +504,14 @@ export default class OpcuaClientManager {
             this.state = OpcuaState.Connected;
 
         } catch (err) {
+            this.reportError(err);
             this.logOpcuaConnectionFailure(err);
             await this.teardownExistingOpcuaConnection();
             if (this.connectionFailureCount === 1 || Date.now() - this.lastConnectionRetryLogAt < 50) {
                 console.log(`[OPCUA] Will retry in ${Config.RECONNECT_DELAY_MS}ms...`);
             }
             this.state = OpcuaState.Reconnecting;
+            this.setPublishStatus(PublishManagerStatus.Reconnecting);
             await new Promise(resolve => setTimeout(resolve, Config.RECONNECT_DELAY_MS));
         }
     }
@@ -401,25 +520,54 @@ export default class OpcuaClientManager {
 
     private async updateRegisteredDevices(): Promise<void> {
 
-        console.log("Retrieving registered devices from OPC UA...");
+        console.log("[BOOTSTRAP] Retrieving registered devices from OPC UA...");
         const registeredDevicesNodeId = concatNodeId(PlcNamespaces.Machine, MachineTags.registeredDevices);
+        console.log(`[BOOTSTRAP] Reading node: ${registeredDevicesNodeId}`);
         const registeredDevices = await this.readOpcuaValue(registeredDevicesNodeId) as DeviceRegistration[];
 
-        console.log("[OPCUA] Raw OPC UA registeredDevices count:", registeredDevices?.length ?? 0,
+        console.log("[BOOTSTRAP] Raw OPC UA registeredDevices count:", registeredDevices?.length ?? 0,
             "| ids:", (registeredDevices || []).map(d => d.id).join(','));
 
         this.registeredDevices = (registeredDevices || []).filter((device: DeviceRegistration) => device.id !== 0);
-        console.log("[OPCUA] BUILDING DEVICE MAP (clearing previous map)");
+        console.log("[BOOTSTRAP] Building device map (clearing previous map)");
         this.deviceMap.clear();
         this.registeredDevices.forEach(deviceReg => {
             const topicPath = buildFullTopicPath(deviceReg, this.deviceMap);
             const devicePath = topicPath.split('/');
             deviceReg.devicePath = devicePath;
             this.deviceMap.set(deviceReg.id, deviceReg);
-            console.log("Adding", deviceReg.mnemonic, "to deviceMap, id:", deviceReg.id, "with path:", deviceReg.devicePath);
+            console.log(`[BOOTSTRAP] Device map entry: id=${deviceReg.id} mnemonic=${deviceReg.mnemonic} parentId=${deviceReg.parentId} topic=${topicPath}`);
         });
-        console.log("Retrieved registered devices, count:", this.registeredDevices.length,
+        console.log("[BOOTSTRAP] Registered devices ready, count:", this.registeredDevices.length,
             "| deviceMap ids:", Array.from(this.deviceMap.keys()).sort((a, b) => a - b).join(','));
+    }
+
+    private logBootstrapStep(step: string, description: string): void {
+        console.log(`[BOOTSTRAP] ${step} ${description}`);
+    }
+
+    private logReadItemBatch(label: string, items: ReadItemInfo[]): void {
+        console.log(`[BOOTSTRAP] ${label}: ${items.length} tag(s)`);
+        items.forEach((item, index) => {
+            console.log(`[BOOTSTRAP]   [${index + 1}/${items.length}] tag=${item.tagId} node=${item.nodeId} topic=${item.mqttTopic}`);
+        });
+    }
+
+    private logValidatedReadItemBatch(label: string, requestedItems: ReadItemInfo[], validatedItems: ReadItemInfo[]): void {
+        const validatedTagIds = new Set(validatedItems.map((item) => item.tagId));
+        const skippedItems = requestedItems.filter((item) => !validatedTagIds.has(item.tagId));
+
+        console.log(`[BOOTSTRAP] ${label}: validated ${validatedItems.length}/${requestedItems.length}`);
+        validatedItems.forEach((item, index) => {
+            console.log(`[BOOTSTRAP]   [OK ${index + 1}/${validatedItems.length}] tag=${item.tagId} node=${item.nodeId} topic=${item.mqttTopic}`);
+        });
+
+        if (skippedItems.length > 0) {
+            console.warn(`[BOOTSTRAP] ${label}: skipped ${skippedItems.length} invalid tag(s)`);
+            skippedItems.forEach((item, index) => {
+                console.warn(`[BOOTSTRAP]   [SKIP ${index + 1}/${skippedItems.length}] tag=${item.tagId} node=${item.nodeId} topic=${item.mqttTopic}`);
+            });
+        }
     }
 
     private async publishTags(chunkIndex: number): Promise<void> {
@@ -473,86 +621,10 @@ export default class OpcuaClientManager {
         } catch (error) {
             // A read error likely means the session or connection is bad.
             console.error("❌ Polling failed. Assuming connection issue, attempting reconnection:", error);
+            this.reportError(error);
             this.state = OpcuaState.Reconnecting;
+            this.setPublishStatus(PublishManagerStatus.Reconnecting);
             this.session = null; // Invalidate session
-        }
-    }
-
-    private async subscribeToExtDeviceUpdateDevice(device: DeviceRegistration): Promise<void> {
-        if (!this.session) {
-            throw new Error("OPC UA session is not initialized");
-        }
-        if (!this.mqttClientManager) {
-            throw new Error("MQTT client is not initialized");
-        }
-        if (!this.deviceMap || this.deviceMap.size === 0) {
-            throw new Error("Device map is not initialized or empty");
-        }
-
-        //const deviceTopic = buildFullTopicPath(device, this.deviceMap);
-
-        if (device.isExternalService) {
-            //const topic = device.mnemonic.toLowerCase() + '/';
-            const deviceTags = DeviceTags;
-            const baseTopic = Config.BRIDGE_API_UPDATE_DEVICE + '/' + device.id.toString();
-
-            // Subscribe to each key in deviceTags
-            // Object.keys(deviceTags).forEach(async tagKey => {
-            //     const topic = baseTopic + '/' + tagKey.toLowerCase();
-            //     console.log('Subscribing to topic for external service device tag relay:', topic);
-            //     this.mqttClientManager.subscribe(topic, async (topic: string, message: Buffer) => {
-            //         this.handleExternalServiceDeviceTagRelayToPlc(topic, JSON.parse(message.toString()) as TopicData)
-            //     });
-            // });
-
-            const topic = baseTopic + '/sts';
-            console.log('Subscribing to topic for external service sts tag:', topic);
-            this.mqttClientManager.subscribe(topic, async (topic: string, message: Buffer) => {
-                this.handleExternalServiceDeviceTagRelayToPlc(topic, JSON.parse(message.toString()) as TopicData)
-            });
-        }
-    }
-
-    private async handleExternalServiceDeviceTagRelayToPlc(topic: string, message: TopicData): Promise<void> {
-        if (!this.canPerformOpcuaWrites()) {
-            console.warn(`[OPCUA] Skipping external service write while OPC UA is unavailable: ${topic}`);
-            return;
-        }
-
-        const completeData = message.payload as unknown;
-        const topicParts = topic.split('/');
-        const deviceId = topicParts[topicParts.length - 2];
-        const tagName = topicParts[topicParts.length - 1];
-        const deviceReg = this.deviceMap.get(Number(deviceId));
-        if (!deviceReg) {
-            console.error('No device found for deviceId:', deviceId);
-            return;
-        }
-        if (!message.payload || completeData === undefined || completeData === null) {
-            console.error('No payload found in message for deviceId:', deviceId, ' topic:', topic);
-            return;
-        }
-
-        if (tagName === 'sts') {
-            const deviceTag = PlcNamespaces.Machine + '.' + deviceReg.mnemonic.toLowerCase() + 'Sts';// + 'ExtService';
-
-            //delete the iExtService.o: expected 0, got 1. Type of written value: number, Type of read value: number
-            if (typeof completeData === 'object' && completeData !== null && 'iExtService' in completeData && typeof (completeData as Record<string, any>)['iExtService'] === 'object' && (completeData as Record<string, any>)['iExtService'] !== null && 'o' in (completeData as Record<string, any>)['iExtService']) {
-                delete ((completeData as Record<string, any>)['iExtService'] as Record<string, any>)['o'];
-                //console.log('Deleted iExtService.o from sts payload for deviceId:', deviceId);
-                //console.log('incoming heartbeatVal:', (completeData as Record<string, any>)['iExtService']?.['i']?.['heartbeatVal']);
-                //console.log('incoming stepNum:', (completeData as Record<string, any>)['iExtService']?.['i']?.['stepNum']);
-            }
-
-            await this.enqueueOpcuaWrite(async () => {
-                const result = await this.codesysOpcuaDriver?.writeNestedObject(deviceTag, completeData, true);
-                if (result && !result.success) {
-                    console.warn(`[OPCUA] External service write failed for ${deviceTag}: ${result.message}`);
-                }
-            });
-        } else {
-            const deviceTag = PlcNamespaces.Machine + '.' + MachineTags.deviceStore + '[' + deviceId + ']' + '.' + tagName;
-            //this.codesysOpcuaDriver?.writeNestedObject(deviceTag, message.payload);
         }
     }
 
@@ -566,20 +638,6 @@ export default class OpcuaClientManager {
         await this.writeQueue;
     }
 
-    private async subscribeToMachineWriteTag(): Promise<void> {
-        if (!this.session) {
-            throw new Error("OPC UA session is not initialized");
-        }
-        if (!this.mqttClientManager) {
-            throw new Error("MQTT client is not initialized");
-        }
-        const topic = Config.BRIDGE_API_WRITE_TAG;
-        console.log('Subscribing to bridge api write_tag topic:', topic);
-            this.mqttClientManager.subscribe(topic, async (topic: string, message: Buffer) => {
-                await this.handleWriteTag(topic, JSON.parse(message.toString()) as any);
-            });
-    }
-
     private async subscribeToBridgeCommandTopic(): Promise<void> {
         if (!this.mqttClientManager) {
             throw new Error("MQTT client is not initialized");
@@ -591,78 +649,9 @@ export default class OpcuaClientManager {
         });
     }
 
-    private async handleWriteTag(topic: string, writeTagData: { tag: string; value: any }): Promise<void> {
-        console.log('Handling write tag request for tag:', writeTagData.tag);
-
-        if (!this.canPerformOpcuaWrites()) {
-            console.warn(`[OPCUA] Skipping write_tag for ${writeTagData.tag} while OPC UA is unavailable.`);
-            return;
-        }
-
-        await this.enqueueOpcuaWrite(async () => {
-            const result = await this.codesysOpcuaDriver?.writeNestedObject(writeTagData.tag, writeTagData.value, true);
-            if (result && !result.success) {
-                console.warn(`[OPCUA] Write tag request failed for ${writeTagData.tag}: ${result.message}`);
-            }
-        });
-    }
-
-    private async subscribeToMqttTopicDeviceHmiActionRequest(device: DeviceRegistration): Promise<void> {
-        if (!this.session) {
-            throw new Error("OPC UA session is not initialized");
-        }
-        if (!this.mqttClientManager) {
-            throw new Error("MQTT client is not initialized");
-        }
-        if (!this.deviceMap || this.deviceMap.size === 0) {
-            throw new Error("Device map is not initialized or empty");
-        }
-
-        //const deviceTopic = buildFullTopicPath(device, this.deviceMap);
-
-        if (false && device.isExternalService) {
-            const topic = device.mnemonic.toLowerCase() + '/';
-            const deviceTags = DeviceTags;
-            //this.subscribeToBridgeExternalServiceApi(device.id);
-        }
-        else {
-            const topic = MqttTopics.HMI_ACTION_REQ + '/' + device.id.toString();
-            console.log('Subscribing to device action request topic:', topic);
-            this.mqttClientManager.subscribe(topic, async (topic: string, message: Buffer) => {
-                await this.handleHmiActionRequest(topic, JSON.parse(message.toString()) as DeviceActionRequestData);
-            });
-        }
-    }
-
-    private async handleHmiActionRequest(topic: string, hmiActionReqData: DeviceActionRequestData): Promise<void> {
-        if (!this.canPerformOpcuaWrites()) {
-            console.warn(`[OPCUA] Skipping HMI action request while OPC UA is unavailable: ${topic}`);
-            return;
-        }
-
-        //const hmiActionReqData = JSON.parse(message.toString()) as DeviceActionRequestData;
-        const topicParts = topic.split('/');
-        const deviceIdStr = topicParts[topicParts.length - 1];
-        const deviceId = Number(deviceIdStr);
-        if (isNaN(deviceId)) {
-            console.error('Invalid deviceId extracted from topic:', topic);
-            return;
-        }
-        const device = this.deviceMap.get(deviceId);
-        if (!device) {
-            console.error('No device found for deviceId:', deviceId);
-            return;
-        }
-        console.log('Handling HMI Action Request for device:', device.mnemonic);
-        //const tag = `Machine.Devices[${device.id}].${DeviceTags.ApiOpcuaHmiReq}`;
-        //const tag = `Machine.Devices[${device.id}].is`;
-        //await this.codesysOpcuaDriver?.writeTagV2(tag, initialDeviceStatus);
-        await this.codesysOpcuaDriver?.requestAction(device.id, hmiActionReqData.ActionType, hmiActionReqData.ActionId, hmiActionReqData.ParamArray);
-
-    }
-
     private async handleDisconnect(): Promise<void> {
         this.state = OpcuaState.Disconnecting;
+        this.setPublishStatus(PublishManagerStatus.Disconnecting);
         console.log("Starting graceful OPC UA disconnection and cleanup...");
 
         // 1. Cleanup Codesys driver first (important!)
@@ -719,6 +708,7 @@ export default class OpcuaClientManager {
         }
 
         this.state = OpcuaState.Disconnected;
+        this.setPublishStatus(PublishManagerStatus.Disconnected);
         this.stopConnectionStatusLogger();
         console.log("✅ OPC UA fully disconnected.");
     }
@@ -863,8 +853,13 @@ export default class OpcuaClientManager {
             return;
         }
 
-        const payload: BridgeConnectionStatus = {
+        const payload: BridgeStatusSnapshot = {
+            ...this.getBridgeStatusSnapshot?.(),
+            mqttConnected: this.mqttClientManager.isConnected(),
             opcuaState: this.state,
+            opcuaStateLabel: OpcuaState[this.state],
+            publishManagerStatus: this.publishStatus,
+            registeredDeviceCount: this.deviceMap.size,
         };
 
         this.mqttClientManager.publish(MqttTopics.BRIDGE_STATUS, payload, true);
@@ -1066,6 +1061,11 @@ export default class OpcuaClientManager {
             readInfo.last_publish_time = Date.now();
             // update the tagReadInfoMap
             this.tagReadInfoMap.set(tag, readInfo);
+
+            if (tag === `${PlcNamespaces.Machine}.${MachineTags.HeartbeatPLC}`) {
+                this.heartbeatPlcValue = newValue as number;
+                this.lastHeartbeatObservedAt = Date.now();
+            }
 
             this.mqttClientManager.publish(topic, newValue);
             if (topic === "machine/heartbeatplc" && newValue % 30 === 0) {

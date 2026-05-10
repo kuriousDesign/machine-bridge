@@ -1,24 +1,36 @@
 //import "dotenv/config"; // auto-loads .env
-import OpcuaClientManager from './OpcuaMqttManager';
+import BridgeSupervisor from './BridgeSupervisor';
 
 
 async function main() {
     console.log('🚀 Starting OPC UA ↔ MQTT Bridge');
 
-
-    const manager = new OpcuaClientManager();
+    const supervisor = new BridgeSupervisor();
+    let shutdownRequested = false;
     
 
     // Handle graceful shutdown via Ctrl+C
-    process.on('SIGINT', async () => {
+    process.once('SIGINT', async () => {
+        if (shutdownRequested) {
+            return;
+        }
+
+        shutdownRequested = true;
         console.log("\nSIGINT received. Shutting down gracefully.");
-        manager.requestShutdown();
-        // Give the state machine loop time to complete the disconnect process
-        // A better approach in a real app might use a promise/event listener here
-        setTimeout(() => process.exit(0), 5000);
+        const forceExitTimer = setTimeout(() => process.exit(1), 10000);
+        forceExitTimer.unref();
+
+        try {
+            await supervisor.requestShutdown();
+            clearTimeout(forceExitTimer);
+            process.exit(0);
+        } catch (error) {
+            console.error('Shutdown failed:', error);
+            process.exit(1);
+        }
     });
 
-    await manager.manageConnectionLoop();
+    await supervisor.start();
     // Script finishes here after disconnection is complete.
 }
 

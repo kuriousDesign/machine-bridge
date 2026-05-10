@@ -36,6 +36,7 @@ export default class MqttClientManager {
 
     public requestShutdown(): void {
         this.shutdownRequested = true;
+        this.state = MqttState.Disconnecting;
         console.log("[MQTT] Shutdown requested. Transitioning to Disconnecting state.");
     }
 
@@ -45,6 +46,23 @@ export default class MqttClientManager {
         return () => {
             this.connectHandlers.delete(handler);
         };
+    }
+
+    public isConnected(): boolean {
+        return this.state === MqttState.Connected && !!this.client?.connected;
+    }
+
+    public async waitUntilConnected(): Promise<void> {
+        if (this.isConnected()) {
+            return;
+        }
+
+        await new Promise<void>((resolve) => {
+            const unregister = this.registerOnConnect(() => {
+                unregister();
+                resolve();
+            });
+        });
     }
 
     private notifyConnectHandlers(): void {
@@ -120,10 +138,46 @@ export default class MqttClientManager {
     private async handleDisconnect(): Promise<void> {
         this.state = MqttState.Disconnecting;
         if (this.client) {
+            const activeClient = this.client;
             // Remove all handlers upon disconnect to prevent memory leaks if client instance changes
             this.clearAllHandlers();
-            this.client.removeAllListeners('message'); 
-            await new Promise<void>(resolve => { this.client!.end(true, () => { this.client = null; this.state = MqttState.Disconnected; resolve(); }); });
+            activeClient.removeAllListeners('message');
+
+            await new Promise<void>((resolve) => {
+                let settled = false;
+                const cleanup = () => {
+                    activeClient.removeListener('close', onClose);
+                    clearTimeout(timeoutId);
+                };
+                const finish = () => {
+                    if (settled) {
+                        return;
+                    }
+
+                    settled = true;
+                    cleanup();
+                    if (this.client === activeClient) {
+                        this.client = null;
+                    }
+                    this.state = MqttState.Disconnected;
+                    console.log('[MQTT] Client disconnect completed.');
+                    resolve();
+                };
+                const onClose = () => {
+                    finish();
+                };
+                const timeoutId = setTimeout(() => {
+                    console.warn('[MQTT] Timed out waiting for MQTT client disconnect callback. Continuing shutdown.');
+                    finish();
+                }, 5000);
+
+                activeClient.once('close', onClose);
+                activeClient.end(true, {}, () => {
+                    finish();
+                });
+            });
+        } else {
+            this.state = MqttState.Disconnected;
         }
     }
 

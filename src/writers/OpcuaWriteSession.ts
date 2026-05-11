@@ -2,8 +2,8 @@ import { ClientSession, OPCUAClient } from 'node-opcua';
 
 import { DeviceId } from '@kuriousdesign/machine-sdk';
 
-import Config from './config';
-import CodesysOpcuaDriver from './OpcuaMqtt/codesys-opcua-driver';
+import CodesysOpcuaDriver from '../opcua/codesys-opcua-driver';
+import Config from '../shared/config';
 
 export default class OpcuaWriteSession {
     private client: OPCUAClient | null = null;

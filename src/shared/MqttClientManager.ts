@@ -85,7 +85,7 @@ export default class MqttClientManager {
                     await this.handleConnection();
                     break;
                 case MqttState.Connected:
-                    // Once connected, we just wait for the OpcuaClientManager to call publish()
+                    // Once connected, we just wait for the publish manager to call publish()
                     await new Promise(resolve => setTimeout(resolve, 500));
                     break;
                 case MqttState.Disconnecting:
@@ -203,7 +203,7 @@ export default class MqttClientManager {
     }
 
     /**
-     * The method the OpcuaClientManager will call to send data.
+    * The method the publish manager will call to send data.
      */
     public async publish(topic: string, payload: any, retainOrOptions: boolean | PublishOptions = false): Promise<void> {
         if (this.state === MqttState.Connected && this.client && this.client.connected) {

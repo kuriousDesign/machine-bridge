@@ -1,6 +1,6 @@
 import { buildFullTopicPath, DeviceRegistration, DeviceTags, initialMachine, MachineTags, PlcNamespaces } from "@kuriousdesign/machine-sdk";
 import { ClientSession, ReadValueIdOptions, AttributeIds, StatusCodes } from "node-opcua-client";
-import { Config } from "../config";
+import Config from "../shared/config";
 
 export interface ReadItemInfo {
     tagId: string;

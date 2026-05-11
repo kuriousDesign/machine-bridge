@@ -1,7 +1,7 @@
 import { DeviceId, DeviceRegistration, TopicData, PlcNamespaces } from '@kuriousdesign/machine-sdk';
 
-import Config from './config';
-import MqttClientManager from './MqttClientManager';
+import Config from '../shared/config';
+import MqttClientManager from '../shared/MqttClientManager';
 import OpcuaWriteSession from './OpcuaWriteSession';
 
 export enum ExternalServiceWriteManagerState {

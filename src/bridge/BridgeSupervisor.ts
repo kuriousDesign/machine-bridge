@@ -1,7 +1,8 @@
-import ExternalServiceWriteManager, { ExternalServiceWriteManagerState } from './ExternalServiceWriteManager';
-import HmiWriteManager, { HmiWriteManagerState } from './HmiWriteManager';
-import MqttClientManager from './MqttClientManager';
-import PublishManager, { BridgeStatusSnapshot, PublishManagerStatus } from './PublishManager';
+import PublishManager from '../publish/PublishManager';
+import { BridgeStatusSnapshot, PublishManagerStatus } from '../publish/PublishManagerContracts';
+import MqttClientManager from '../shared/MqttClientManager';
+import ExternalServiceWriteManager, { ExternalServiceWriteManagerState } from '../writers/ExternalServiceWriteManager';
+import HmiWriteManager, { HmiWriteManagerState } from '../writers/HmiWriteManager';
 
 interface WriterHealth {
     state: string;
@@ -27,6 +28,7 @@ export default class BridgeSupervisor {
     private state: BridgeSupervisorState = BridgeSupervisorState.Startup;
     private mqttClientManager: MqttClientManager | null = null;
     private mqttLoopPromise: Promise<void> | null = null;
+    private publishManagerLoopPromise: Promise<void> | null = null;
     private publishManager: PublishManager | null = null;
     private hmiWriteManager: HmiWriteManager | null = null;
     private externalServiceWriteManager: ExternalServiceWriteManager | null = null;
@@ -107,7 +109,9 @@ export default class BridgeSupervisor {
             hmiWriteManager: this.hmiWriteManager,
             mqttClientManager: this.mqttClientManager,
         });
-        await this.publishManager.manageConnectionLoop();
+
+        this.publishManagerLoopPromise = this.publishManager.manageConnectionLoop();
+        await this.publishManagerLoopPromise;
         await this.mqttLoopPromise;
         this.transitionTo(BridgeSupervisorState.Shutdown);
     }
@@ -129,16 +133,32 @@ export default class BridgeSupervisor {
         }
 
         this.transitionTo(BridgeSupervisorState.Draining);
-        this.mqttClientManager?.requestShutdown();
+        console.log('[SUPERVISOR] Shutdown: requesting publish manager stop');
+        this.publishManager.requestShutdown();
+        console.log('[SUPERVISOR] Shutdown: stopping writer managers');
         await Promise.all([
             this.hmiWriteManager?.requestShutdown(),
             this.externalServiceWriteManager?.requestShutdown(),
         ]);
-        this.publishManager.requestShutdown();
+        console.log('[SUPERVISOR] Shutdown: writer managers stopped');
+
+        if (this.publishManagerLoopPromise) {
+            console.log('[SUPERVISOR] Shutdown: awaiting publish manager loop');
+            await this.publishManagerLoopPromise;
+            console.log('[SUPERVISOR] Shutdown: publish manager loop resolved');
+        }
+
+        console.log('[SUPERVISOR] Shutdown: requesting MQTT stop');
+        this.mqttClientManager?.requestShutdown();
 
         if (this.mqttLoopPromise) {
+            console.log('[SUPERVISOR] Shutdown: awaiting MQTT loop');
             await this.mqttLoopPromise;
+            console.log('[SUPERVISOR] Shutdown: MQTT loop resolved');
         }
+
+        this.transitionTo(BridgeSupervisorState.Shutdown);
+        console.log('[SUPERVISOR] Shutdown: complete');
     }
 
     public getState(): BridgeSupervisorState {

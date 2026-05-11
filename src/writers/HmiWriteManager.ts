@@ -15,6 +15,7 @@ export enum HmiWriteManagerState {
 export interface HmiWriteManagerDependencies {
     mqttClientManager: MqttClientManager;
     getDeviceMap: () => Map<number, DeviceRegistration>;
+    getMachineId: () => string | null;
 }
 
 export interface HmiWriteManagerCallbacks {
@@ -27,7 +28,7 @@ export default class HmiWriteManager {
     private state: HmiWriteManagerState = HmiWriteManagerState.Idle;
     private dependencies: HmiWriteManagerDependencies | null = null;
     private actionQueue: Promise<void> = Promise.resolve();
-    private opcuaWriteSession = new OpcuaWriteSession(DeviceId.HMI, 'HMI_MANAGER');
+    private opcuaWriteSession = new OpcuaWriteSession(DeviceId.HMI, 'HMI_MANAGER', () => this.dependencies?.getMachineId() ?? null);
     private subscribedTopics = new Set<string>();
     private sessionResetCount = 0;
 

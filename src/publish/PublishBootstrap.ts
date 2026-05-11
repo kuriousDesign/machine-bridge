@@ -1,14 +1,57 @@
-import { DeviceRegistration, MachineTags, PlcNamespaces, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
-import { ClientSession } from 'node-opcua';
+import { AttributeIds, ClientSession, StatusCodes } from 'node-opcua';
+import { BaseMachineBootstrapTags, DeviceRegistration, MachineCfg, PlcNamespaces, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
 
-import { getDeviceReadItems, getMachineReadItems, ReadItemInfo, validateReadItems } from '../opcua/monitored-items';
-import { logBootstrapStep, logReadItemBatch, logValidatedReadItemBatch } from './BootstrapLogHelpers';
+import { getDeviceReadItems, getMachineReadItems, getOptionalDeviceBootstrapReadItems, ReadItemInfo, ReadItemValidationResult, validateReadItemsDetailed } from '../opcua/polling-items';
+import { logBootstrapReadItemBatch, logBootstrapStep, logPollingReadItemBatch, logValidatedPollingItemBatch } from './BootstrapLogHelpers';
+
+function createBootstrapReadItem(nodeId: string, mqttTopic: string): ReadItemInfo {
+    return {
+        tagId: nodeId.replace(/^.*\.Application\./, ''),
+        nodeId,
+        mqttTopic,
+        attributeId: AttributeIds.Value,
+        last_publish_time: 0,
+        update_period: 1,
+        value: null,
+    };
+}
 
 export interface PublishBootstrapResult {
+    availableOptionalDeviceBootstrapItems: ReadItemInfo[];
+    devicePollingValidationResults: ReadItemValidationResult[];
+    machineCfg: MachineCfg;
+    machinePollingValidationResults: ReadItemValidationResult[];
+    optionalDeviceBootstrapAvailabilityResults: ReadItemValidationResult[];
     registeredDevices: DeviceRegistration[];
     devicePollingItems: ReadItemInfo[];
     machinePollingItems: ReadItemInfo[];
     allPollingItems: ReadItemInfo[];
+    optionalDeviceBootstrapItems: ReadItemInfo[];
+}
+
+export async function loadMachineCfg(
+    machineCfgNodeId: string,
+    readOpcuaValue: (nodeId: string) => Promise<unknown>,
+): Promise<MachineCfg> {
+    console.log('[BOOTSTRAP] Retrieving machine cfg from OPC UA...');
+    logBootstrapReadItemBatch('Base machine bootstrap reads', [
+        createBootstrapReadItem(machineCfgNodeId, 'machine/cfg'),
+    ]);
+
+    const machineCfg = await readOpcuaValue(machineCfgNodeId) as MachineCfg | null;
+
+    if (!machineCfg) {
+        throw new Error(`Machine cfg at ${machineCfgNodeId} was not available`);
+    }
+
+    const machineId = machineCfg.machineId?.trim();
+
+    if (!machineId) {
+        throw new Error(`Machine cfg at ${machineCfgNodeId} did not provide a valid machineId`);
+    }
+
+    console.log(`[BOOTSTRAP] Machine cfg loaded for machineId=${machineId}`);
+    return machineCfg;
 }
 
 export async function loadRegisteredDevices(
@@ -17,7 +60,9 @@ export async function loadRegisteredDevices(
     deviceMap: Map<number, DeviceRegistration>,
 ): Promise<DeviceRegistration[]> {
     console.log('[BOOTSTRAP] Retrieving registered devices from OPC UA...');
-    console.log(`[BOOTSTRAP] Reading node: ${registeredDevicesNodeId}`);
+    logBootstrapReadItemBatch('Base machine bootstrap reads', [
+        createBootstrapReadItem(registeredDevicesNodeId, 'machine/registereddevices'),
+    ]);
 
     const registeredDevices = await readOpcuaValue(registeredDevicesNodeId) as DeviceRegistration[];
 
@@ -44,36 +89,95 @@ export async function loadRegisteredDevices(
 
 export async function buildValidatedPollingItems(
     session: ClientSession,
+    machineCfg: MachineCfg,
     registeredDevices: DeviceRegistration[],
     deviceMap: Map<number, DeviceRegistration>,
 ): Promise<PublishBootstrapResult> {
-    logBootstrapStep('2/6', 'Building unvalidated device polling tag list');
-    const unvalidatedDeviceReadItems = await getDeviceReadItems(registeredDevices, deviceMap);
-    logReadItemBatch('Device polling candidates', unvalidatedDeviceReadItems);
+    const optionalDeviceBootstrapItems = getOptionalDeviceBootstrapReadItems(
+        registeredDevices,
+        deviceMap,
+        machineCfg.machineId,
+    );
+    const availableOptionalDeviceBootstrapItems: ReadItemInfo[] = [];
+    const optionalDeviceBootstrapAvailabilityResults: ReadItemValidationResult[] = [];
+    logBootstrapStep('3/8', `Reading optional device bootstrap tags for machineId=${machineCfg.machineId}`);
+    logBootstrapReadItemBatch('Optional device bootstrap candidates', optionalDeviceBootstrapItems);
 
-    logBootstrapStep('3/6', 'Validating device polling tags against live OPC UA session');
-    const devicePollingItems = await validateReadItems(session, unvalidatedDeviceReadItems);
-    logValidatedReadItemBatch('Device polling tags', unvalidatedDeviceReadItems, devicePollingItems);
+    for (const item of optionalDeviceBootstrapItems) {
+        try {
+            const data = await session.read({
+                nodeId: item.nodeId,
+                attributeId: AttributeIds.Value,
+            });
 
-    logBootstrapStep('4/6', 'Building unvalidated machine polling tag list');
-    const unvalidatedMachineReadItems = await getMachineReadItems();
-    logReadItemBatch('Machine polling candidates', unvalidatedMachineReadItems);
+            if (data.statusCode === StatusCodes.Good) {
+                availableOptionalDeviceBootstrapItems.push(item);
+                optionalDeviceBootstrapAvailabilityResults.push({
+                    detail: data.statusCode.toString(),
+                    item,
+                    success: true,
+                });
+                console.log(`[BOOTSTRAP] Optional device bootstrap tag available: ${item.tagId}`);
+            } else {
+                optionalDeviceBootstrapAvailabilityResults.push({
+                    detail: data.statusCode.toString(),
+                    item,
+                    success: false,
+                });
+                console.warn(`[BOOTSTRAP] Optional device bootstrap tag unavailable: ${item.tagId} (status=${data.statusCode.toString()})`);
+            }
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            optionalDeviceBootstrapAvailabilityResults.push({
+                detail: errorMessage,
+                item,
+                success: false,
+            });
+            console.warn(`[BOOTSTRAP] Optional device bootstrap tag read failed: ${item.tagId} (${errorMessage})`);
+        }
+    }
 
-    logBootstrapStep('5/6', 'Validating machine polling tags against live OPC UA session');
-    const machinePollingItems = await validateReadItems(session, unvalidatedMachineReadItems);
-    logValidatedReadItemBatch('Machine polling tags', unvalidatedMachineReadItems, machinePollingItems);
+    logBootstrapReadItemBatch('Optional device bootstrap tags available', availableOptionalDeviceBootstrapItems);
+
+    logBootstrapStep('4/8', `Building unvalidated polling tag list for machineId=${machineCfg.machineId}`);
+    const unvalidatedDeviceReadItems = await getDeviceReadItems(registeredDevices, deviceMap, machineCfg.machineId);
+    logPollingReadItemBatch('Device polling candidates', unvalidatedDeviceReadItems);
+
+    logBootstrapStep('5/8', 'Validating device polling tags against live OPC UA session');
+    const devicePollingValidationResults = await validateReadItemsDetailed(session, unvalidatedDeviceReadItems);
+    const devicePollingItems = devicePollingValidationResults.filter((result) => result.success).map((result) => result.item);
+    logValidatedPollingItemBatch('Device polling tags', unvalidatedDeviceReadItems, devicePollingItems);
+
+    logBootstrapStep('6/8', 'Building unvalidated machine polling tag list');
+    const unvalidatedMachineReadItems = await getMachineReadItems(machineCfg.machineId);
+    logPollingReadItemBatch('Machine polling candidates', unvalidatedMachineReadItems);
+
+    logBootstrapStep('7/8', 'Validating machine polling tags against live OPC UA session');
+    const machinePollingValidationResults = await validateReadItemsDetailed(session, unvalidatedMachineReadItems);
+    const machinePollingItems = machinePollingValidationResults.filter((result) => result.success).map((result) => result.item);
+    logValidatedPollingItemBatch('Machine polling tags', unvalidatedMachineReadItems, machinePollingItems);
 
     const allPollingItems = machinePollingItems.concat(devicePollingItems);
-    logBootstrapStep('6/6', `Caching validated polling tags (${allPollingItems.length} total)`);
+    logBootstrapStep('8/8', `Caching validated polling tags (${allPollingItems.length} total)`);
 
     return {
         allPollingItems,
+        availableOptionalDeviceBootstrapItems,
+        devicePollingValidationResults,
         devicePollingItems,
+        machineCfg,
+        machinePollingValidationResults,
         machinePollingItems,
+        optionalDeviceBootstrapAvailabilityResults,
+        optionalDeviceBootstrapItems,
         registeredDevices,
     };
 }
 
+export function getMachineCfgNodeId(concatNodeId: (namespace: string, tag: string) => string): string {
+    return concatNodeId(PlcNamespaces.Machine, BaseMachineBootstrapTags.cfg);
+}
+
 export function getRegisteredDevicesNodeId(concatNodeId: (namespace: string, tag: string) => string): string {
-    return concatNodeId(PlcNamespaces.Machine, MachineTags.registeredDevices);
+    return concatNodeId(PlcNamespaces.Machine, BaseMachineBootstrapTags.registeredDevices);
 }

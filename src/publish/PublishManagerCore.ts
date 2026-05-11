@@ -17,22 +17,25 @@ import {
     VariantArrayType,
     WriteValueOptions,
 } from 'node-opcua';
+import { mkdir, writeFile } from 'node:fs/promises';
+import path from 'node:path';
 
 import Config from '../shared/config'; // <--- Use the central config
 
-import { DeviceId, DeviceRegistration, DeviceTags, initialKioskControlData, KioskControlData, MachineTags, PlcNamespaces, TopicData } from '@kuriousdesign/machine-sdk';
+import { BaseMachinePollingTags, DeviceId, DeviceRegistration, initialKioskControlData, KioskControlData, MachineCfg, PlcNamespaces, TopicData } from '@kuriousdesign/machine-sdk';
 import CodesysOpcuaDriver from '../opcua/codesys-opcua-driver';
-import { ReadItemInfo } from '../opcua/monitored-items';
+import { ReadItemInfo, ReadItemValidationResult } from '../opcua/polling-items';
 import MqttClientManager from '../shared/MqttClientManager';
 import ExternalServiceWriteManager from '../writers/ExternalServiceWriteManager';
 import HmiWriteManager from '../writers/HmiWriteManager';
-import { buildValidatedPollingItems, getRegisteredDevicesNodeId, loadRegisteredDevices } from './PublishBootstrap';
+import { buildValidatedPollingItems, getMachineCfgNodeId, getRegisteredDevicesNodeId, loadMachineCfg, loadRegisteredDevices } from './PublishBootstrap';
 import { handlePublishBridgeCommand, subscribeToPublishBridgeCommands } from './PublishCommands';
 import { connectPublishOpcuaSession, disconnectPublishOpcuaSession, logPublishOpcuaConnectionFailure, resetPublishOpcuaConnectionFailureTracking, teardownPublishOpcuaConnection } from './PublishConnectionLifecycle';
-import { BridgeStatusSnapshot, PublishManagerStatus } from './PublishManagerContracts';
+import { BootstrapCacheSnapshot, BridgeStatusSnapshot, OpcuaItemSnapshot, OpcuaItemSource, OpcuaPollStatus, OpcuaReadStatus, PublishManagerStatus } from './PublishManagerContracts';
 import { republishStalePollingValues } from './PublishPolling';
 import { publishBridgeStatus, syncPublishHeartbeat } from './PublishStatus';
-import { handlePublishMonitoredItemChange, subscribeToPublishMonitoredItems, terminatePublishSubscriptions } from './PublishSubscriptions';
+import { handlePublishPollingItemChange, subscribeToPublishPollingItems, terminatePublishSubscriptions } from './PublishSubscriptions';
+import { logBootstrapCacheSnapshot } from './BootstrapLogHelpers';
 
 
 
@@ -81,6 +84,8 @@ function concatNodeId(namespace: string, tag: string): string {
 }
 
 export default class PublishManagerCore {
+    private static readonly OPCUA_ITEM_DUMP_PATH = path.join(process.cwd(), 'TagTopics', 'bridge-opcua-items.json');
+
     private externalServiceWriteManager: ExternalServiceWriteManager;
     private getBridgeStatusSnapshot?: () => Partial<BridgeStatusSnapshot>;
     private mqttClientManager: MqttClientManager;
@@ -98,18 +103,25 @@ export default class PublishManagerCore {
     private shutdownRequested: boolean = false;
     private heartbeatPlcValue: number = 0;
     private heartbeatHmiValue: number = 0;
-    private heartbeatHmiNodeId = concatNodeId(PlcNamespaces.Machine, MachineTags.HeartbeatHMI);
-    private heartbeatPlcNodeId = concatNodeId(PlcNamespaces.Machine, MachineTags.HeartbeatPLC);
+    private heartbeatHmiNodeId = concatNodeId(PlcNamespaces.Machine, BaseMachinePollingTags.heartbeatHMI);
+    private heartbeatPlcNodeId = concatNodeId(PlcNamespaces.Machine, BaseMachinePollingTags.heartbeatPLC);
+    private machineCfg: MachineCfg | null = null;
+    private machineId: string = '';
     private lastHeartbeatObservedAt: number = 0;
+    private lastBootstrapCompletedAt: number | null = null;
+    private optionalDeviceBootstrapItems: ReadItemInfo[] = [];
+    private availableOptionalDeviceBootstrapItems: ReadItemInfo[] = [];
     private registeredDevices: DeviceRegistration[] = []
     private deviceMap: Map<number, DeviceRegistration> = new Map();
     private codesysOpcuaDriver: CodesysOpcuaDriver | null = null;
     private opcuaSubscriptions: ClientSubscription[] = [];
-    private monitoredItemGroups: ClientMonitoredItemGroup[] = [];
+    private pollingItemGroups: ClientMonitoredItemGroup[] = [];
     private kioskControlData: KioskControlData = { ...initialKioskControlData };
     //private deviceStore: Map<number, Device> = new Map();
     //private deviceStsStore: Map<number, any> = new Map();
     private tagReadInfoMap: Map<string, ReadItemInfo> = new Map();
+    private opcuaItemSnapshotMap: Map<string, OpcuaItemSnapshot> = new Map();
+    private lastOpcuaItemDumpJson: string | null = null;
     private connectionFailureCount: number = 0;
     private connectionFailureStartedAt: number | null = null;
     private lastConnectionRetryLogAt: number = 0;
@@ -281,6 +293,141 @@ export default class PublishManagerCore {
         return this.publishStatus;
     }
 
+    // Bootstrap cache is available directly to in-process callers and is also
+    // forwarded through bridge/status as bootstrapCache by BridgeSupervisor.
+    public getBootstrapCacheSnapshot(): BootstrapCacheSnapshot {
+        return {
+            allPollingItemCount: this.allPollingItems.length,
+            availableOptionalDeviceBootstrapTagCount: this.availableOptionalDeviceBootstrapItems.length,
+            cachedPollingTagCount: this.tagReadInfoMap.size,
+            deviceMapCount: this.deviceMap.size,
+            devicePollingItemCount: this.devicePollingItems.length,
+            lastBootstrapCompletedAt: this.lastBootstrapCompletedAt,
+            machineId: this.machineId || null,
+            machinePollingItemCount: this.machinePollingItems.length,
+            opcuaItems: Array.from(this.opcuaItemSnapshotMap.values()).sort((left, right) => left.tagId.localeCompare(right.tagId)),
+            optionalDeviceBootstrapTagCount: this.optionalDeviceBootstrapItems.length,
+            registeredDeviceCount: this.registeredDevices.length,
+        };
+    }
+
+    private upsertOpcuaItemSnapshot(params: {
+        item: Pick<OpcuaItemSnapshot, 'mqttTopic' | 'nodeId' | 'tagId'>;
+        pollDetail?: string | null;
+        pollStatus?: OpcuaPollStatus;
+        readDetail?: string | null;
+        readStatus?: OpcuaReadStatus;
+        source: OpcuaItemSource;
+        updatePollTimestamp?: boolean;
+        updateReadTimestamp?: boolean;
+    }): void {
+        const {
+            item,
+            pollDetail,
+            pollStatus,
+            readDetail,
+            readStatus,
+            source,
+            updatePollTimestamp = false,
+            updateReadTimestamp = false,
+        } = params;
+
+        const existing = this.opcuaItemSnapshotMap.get(item.tagId);
+        const nextSnapshot: OpcuaItemSnapshot = {
+            lastPolledAt: updatePollTimestamp ? Date.now() : existing?.lastPolledAt ?? null,
+            lastReadAt: updateReadTimestamp ? Date.now() : existing?.lastReadAt ?? null,
+            mqttTopic: item.mqttTopic,
+            nodeId: item.nodeId,
+            pollDetail: pollDetail ?? existing?.pollDetail ?? null,
+            pollStatus: pollStatus ?? existing?.pollStatus ?? (source === 'devicePolling' || source === 'machinePolling' ? 'pending' : 'notApplicable'),
+            readDetail: readDetail ?? existing?.readDetail ?? null,
+            readStatus: readStatus ?? existing?.readStatus ?? 'pending',
+            source,
+            tagId: item.tagId,
+        };
+
+        this.opcuaItemSnapshotMap.set(item.tagId, nextSnapshot);
+    }
+
+    private async writeOpcuaItemDumpFile(): Promise<void> {
+        const snapshot = this.getBootstrapCacheSnapshot();
+        const payload = {
+            generatedAt: Date.now(),
+            machineId: snapshot.machineId,
+            lastBootstrapCompletedAt: snapshot.lastBootstrapCompletedAt,
+            counts: {
+                allPollingItemCount: snapshot.allPollingItemCount,
+                availableOptionalDeviceBootstrapTagCount: snapshot.availableOptionalDeviceBootstrapTagCount,
+                cachedPollingTagCount: snapshot.cachedPollingTagCount,
+                deviceMapCount: snapshot.deviceMapCount,
+                devicePollingItemCount: snapshot.devicePollingItemCount,
+                machinePollingItemCount: snapshot.machinePollingItemCount,
+                optionalDeviceBootstrapTagCount: snapshot.optionalDeviceBootstrapTagCount,
+                registeredDeviceCount: snapshot.registeredDeviceCount,
+            },
+            items: snapshot.opcuaItems,
+        };
+        const nextJson = `${JSON.stringify(payload, null, 2)}\n`;
+
+        if (this.lastOpcuaItemDumpJson === nextJson) {
+            return;
+        }
+
+        try {
+            await mkdir(path.dirname(PublishManagerCore.OPCUA_ITEM_DUMP_PATH), { recursive: true });
+            await writeFile(PublishManagerCore.OPCUA_ITEM_DUMP_PATH, nextJson, 'utf8');
+            this.lastOpcuaItemDumpJson = nextJson;
+        } catch (error) {
+            console.warn(`[BOOTSTRAP][CACHE] Failed to write OPC UA item dump to ${PublishManagerCore.OPCUA_ITEM_DUMP_PATH}:`, error);
+        }
+    }
+
+    private recordBootstrapItemResult(item: ReadItemInfo, source: OpcuaItemSource, success: boolean, detail: string | null): void {
+        this.upsertOpcuaItemSnapshot({
+            item,
+            readDetail: detail,
+            readStatus: success ? 'success' : 'failed',
+            source,
+            updateReadTimestamp: true,
+        });
+    }
+
+    private recordPollingValidationResults(results: ReadItemValidationResult[], source?: OpcuaItemSource): void {
+        results.forEach((result) => {
+            const existing = this.opcuaItemSnapshotMap.get(result.item.tagId);
+            this.upsertOpcuaItemSnapshot({
+                item: result.item,
+                pollDetail: result.success ? 'subscription eligible' : result.detail,
+                pollStatus: result.success ? 'subscribed' : 'notSubscribed',
+                readDetail: result.detail,
+                readStatus: result.success ? 'success' : 'skipped',
+                source: source ?? existing?.source ?? 'machinePolling',
+                updatePollTimestamp: false,
+                updateReadTimestamp: result.success,
+            });
+        });
+    }
+
+    private recordPollingItemResult(tagId: string, success: boolean, detail: string | null = null): void {
+        const readInfo = this.tagReadInfoMap.get(tagId);
+        if (!readInfo) {
+            return;
+        }
+
+        const existing = this.opcuaItemSnapshotMap.get(tagId);
+        this.upsertOpcuaItemSnapshot({
+            item: {
+                mqttTopic: readInfo.mqttTopic,
+                nodeId: readInfo.nodeId,
+                tagId,
+            },
+            pollDetail: detail,
+            pollStatus: success ? 'received' : 'failed',
+            source: existing?.source ?? 'machinePolling',
+            updatePollTimestamp: true,
+        });
+    }
+
     public async manageConnectionLoop(): Promise<void> {
         let prevHeartbeatPlcValue = -1;
         let lastUpdateTime = Date.now();
@@ -302,6 +449,7 @@ export default class PublishManagerCore {
                     }
                     this.setPublishStatus(PublishManagerStatus.LoadingBootstrapData);
                     await this.executeBootstrap();
+                    this.tagReadInfoMap.clear();
                     this.allPollingItems.map((item) => {
                         this.tagReadInfoMap.set(item.tagId, item);
                     });
@@ -313,13 +461,15 @@ export default class PublishManagerCore {
                     //     //await this.subscribeToMqttTopicDeviceHmiActionRequest(device)
                     // );
                     await this.terminateAllSubscriptions();
-                    await this.subscribeToMonitoredItems();
+                    await this.subscribeToPollingItems();
                     console.log("Total validated polling items:", this.allPollingItems.length);
                     this.externalServiceWriteManager.configure({
+                        getMachineId: () => this.machineId || null,
                         mqttClientManager: this.mqttClientManager,
                         getDeviceMap: () => this.deviceMap,
                     });
                     this.hmiWriteManager.configure({
+                        getMachineId: () => this.machineId || null,
                         mqttClientManager: this.mqttClientManager,
                         getDeviceMap: () => this.deviceMap,
                     });
@@ -464,21 +614,75 @@ export default class PublishManagerCore {
             throw new Error('Session is not active during bootstrap');
         }
 
-        this.registeredDevices = await loadRegisteredDevices(
-            getRegisteredDevicesNodeId(concatNodeId),
-            (nodeId) => this.readOpcuaValue(nodeId),
-            this.deviceMap,
-        );
+        this.opcuaItemSnapshotMap.clear();
+
+        const machineCfgItem: ReadItemInfo = {
+            attributeId: AttributeIds.Value,
+            last_publish_time: 0,
+            mqttTopic: 'machine/cfg',
+            nodeId: getMachineCfgNodeId(concatNodeId),
+            tagId: `${PlcNamespaces.Machine}.Cfg`,
+            update_period: 1,
+            value: null,
+        };
+
+        let machineCfg: MachineCfg;
+        try {
+            machineCfg = await loadMachineCfg(
+                machineCfgItem.nodeId,
+                (nodeId) => this.readOpcuaValue(nodeId),
+            );
+            this.recordBootstrapItemResult(machineCfgItem, 'machineCfg', true, 'loaded machine cfg');
+        } catch (error) {
+            this.recordBootstrapItemResult(machineCfgItem, 'machineCfg', false, error instanceof Error ? error.message : String(error));
+            throw error;
+        }
+        this.machineCfg = machineCfg;
+        this.machineId = machineCfg.machineId.trim();
+
+        const registeredDevicesItem: ReadItemInfo = {
+            attributeId: AttributeIds.Value,
+            last_publish_time: 0,
+            mqttTopic: 'machine/registereddevices',
+            nodeId: getRegisteredDevicesNodeId(concatNodeId),
+            tagId: `${PlcNamespaces.Machine}.RegisteredDevices`,
+            update_period: 1,
+            value: null,
+        };
+
+        try {
+            this.registeredDevices = await loadRegisteredDevices(
+                registeredDevicesItem.nodeId,
+                (nodeId) => this.readOpcuaValue(nodeId),
+                this.deviceMap,
+            );
+            this.recordBootstrapItemResult(registeredDevicesItem, 'registeredDevices', true, `loaded ${this.registeredDevices.length} registered device(s)`);
+        } catch (error) {
+            this.recordBootstrapItemResult(registeredDevicesItem, 'registeredDevices', false, error instanceof Error ? error.message : String(error));
+            throw error;
+        }
 
         const bootstrapResult = await buildValidatedPollingItems(
             this.session,
+            machineCfg,
             this.registeredDevices,
             this.deviceMap,
         );
 
+        bootstrapResult.optionalDeviceBootstrapAvailabilityResults.forEach((result) => {
+            this.recordBootstrapItemResult(result.item, 'optionalDeviceBootstrap', result.success, result.detail);
+        });
+        this.recordPollingValidationResults(bootstrapResult.devicePollingValidationResults, 'devicePolling');
+        this.recordPollingValidationResults(bootstrapResult.machinePollingValidationResults, 'machinePolling');
+
         this.devicePollingItems = bootstrapResult.devicePollingItems;
         this.machinePollingItems = bootstrapResult.machinePollingItems;
         this.allPollingItems = bootstrapResult.allPollingItems;
+        this.optionalDeviceBootstrapItems = bootstrapResult.optionalDeviceBootstrapItems;
+        this.availableOptionalDeviceBootstrapItems = bootstrapResult.availableOptionalDeviceBootstrapItems;
+        this.lastBootstrapCompletedAt = Date.now();
+        logBootstrapCacheSnapshot(this.getBootstrapCacheSnapshot());
+        await this.writeOpcuaItemDumpFile();
     }
 
     private async subscribeToBridgeCommandTopic(): Promise<void> {
@@ -612,30 +816,33 @@ export default class PublishManagerCore {
         this.timeWasSynced = nextHeartbeatState.timeWasSynced;
     }
     // -----------------------------
-    // Terminate all subscriptions & monitored groups
+    // Terminate all subscriptions & polling groups
     // -----------------------------
     private async terminateAllSubscriptions(): Promise<void> {
         await terminatePublishSubscriptions({
-            monitoredItemGroups: this.monitoredItemGroups,
+            pollingItemGroups: this.pollingItemGroups,
             opcuaSubscriptions: this.opcuaSubscriptions,
         }, (error) => this.isIgnorableOpcuaCleanupError(error));
     }
 
-    private async subscribeToMonitoredItems(): Promise<void> {
+    private async subscribeToPollingItems(): Promise<void> {
         if (!this.session) {
             throw new Error("OPC UA session is not initialized");
         }
 
         const activeSession = this.session;
 
-        await subscribeToPublishMonitoredItems({
+        await subscribeToPublishPollingItems({
             allPollingItems: this.allPollingItems,
             collections: {
-                monitoredItemGroups: this.monitoredItemGroups,
+                pollingItemGroups: this.pollingItemGroups,
                 opcuaSubscriptions: this.opcuaSubscriptions,
             },
-            onMonitoredItemChange: (monitoredItem, dataValue) => {
-                void this.handleMonitoredItemChange(monitoredItem, dataValue);
+            onPollingItemChange: (pollingItem, dataValue) => {
+                void this.handlePollingItemChange(pollingItem, dataValue);
+            },
+            onPollingValidationResults: (results) => {
+                this.recordPollingValidationResults(results);
             },
             session: activeSession,
             sessionIsCurrent: () => this.session === activeSession,
@@ -643,16 +850,19 @@ export default class PublishManagerCore {
         });
     }
 
-    private async handleMonitoredItemChange(monitoredItem: ClientMonitoredItemBase, dataValue: DataValue): Promise<void> {
-        await handlePublishMonitoredItemChange({
+    private async handlePollingItemChange(pollingItem: ClientMonitoredItemBase, dataValue: DataValue): Promise<void> {
+        await handlePublishPollingItemChange({
             dataValue,
             decipherOpcuaValue: (data) => decipherOpcuaValue(data),
-            monitoredItem,
+            pollingItem,
             mqttClientManager: this.mqttClientManager,
             nodeListPrefix: Config.NODE_LIST_PREFIX,
             onHeartbeatObserved: (value) => {
                 this.heartbeatPlcValue = value;
                 this.lastHeartbeatObservedAt = Date.now();
+            },
+            onPollingItemResult: (tagId, success, detail) => {
+                this.recordPollingItemResult(tagId, success, detail ?? null);
             },
             tagReadInfoMap: this.tagReadInfoMap,
         });

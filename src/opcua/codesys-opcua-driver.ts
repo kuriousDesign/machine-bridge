@@ -1,5 +1,5 @@
 import { ClientSession, Variant, AttributeIds, DataType, VariantArrayType, ReadValueIdOptions, StatusCodes, DataValue } from "node-opcua";
-import { ActionTypes, initialApiOpcuaReqData, DeviceCmds, States, ApiOpcuaReqData, DeviceActionRequestData, ApiReqRespStates, AxisProcesses, DeviceConstants, PlcNamespaces, MachineTags, apiReqRespStateToString, Device, initialDevice, initialDeviceActionRequestData } from "@kuriousdesign/machine-sdk";
+import { ActionTypes, BaseMachineBootstrapTags, BaseMachinePollingTags, initialApiOpcuaReqData, DeviceCmds, States, ApiOpcuaReqData, DeviceActionRequestData, ApiReqRespStates, AxisProcesses, DeviceConstants, PlcNamespaces, apiReqRespStateToString, Device, getProjectMachineTag, initialDevice, initialDeviceActionRequestData } from "@kuriousdesign/machine-sdk";
 import { read, write } from "fs";
 import { writeExtensionObject } from "./opcua-helpers";
 
@@ -20,8 +20,25 @@ export default class CodesysOpcuaDriver {
     private lastLogTimeStamp: number = 0;
     private lastLogMsgId: number = 0;
     private lastReadLogIndex: number = 255;
-    private devicesNodeId = `${PlcNamespaces.Machine}.${MachineTags.deviceStore}`;
+    private devicesNodeId = `${PlcNamespaces.Machine}.Devices`;
+    private machineId: string | null = null;
+    private loggedTagNormalizations = new Set<string>();
     private uniqueActionRequestCtr: number = 0;
+
+    public setMachineId(machineId: string | null): void {
+        const normalizedMachineId = machineId?.trim() || null;
+        if (this.machineId === normalizedMachineId) {
+            return;
+        }
+
+        this.machineId = normalizedMachineId;
+        this.cachedNestedTagDataTypesMap.clear();
+        this.loggedTagNormalizations.clear();
+
+        if (this.machineId) {
+            console.log(`[OPCUA] Using machineId-aware write tag resolution for ${this.machineId}`);
+        }
+    }
 
     private isOpcuaConnectionClosedError(message: string): boolean {
         const normalizedMessage = message.toLowerCase();
@@ -44,6 +61,33 @@ export default class CodesysOpcuaDriver {
 
     private addNodePrefix(tag: string): string {
         return `${this.nodePrefix}${tag}`;
+    }
+
+    private normalizeProjectSpecificMachineTag(tag: string): string {
+        if (!this.machineId || !tag.startsWith(`${PlcNamespaces.Machine}.`)) {
+            return tag;
+        }
+
+        const remainder = tag.slice(`${PlcNamespaces.Machine}.`.length);
+        const exemptRoots = new Set<string>([
+            BaseMachineBootstrapTags.cfg,
+            BaseMachineBootstrapTags.registeredDevices,
+            ...Object.values(BaseMachinePollingTags),
+            'Devices',
+            'DeviceLogs',
+        ]);
+
+        const firstSegment = remainder.split(/[.[]/, 1)[0];
+        if (exemptRoots.has(firstSegment)) {
+            return tag;
+        }
+
+        const normalizedTag = `${getProjectMachineTag(this.machineId)}.${remainder}`;
+        if (normalizedTag !== tag && !this.loggedTagNormalizations.has(tag)) {
+            this.loggedTagNormalizations.add(tag);
+            console.log(`[OPCUA] Resolved project-specific tag ${tag} -> ${normalizedTag}`);
+        }
+        return normalizedTag;
     }
 
     private getDeviceNodeId(deviceId: number): string {
@@ -89,6 +133,7 @@ export default class CodesysOpcuaDriver {
         if (!this.session) {
             throw new Error("OPC UA session is not initialized");
         }
+        tag = this.normalizeProjectSpecificMachineTag(tag);
         let dType: DataType | null = null;
         if (dataType === undefined) {
             dType = await this.readTagDataType(tag);
@@ -114,6 +159,7 @@ export default class CodesysOpcuaDriver {
             return null;
         }
         try {
+            tag = this.normalizeProjectSpecificMachineTag(tag);
             const nodeId = this.addNodePrefix(tag);
             const readValueOptions: ReadValueIdOptions = {
                 nodeId: nodeId,
@@ -145,6 +191,7 @@ export default class CodesysOpcuaDriver {
         }
         //console.log(`Reading tag ${tag} with dataType ${DataType[dataType]}`);
         try {
+            tag = this.normalizeProjectSpecificMachineTag(tag);
             const nodeId = this.addNodePrefix(tag);
             const readValueOptions: ReadValueIdOptions = {
                 nodeId: nodeId,
@@ -224,6 +271,7 @@ export default class CodesysOpcuaDriver {
         baseTag: string,
         value: any
     ): Promise<any> {
+        baseTag = this.normalizeProjectSpecificMachineTag(baseTag);
         const writeItems: Array<{ nodeId: string; value: any, dataType: any }> = [];
         this.traverseAndFlatten(baseTag, value, writeItems);
         const dataTypePromises = writeItems.map(item =>
@@ -238,6 +286,7 @@ export default class CodesysOpcuaDriver {
     }
 
     async writeNestedObject(baseTag: string, value: any, skipValidation: boolean = false): Promise<{ success: boolean; message: string; details?: any }> {
+        baseTag = this.normalizeProjectSpecificMachineTag(baseTag);
         let writeValues: Array<{ nodeId: string; value: any, dataType: any }> = [];
         this.traverseAndFlatten(baseTag, value, writeValues);
         if (writeValues.length === 0) {
@@ -326,6 +375,7 @@ export default class CodesysOpcuaDriver {
 
     async writeTag(tag: string, value: any, dataType: DataType = DataType.Int16, skipValidation: boolean = false): Promise<{ success: boolean; message: string }> {
         try {
+            tag = this.normalizeProjectSpecificMachineTag(tag);
             const nodeId = this.addNodePrefix(tag);
             const variant = new Variant({ dataType, value });
 

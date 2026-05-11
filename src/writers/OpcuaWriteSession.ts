@@ -13,10 +13,12 @@ export default class OpcuaWriteSession {
     constructor(
         private readonly deviceId: DeviceId,
         private readonly label: string,
+        private readonly getMachineId?: () => string | null,
     ) {}
 
     public async ensureConnected(): Promise<void> {
         if (this.session && this.driver) {
+            this.driver.setMachineId(this.getMachineId?.() ?? null);
             return;
         }
 
@@ -33,6 +35,7 @@ export default class OpcuaWriteSession {
         await this.client.connect(Config.OPCUA_ENDPOINT);
         this.session = await this.client.createSession();
         this.driver = new CodesysOpcuaDriver(this.deviceId, this.session, Config.OPCUA_CONTROLLER_NAME);
+        this.driver.setMachineId(this.getMachineId?.() ?? null);
         console.log(`[${this.label}] Dedicated OPC UA session ready.`);
     }
 

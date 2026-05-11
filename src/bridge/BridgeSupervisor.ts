@@ -239,7 +239,11 @@ export default class BridgeSupervisor {
     }
 
     private buildBridgeStatusSnapshot(): Partial<BridgeStatusSnapshot> {
+        const bootstrapCache = this.publishManager?.getBootstrapCacheSnapshot();
+
         return {
+            bootstrapCache,
+            machineId: bootstrapCache?.machineId,
             supervisorState: this.state,
             writeManagers: this.getWriterHealth(),
         };

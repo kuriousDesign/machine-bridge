@@ -1,4 +1,4 @@
-import { DeviceId, DeviceRegistration, TopicData, PlcNamespaces } from '@kuriousdesign/machine-sdk';
+import { DeviceId, DeviceRegistration, OptionalDevicePollingTags, TopicData } from '@kuriousdesign/machine-sdk';
 
 import Config from '../shared/config';
 import MqttClientManager from '../shared/MqttClientManager';
@@ -15,6 +15,7 @@ export enum ExternalServiceWriteManagerState {
 export interface ExternalServiceWriteManagerDependencies {
     mqttClientManager: MqttClientManager;
     getDeviceMap: () => Map<number, DeviceRegistration>;
+    getMachineId: () => string | null;
 }
 
 export interface ExternalServiceWriteManagerCallbacks {
@@ -26,7 +27,7 @@ export interface ExternalServiceWriteManagerCallbacks {
 export default class ExternalServiceWriteManager {
     private state: ExternalServiceWriteManagerState = ExternalServiceWriteManagerState.Idle;
     private dependencies: ExternalServiceWriteManagerDependencies | null = null;
-    private opcuaWriteSession = new OpcuaWriteSession(DeviceId.HMI, 'EXT_SERVICE_MANAGER');
+    private opcuaWriteSession = new OpcuaWriteSession(DeviceId.HMI, 'EXT_SERVICE_MANAGER', () => this.dependencies?.getMachineId() ?? null);
     private writeQueue: Promise<void> = Promise.resolve();
     private subscribedTopics = new Set<string>();
     private sessionResetCount = 0;
@@ -146,8 +147,14 @@ export default class ExternalServiceWriteManager {
                 return;
             }
 
+            const machineId = this.dependencies.getMachineId()?.trim();
+            if (!machineId) {
+                console.warn(`[EXT_SERVICE_MANAGER] Skipping external service write because machineId is unavailable: ${topic}`);
+                return;
+            }
+
             const completeData = payload as Record<string, unknown>;
-            const deviceTag = `${PlcNamespaces.Machine}.${device.mnemonic.toLowerCase()}Sts`;
+            const deviceTag = OptionalDevicePollingTags(device, machineId).Sts;
 
             if (
                 typeof completeData === 'object'

@@ -6,7 +6,7 @@ import {
     TimestampsToReturn,
 } from 'node-opcua';
 
-import { ReadItemInfo } from '../opcua/monitored-items';
+import { ReadItemInfo } from '../opcua/polling-items';
 import MqttClientManager from '../shared/MqttClientManager';
 import Config from '../shared/config';
 

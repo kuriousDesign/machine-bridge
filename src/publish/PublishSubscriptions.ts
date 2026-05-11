@@ -7,14 +7,14 @@ import {
     TimestampsToReturn,
 } from 'node-opcua';
 
-import { MachineTags, PlcNamespaces } from '@kuriousdesign/machine-sdk';
+import { BaseMachinePollingTags, PlcNamespaces } from '@kuriousdesign/machine-sdk';
 
-import { ReadItemInfo, validateReadItems } from '../opcua/monitored-items';
+import { ReadItemInfo, ReadItemValidationResult, validateReadItemsDetailed } from '../opcua/polling-items';
 import MqttClientManager from '../shared/MqttClientManager';
 import Config from '../shared/config';
 
 export interface PublishSubscriptionCollections {
-    monitoredItemGroups: ClientMonitoredItemGroup[];
+    pollingItemGroups: ClientMonitoredItemGroup[];
     opcuaSubscriptions: ClientSubscription[];
 }
 
@@ -22,18 +22,18 @@ export async function terminatePublishSubscriptions(
     collections: PublishSubscriptionCollections,
     isIgnorableCleanupError: (error: unknown) => boolean,
 ): Promise<void> {
-    const monitoredGroups = collections.monitoredItemGroups.splice(0);
+    const pollingGroups = collections.pollingItemGroups.splice(0);
     const subscriptions = collections.opcuaSubscriptions.splice(0);
 
-    if (monitoredGroups.length > 0) {
-        for (const group of monitoredGroups) {
+    if (pollingGroups.length > 0) {
+        for (const group of pollingGroups) {
             try {
                 await group.terminate();
             } catch (error) {
                 if (isIgnorableCleanupError(error)) {
-                    console.warn('[OPCUA] Ignoring monitored group termination error after connection loss:', error instanceof Error ? error.message : error);
+                    console.warn('[OPCUA] Ignoring polling group termination error after connection loss:', error instanceof Error ? error.message : error);
                 } else {
-                    console.warn('Error terminating monitored group:', error);
+                    console.warn('Error terminating polling group:', error);
                 }
             }
         }
@@ -53,13 +53,14 @@ export async function terminatePublishSubscriptions(
         }
     }
 
-    console.log('All OPC UA subscriptions and monitored groups terminated');
+    console.log('All OPC UA subscriptions and polling groups terminated');
 }
 
-export async function subscribeToPublishMonitoredItems(params: {
+export async function subscribeToPublishPollingItems(params: {
     allPollingItems: ReadItemInfo[];
     collections: PublishSubscriptionCollections;
-    onMonitoredItemChange: (monitoredItem: ClientMonitoredItemBase, dataValue: DataValue) => void;
+    onPollingItemChange: (pollingItem: ClientMonitoredItemBase, dataValue: DataValue) => void;
+    onPollingValidationResults?: (results: ReadItemValidationResult[]) => void;
     session: ClientSession;
     sessionIsCurrent: () => boolean;
     terminateAllSubscriptions: () => Promise<void>;
@@ -67,7 +68,8 @@ export async function subscribeToPublishMonitoredItems(params: {
     const {
         allPollingItems,
         collections,
-        onMonitoredItemChange,
+        onPollingItemChange,
+        onPollingValidationResults,
         session,
         sessionIsCurrent,
         terminateAllSubscriptions,
@@ -75,7 +77,7 @@ export async function subscribeToPublishMonitoredItems(params: {
 
     await terminateAllSubscriptions();
 
-    console.log('Subscribing to monitored items', allPollingItems.length, 'items to monitor...');
+    console.log('Subscribing to polling items', allPollingItems.length, 'items to monitor...');
     const chunks: ReadItemInfo[][] = [];
     for (let i = 0; i < allPollingItems.length; i += Config.CHUNK_SIZE) {
         chunks.push(allPollingItems.slice(i, i + Config.CHUNK_SIZE));
@@ -90,7 +92,9 @@ export async function subscribeToPublishMonitoredItems(params: {
             return;
         }
 
-        const validatedItems = await validateReadItems(session, chunk);
+        const validationResults = await validateReadItemsDetailed(session, chunk);
+        onPollingValidationResults?.(validationResults);
+        const validatedItems = validationResults.filter((result) => result.success).map((result) => result.item);
         if (validatedItems.length === 0) {
             console.warn(`No valid items in group ${groupIndex}, skipping subscription creation.`);
             return;
@@ -109,56 +113,61 @@ export async function subscribeToPublishMonitoredItems(params: {
             }
             collections.opcuaSubscriptions.push(subscription);
 
-            const monitoredGroup = ClientMonitoredItemGroup.create(
+            const pollingGroup = ClientMonitoredItemGroup.create(
                 subscription,
                 validatedItems,
                 Config.OPTIONS_GROUP,
                 TimestampsToReturn.Neither,
             );
 
-            collections.monitoredItemGroups.push(monitoredGroup);
-            monitoredGroup.on('changed', onMonitoredItemChange);
+            collections.pollingItemGroups.push(pollingGroup);
+            pollingGroup.on('changed', onPollingItemChange);
         } catch (error) {
-            console.error(`Failed to create subscription/monitored group ${groupIndex}:`, error);
+            console.error(`Failed to create subscription/polling group ${groupIndex}:`, error);
         }
     }));
 
-    console.log(`✅ Subscribed via ${collections.opcuaSubscriptions.length} subscriptions and ${collections.monitoredItemGroups.length} monitored groups`);
+    console.log(`✅ Subscribed via ${collections.opcuaSubscriptions.length} subscriptions and ${collections.pollingItemGroups.length} polling groups`);
 }
 
-export async function handlePublishMonitoredItemChange(params: {
+export async function handlePublishPollingItemChange(params: {
     dataValue: DataValue;
     decipherOpcuaValue: (data: DataValue) => unknown;
-    monitoredItem: ClientMonitoredItemBase;
+    pollingItem: ClientMonitoredItemBase;
     mqttClientManager: MqttClientManager;
     nodeListPrefix: string;
     onHeartbeatObserved: (value: number) => void;
+    onPollingItemResult?: (tagId: string, success: boolean, detail?: string | null) => void;
     tagReadInfoMap: Map<string, ReadItemInfo>;
 }): Promise<void> {
     const {
         dataValue,
         decipherOpcuaValue,
-        monitoredItem,
+        pollingItem,
         mqttClientManager,
         nodeListPrefix,
         onHeartbeatObserved,
+        onPollingItemResult,
         tagReadInfoMap,
     } = params;
+
+    const fullNodeId = pollingItem.itemToMonitor?.nodeId?.toString ? pollingItem.itemToMonitor.nodeId.toString() : String(pollingItem.itemToMonitor?.nodeId);
+    const tag = fullNodeId.replace(nodeListPrefix, '');
 
     try {
         const newValue = decipherOpcuaValue(dataValue);
         const newValueType = typeof newValue;
-        const fullNodeId = monitoredItem.itemToMonitor?.nodeId?.toString ? monitoredItem.itemToMonitor.nodeId.toString() : String(monitoredItem.itemToMonitor?.nodeId);
-        const tag = fullNodeId.replace(nodeListPrefix, '');
         const readInfo = tagReadInfoMap.get(tag);
 
         if (!readInfo) {
             console.error('No valid MQTT topic found for tag:', tag, 'full:', fullNodeId);
+            onPollingItemResult?.(tag, false, 'missing MQTT topic mapping');
             return;
         }
 
         if (newValue === null && newValueType === 'undefined') {
-            console.error('No valid new value for monitored item:', tag, ', value:', newValue);
+            console.error('No valid new value for polling item:', tag, ', value:', newValue);
+            onPollingItemResult?.(tag, false, 'undefined polling value');
             return;
         }
 
@@ -166,15 +175,20 @@ export async function handlePublishMonitoredItemChange(params: {
         readInfo.last_publish_time = Date.now();
         tagReadInfoMap.set(tag, readInfo);
 
-        if (tag === `${PlcNamespaces.Machine}.${MachineTags.HeartbeatPLC}`) {
+        if (tag === `${PlcNamespaces.Machine}.${BaseMachinePollingTags.heartbeatPLC}`) {
             onHeartbeatObserved(newValue as number);
         }
 
         mqttClientManager.publish(readInfo.mqttTopic, newValue);
+        onPollingItemResult?.(tag, true, 'published');
+        if (readInfo.mqttTopic === 'machine/estopcircuit_ok' || readInfo.mqttTopic === 'machine/estopcircuitdelayed_ok') {
+            console.log(`[MQTT][ESTOP] Published ${readInfo.mqttTopic}:`, newValue);
+        }
         if (readInfo.mqttTopic === 'machine/heartbeatplc' && typeof newValue === 'number' && newValue % 30 === 0) {
             console.log('Machine.heartbeatPlc:', newValue);
         }
     } catch (error) {
-        console.error('Error processing monitored item change:', error);
+        console.error('Error processing polling item change:', error);
+        onPollingItemResult?.(tag, false, error instanceof Error ? error.message : String(error));
     }
 }

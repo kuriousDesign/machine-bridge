@@ -29,8 +29,8 @@ export default class MqttClientManager {
     private client: MqttClient | null = null;
     private shutdownRequested: boolean = false;
     private previousState: MqttState = MqttState.Disconnected;
-    // Map to store all registered handlers centrally
-    private handlers = new Map<string, MessageHandler>(); 
+    // Registered topic handlers are also the desired subscription set for reconnects.
+    private handlers = new Map<string, MessageHandler>();
     private connectHandlers = new Set<ConnectHandler>();
 
 
@@ -104,11 +104,12 @@ export default class MqttClientManager {
             this.client = connect(Config.MQTT_URL, Config.MQTT_OPTIONS);
 
             await new Promise<void>((resolve, reject) => {
-                this.client!.on('connect', () => { 
+                this.client!.on('connect', async () => {
                     this.state = MqttState.Connected; 
                     this.setupSingleMessageHandler(); // Call the new setup function once
+                    await this.resubscribeRegisteredTopics();
                     this.notifyConnectHandlers();
-                    resolve(); 
+                    resolve();
                 });
                 this.client!.once('error', (error) => { reject(error); });
             });
@@ -133,6 +134,38 @@ export default class MqttClientManager {
 
     public clearAllHandlers(): void {
         this.handlers.clear();
+    }
+
+    private async subscribeClientTopic(topic: string): Promise<void> {
+        if (!this.client || !this.client.connected) {
+            return;
+        }
+
+        await new Promise<void>((resolve, reject) => {
+            this.client!.subscribe(topic, { qos: 1 }, (error) => {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+
+                resolve();
+            });
+        });
+    }
+
+    private async resubscribeRegisteredTopics(): Promise<void> {
+        if (!this.client || !this.client.connected || this.handlers.size === 0) {
+            return;
+        }
+
+        for (const topic of this.handlers.keys()) {
+            try {
+                await this.subscribeClientTopic(topic);
+                console.log(`[MQTT] Subscribed to topic: ${topic}`);
+            } catch (error) {
+                console.error(`[MQTT] ❌ Failed to subscribe to topic ${topic}: ${error instanceof Error ? error.message : String(error)}`);
+            }
+        }
     }
 
     private async handleDisconnect(): Promise<void> {
@@ -242,20 +275,18 @@ export default class MqttClientManager {
      * Register a new topic to subscribe to and store its associated handler function.
      */
     public async subscribe(topic: string, messageHandler: MessageHandler): Promise<void> {
-        if (this.state === MqttState.Connected && this.client && this.client.connected) {
-            this.client.subscribe(topic, { qos: 1 }, (err) => {
-                if (err) {
-                    console.error(`[MQTT] ❌ Failed to subscribe to topic ${topic}: ${err.message}`);
-                } else {
-                    //console.log(`[MQTT] Subscribed to topic: ${topic}`);
-                    // Store the handler in our local map
-                    this.handlers.set(topic, messageHandler); 
-                }
-            });
-            // CRITICAL CHANGE: Removed this.client.on('message', ...) from this function
-            // The single listener set up in handleConnection() handles the routing now.
-        } else {
-            console.warn(`[MQTT] Cannot subscribe to ${topic}, MQTT client not operational.`);
+        this.handlers.set(topic, messageHandler);
+
+        if (this.state !== MqttState.Connected || !this.client || !this.client.connected) {
+            console.warn(`[MQTT] Deferring subscription to ${topic} until MQTT is connected.`);
+            return;
+        }
+
+        try {
+            await this.subscribeClientTopic(topic);
+            console.log(`[MQTT] Subscribed to topic: ${topic}`);
+        } catch (error) {
+            console.error(`[MQTT] ❌ Failed to subscribe to topic ${topic}: ${error instanceof Error ? error.message : String(error)}`);
         }
     }
 }

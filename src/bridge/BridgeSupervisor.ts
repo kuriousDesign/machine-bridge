@@ -191,7 +191,13 @@ export default class BridgeSupervisor {
             return;
         }
 
+        if (!this.mqttClientManager) {
+            throw new Error('MQTT client manager is not initialized');
+        }
+
         this.transitionTo(BridgeSupervisorState.StartingWriters);
+        console.log('[SUPERVISOR] Waiting for MQTT connection before starting writer managers');
+        await this.mqttClientManager.waitUntilConnected();
 
         await this.hmiWriteManager?.start();
         await this.externalServiceWriteManager?.start();

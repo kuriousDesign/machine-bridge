@@ -16,7 +16,15 @@ export async function republishStalePollingValues(params: {
 }): Promise<void> {
     const { mqttClientManager, tagReadInfoMap } = params;
 
+    if (!Config.ENABLE_STALE_POLLING_REPUBLISH) {
+        return;
+    }
+
     tagReadInfoMap.forEach((readInfo, tag) => {
+        if (readInfo.last_publish_time <= 0) {
+            return;
+        }
+
         const now = Date.now();
         if (now - readInfo.last_publish_time >= readInfo.update_period * Config.REPUBLISH_RATE_MS) {
             void mqttClientManager.publish(readInfo.mqttTopic, readInfo.value);

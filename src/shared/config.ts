@@ -11,7 +11,9 @@ export const Config: any = {
     OPCUA_CONTROLLER_NAME: process.env.OPCUA_CONTROLLER_NAME || "DefaultController",
     OPCUA_SERVER_IP_ADDRESS: process.env.OPCUA_SERVER_IP_ADDRESS,
     OPCUA_PORT: process.env.OPCUA_PORT,
+    ENABLE_STALE_POLLING_REPUBLISH: process.env.ENABLE_STALE_POLLING_REPUBLISH === 'true',
     MQTT_LOCAL_BROKER_URL: process.env.MQTT_LOCAL_BROKER_URL, // || "ws://localhost:9002/mqtt",
+    MQTT_REMOTE_BROKER_URL: process.env.MQTT_REMOTE_BROKER_URL,
     MQTT_CLOUD_BROKER_URL: process.env.MQTT_CLOUD_BROKER_URL || "wss://9c4d3c046b704d16a1d64328cc4e4604.s1.eu.hivemq.cloud:8884/mqtt",
     MQTT_BROKER_USERNAME: process.env.MQTT_BROKER_USERNAME || "admin",
     MQTT_BROKER_PASSWORD: process.env.MQTT_BROKER_PASSWORD || "Admin1234",
@@ -23,6 +25,7 @@ export const Config: any = {
 Config.OPCUA_ENDPOINT = `opc.tcp://${Config.OPCUA_SERVER_IP_ADDRESS}:${Config.OPCUA_PORT}`;
 Config.NODE_LIST_PREFIX = nodeListString + Config.OPCUA_CONTROLLER_NAME + '.Application.';
 
+Config.BRIDGE_STATUS_PUBLISH_INTERVAL_MS = 1000;
 Config.POLLING_RATE_MS = 250;
 Config.REPUBLISH_RATE_MS = 500;
 Config.LOOP_DELAY_MS = 250; // Small delay to prevent tight loop
@@ -68,7 +71,30 @@ Config.BRIDGE_API_UPDATE_DEVICE = "bridge/api/update_device";
 Config.BRIDGE_API_WRITE_TAG = "bridge/api/write_tag";
 
 // Derive MQTT URL and Options based on Config settings
-Config.MQTT_URL = Config.MQTT_BROKER_TYPE === "cloud" ? Config.MQTT_CLOUD_BROKER_URL : Config.MQTT_LOCAL_BROKER_URL;
+const selectedMqttUrl = Config.MQTT_BROKER_TYPE === "cloud"
+    ? Config.MQTT_CLOUD_BROKER_URL
+    : Config.MQTT_BROKER_TYPE === "remote"
+        ? Config.MQTT_REMOTE_BROKER_URL
+        : Config.MQTT_LOCAL_BROKER_URL;
+
+const inferMqttProtocol = (brokerUrl: string | undefined): mqtt.MqttProtocol => {
+    if (brokerUrl?.startsWith('mqtts://')) {
+        return 'mqtts';
+    }
+
+    if (brokerUrl?.startsWith('mqtt://')) {
+        return 'mqtt';
+    }
+
+    if (brokerUrl?.startsWith('wss://')) {
+        return 'wss';
+    }
+
+    return 'ws';
+};
+
+Config.MQTT_URL = selectedMqttUrl;
+const selectedMqttProtocol = inferMqttProtocol(selectedMqttUrl);
 
 Config.MQTT_OPTIONS = Config.MQTT_BROKER_TYPE === "cloud" ? {
     //cloud
@@ -81,13 +107,13 @@ Config.MQTT_OPTIONS = Config.MQTT_BROKER_TYPE === "cloud" ? {
     queueQoSZero: false,
     rejectUnauthorized: true,
 } : { 
-    //local
+    //local or remote
     username: Config.MQTT_BROKER_USERNAME,
     password: Config.MQTT_BROKER_PASSWORD,
     clean: true,
     reconnectPeriod: 1000,
     keepalive: 60,
-    protocol: "ws" as mqtt.MqttProtocol,
+    protocol: selectedMqttProtocol,
     queueQoSZero: false,
     rejectUnauthorized: false,
 };

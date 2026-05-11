@@ -4,6 +4,7 @@ import { KioskControlData, MqttTopics } from '@kuriousdesign/machine-sdk';
 
 import CodesysOpcuaDriver from '../opcua/codesys-opcua-driver';
 import MqttClientManager from '../shared/MqttClientManager';
+import Config from '../shared/config';
 import { BridgeStatusSnapshot, PublishManagerStatus } from './PublishManagerContracts';
 
 export async function publishKioskControlStatus(
@@ -41,7 +42,7 @@ export async function publishBridgeStatus(params: {
     } = params;
 
     const stateChanged = currentState !== lastPublishedState;
-    const publishIntervalElapsed = now - lastPublishTime >= 3000;
+    const publishIntervalElapsed = now - lastPublishTime >= Config.BRIDGE_STATUS_PUBLISH_INTERVAL_MS;
 
     if (!stateChanged && !publishIntervalElapsed) {
         return { lastPublishTime, lastPublishedState };

@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "nodemon --exec ts-node src/index.ts",
+    "test-mqtt-connection": "ts-node test/test-mqtt-connection.ts",
     "dev-poller": "nodemon --exec ts-node src/index-poller.ts",
     "dev-subscriber": "nodemon --exec ts-node src/index-subscriber.ts",
     "dev-hmi": "nodemon --exec ts-node src/index-hmi.ts",

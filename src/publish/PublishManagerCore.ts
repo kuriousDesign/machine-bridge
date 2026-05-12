@@ -311,6 +311,43 @@ export default class PublishManagerCore {
         };
     }
 
+    private getBridgeCachePayload(): {
+        bootstrapCache: BootstrapCacheSnapshot;
+        cachedTopics: Array<{
+            payload: unknown;
+            timestamp: number;
+            topic: string;
+        }>;
+        machineId: string | null;
+    } {
+        const bootstrapCache = this.getBootstrapCacheSnapshot();
+        const cachedTopics = Array.from(this.tagReadInfoMap.values())
+            .filter((readInfo) => {
+                return readInfo.last_publish_time > 0 && readInfo.value !== null && typeof readInfo.value !== 'undefined';
+            })
+            .map((readInfo) => ({
+                payload: readInfo.value,
+                timestamp: readInfo.last_publish_time,
+                topic: readInfo.mqttTopic,
+            }));
+
+        return {
+            bootstrapCache,
+            cachedTopics,
+            machineId: bootstrapCache.machineId,
+        };
+    }
+
+    private async publishCachedTopics(): Promise<void> {
+        const cachedTopics = Array.from(this.tagReadInfoMap.values()).filter((readInfo) => {
+            return readInfo.last_publish_time > 0 && readInfo.value !== null && typeof readInfo.value !== 'undefined';
+        });
+
+        await Promise.all(cachedTopics.map((readInfo) => {
+            return this.mqttClientManager.publish(readInfo.mqttTopic, readInfo.value);
+        }));
+    }
+
     private upsertOpcuaItemSnapshot(params: {
         item: Pick<OpcuaItemSnapshot, 'mqttTopic' | 'nodeId' | 'tagId'>;
         pollDetail?: string | null;
@@ -536,6 +573,9 @@ export default class PublishManagerCore {
         this.publishStatus = nextStatus;
         console.log(`[PUBLISH_MANAGER] STATUS: ${nextStatus}`);
         this.callbacks.onStatusChange?.(nextStatus);
+        void this.publishBridgeConnectionStatus(true).catch((error) => {
+            console.error('[PUBLISH_MANAGER] Failed to publish bridge status after status change:', error instanceof Error ? error.message : error);
+        });
     }
 
     private reportError(error: unknown): void {
@@ -771,17 +811,15 @@ export default class PublishManagerCore {
     private async handleBridgeCommand(message: TopicData): Promise<void> {
         this.kioskControlData = await handlePublishBridgeCommand({
             deviceMapEntries: Array.from(this.deviceMap.entries()),
+            getBridgeCachePayload: () => this.getBridgeCachePayload(),
             kioskControlData: this.kioskControlData,
             message,
             mqttClientManager: this.mqttClientManager,
+            publishCachedTopics: () => this.publishCachedTopics(),
         });
     }
 
     private async publishBridgeConnectionStatus(force = false): Promise<void> {
-        if (!force && this.state === this.lastPublishedState && Date.now() - this.lastPublishTime < 3000) {
-            return;
-        }
-
         const nextStatusState = await publishBridgeStatus({
             currentState: this.state,
             currentStateLabel: OpcuaState[this.state],
@@ -797,6 +835,12 @@ export default class PublishManagerCore {
 
         this.lastPublishedState = nextStatusState.lastPublishedState as OpcuaState | null;
         this.lastPublishTime = nextStatusState.lastPublishTime;
+    }
+
+    public requestBridgeStatusRefresh(): void {
+        void this.publishBridgeConnectionStatus(true).catch((error) => {
+            console.error('[PUBLISH_MANAGER] Failed to publish bridge status refresh:', error instanceof Error ? error.message : error);
+        });
     }
     private timeWasSynced: boolean = false;
 

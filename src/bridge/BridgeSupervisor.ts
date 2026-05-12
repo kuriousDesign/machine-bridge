@@ -183,6 +183,7 @@ export default class BridgeSupervisor {
 
         console.log(`[SUPERVISOR] STATE: ${this.state} -> ${nextState}`);
         this.state = nextState;
+        this.publishManager?.requestBridgeStatusRefresh();
     }
 
     private async startWriteManagers(): Promise<void> {
@@ -214,6 +215,7 @@ export default class BridgeSupervisor {
         };
 
         console.log(`[SUPERVISOR] ${name} writer state: ${state}`);
+        this.publishManager?.requestBridgeStatusRefresh();
     }
 
     private recordWriterError(name: WriterName, error: Error): void {
@@ -223,6 +225,7 @@ export default class BridgeSupervisor {
         };
 
         console.error(`[SUPERVISOR] ${name} writer error: ${error.message}`);
+        this.publishManager?.requestBridgeStatusRefresh();
     }
 
     private recordWriterReset(name: WriterName, reason: string, error: Error, resetCount: number): void {
@@ -236,14 +239,12 @@ export default class BridgeSupervisor {
 
         const logMethod = resetCount >= 3 ? console.error : console.warn;
         logMethod(`[SUPERVISOR] ${name} writer session reset #${resetCount}: ${reason}. Last error: ${error.message}`);
+        this.publishManager?.requestBridgeStatusRefresh();
     }
 
     private buildBridgeStatusSnapshot(): Partial<BridgeStatusSnapshot> {
-        const bootstrapCache = this.publishManager?.getBootstrapCacheSnapshot();
-
         return {
-            bootstrapCache,
-            machineId: bootstrapCache?.machineId,
+            machineId: this.publishManager?.getBootstrapCacheSnapshot().machineId ?? null,
             supervisorState: this.state,
             writeManagers: this.getWriterHealth(),
         };

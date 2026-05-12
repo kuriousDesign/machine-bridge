@@ -2,7 +2,10 @@ import { AttributeIds, ClientSession, StatusCodes } from 'node-opcua';
 import { BaseMachineBootstrapTags, DeviceRegistration, MachineCfg, PlcNamespaces, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
 
 import { getDeviceReadItems, getMachineReadItems, getOptionalDeviceBootstrapReadItems, ReadItemInfo, ReadItemValidationResult, validateReadItemsDetailed } from '../opcua/polling-items';
+import Config from '../shared/config';
 import { logBootstrapReadItemBatch, logBootstrapStep, logPollingReadItemBatch, logValidatedPollingItemBatch } from './BootstrapLogHelpers';
+
+const WARNING_ICON = process.stderr.isTTY ? '\x1b[33m⚠\x1b[0m' : '⚠';
 
 function createBootstrapReadItem(nodeId: string, mqttTopic: string): ReadItemInfo {
     return {
@@ -117,14 +120,16 @@ export async function buildValidatedPollingItems(
                     item,
                     success: true,
                 });
-                console.log(`[BOOTSTRAP] Optional device bootstrap tag available: ${item.tagId}`);
+                if (Config.SHOW_SUCCESSFUL_TAG_SUBSCRIPTION_LOGS) {
+                    console.log(`[BOOTSTRAP] Optional device bootstrap tag available: ${item.tagId}`);
+                }
             } else {
                 optionalDeviceBootstrapAvailabilityResults.push({
                     detail: data.statusCode.toString(),
                     item,
                     success: false,
                 });
-                console.warn(`[BOOTSTRAP] Optional device bootstrap tag unavailable: ${item.tagId} (status=${data.statusCode.toString()})`);
+                console.warn(`${WARNING_ICON} [BOOTSTRAP] Optional device bootstrap tag unavailable: ${item.tagId} (status=${data.statusCode.toString()})`);
             }
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
@@ -133,7 +138,7 @@ export async function buildValidatedPollingItems(
                 item,
                 success: false,
             });
-            console.warn(`[BOOTSTRAP] Optional device bootstrap tag read failed: ${item.tagId} (${errorMessage})`);
+            console.warn(`${WARNING_ICON} [BOOTSTRAP] Optional device bootstrap tag read failed: ${item.tagId} (${errorMessage})`);
         }
     }
 
@@ -146,7 +151,12 @@ export async function buildValidatedPollingItems(
     logBootstrapStep('5/8', 'Validating device polling tags against live OPC UA session');
     const devicePollingValidationResults = await validateReadItemsDetailed(session, unvalidatedDeviceReadItems);
     const devicePollingItems = devicePollingValidationResults.filter((result) => result.success).map((result) => result.item);
-    logValidatedPollingItemBatch('Device polling tags', unvalidatedDeviceReadItems, devicePollingItems);
+    logValidatedPollingItemBatch(
+        'Device polling tags',
+        unvalidatedDeviceReadItems,
+        devicePollingItems,
+        new Map(devicePollingValidationResults.map((result) => [result.item.tagId, result.detail])),
+    );
 
     logBootstrapStep('6/8', 'Building unvalidated machine polling tag list');
     const unvalidatedMachineReadItems = await getMachineReadItems(machineCfg.machineId);
@@ -155,7 +165,12 @@ export async function buildValidatedPollingItems(
     logBootstrapStep('7/8', 'Validating machine polling tags against live OPC UA session');
     const machinePollingValidationResults = await validateReadItemsDetailed(session, unvalidatedMachineReadItems);
     const machinePollingItems = machinePollingValidationResults.filter((result) => result.success).map((result) => result.item);
-    logValidatedPollingItemBatch('Machine polling tags', unvalidatedMachineReadItems, machinePollingItems);
+    logValidatedPollingItemBatch(
+        'Machine polling tags',
+        unvalidatedMachineReadItems,
+        machinePollingItems,
+        new Map(machinePollingValidationResults.map((result) => [result.item.tagId, result.detail])),
+    );
 
     const allPollingItems = machinePollingItems.concat(devicePollingItems);
     logBootstrapStep('8/8', `Caching validated polling tags (${allPollingItems.length} total)`);

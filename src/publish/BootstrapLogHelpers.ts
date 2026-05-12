@@ -1,11 +1,17 @@
 import { ReadItemInfo } from '../opcua/polling-items';
+import Config from '../shared/config';
 import { BootstrapCacheSnapshot } from './PublishManagerContracts';
 
 type BootstrapItemStage = 'bootstrap' | 'polling';
+const WARNING_ICON = process.stderr.isTTY ? '\x1b[33m⚠\x1b[0m' : '⚠';
 
 function logItemBatch(stage: BootstrapItemStage, label: string, items: ReadItemInfo[]): void {
     const stageLabel = stage.toUpperCase();
     console.log(`[BOOTSTRAP][${stageLabel}] ${label}: ${items.length} tag(s)`);
+    if (!Config.SHOW_SUCCESSFUL_TAG_SUBSCRIPTION_LOGS) {
+        return;
+    }
+
     items.forEach((item, index) => {
         console.log(`[BOOTSTRAP][${stageLabel}]   [${index + 1}/${items.length}] tag=${item.tagId} node=${item.nodeId} topic=${item.mqttTopic}`);
     });
@@ -23,19 +29,28 @@ export function logPollingReadItemBatch(label: string, items: ReadItemInfo[]): v
     logItemBatch('polling', label, items);
 }
 
-export function logValidatedPollingItemBatch(label: string, requestedItems: ReadItemInfo[], validatedItems: ReadItemInfo[]): void {
+export function logValidatedPollingItemBatch(
+    label: string,
+    requestedItems: ReadItemInfo[],
+    validatedItems: ReadItemInfo[],
+    detailsByTagId: Map<string, string | null> = new Map(),
+): void {
     const validatedTagIds = new Set(validatedItems.map((item) => item.tagId));
     const skippedItems = requestedItems.filter((item) => !validatedTagIds.has(item.tagId));
 
     console.log(`[BOOTSTRAP][POLLING] ${label}: validated ${validatedItems.length}/${requestedItems.length}`);
-    validatedItems.forEach((item, index) => {
-        console.log(`[BOOTSTRAP][POLLING]   [OK ${index + 1}/${validatedItems.length}] tag=${item.tagId} node=${item.nodeId} topic=${item.mqttTopic}`);
-    });
+    if (Config.SHOW_SUCCESSFUL_TAG_SUBSCRIPTION_LOGS) {
+        validatedItems.forEach((item, index) => {
+            console.log(`[BOOTSTRAP][POLLING]   [OK ${index + 1}/${validatedItems.length}] tag=${item.tagId} node=${item.nodeId} topic=${item.mqttTopic}`);
+        });
+    }
 
     if (skippedItems.length > 0) {
-        console.warn(`[BOOTSTRAP][POLLING] ${label}: skipped ${skippedItems.length} invalid tag(s)`);
+        console.warn(`${WARNING_ICON} [BOOTSTRAP][POLLING] ${label}: skipped ${skippedItems.length} invalid tag(s)`);
         skippedItems.forEach((item, index) => {
-            console.warn(`[BOOTSTRAP][POLLING]   [SKIP ${index + 1}/${skippedItems.length}] tag=${item.tagId} node=${item.nodeId} topic=${item.mqttTopic}`);
+            const detail = detailsByTagId.get(item.tagId);
+            const detailSuffix = detail ? ` reason=${detail}` : '';
+            console.warn(`${WARNING_ICON} [BOOTSTRAP][POLLING]   [SKIP ${index + 1}/${skippedItems.length}] tag=${item.tagId} node=${item.nodeId} topic=${item.mqttTopic}${detailSuffix}`);
         });
     }
 }

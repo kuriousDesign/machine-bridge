@@ -5,10 +5,16 @@
     "node": ">=22.16.0 <23"
   },
   "scripts": {
+    "deps:sync-sdk": "node scripts/sync-sdk-dependency.js",
+    "deps:install": "npm run deps:sync-sdk && npm install",
+    "sdk:use-local": "node scripts/sync-sdk-dependency.js --source=local",
+    "sdk:use-npm": "node scripts/sync-sdk-dependency.js --source=npm",
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "nodemon --exec ts-node src/index.ts",
     "test-mqtt-connection": "ts-node test/test-mqtt-connection.ts",
+    "test-read-enum-deviceids": "ts-node test/test-read-enum-deviceids.ts",
+    "test-muted-children-array": "ts-node test/test-muted-children-array.ts",
     "dev-poller": "nodemon --exec ts-node src/index-poller.ts",
     "dev-subscriber": "nodemon --exec ts-node src/index-subscriber.ts",
     "dev-hmi": "nodemon --exec ts-node src/index-hmi.ts",

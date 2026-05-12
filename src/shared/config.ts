@@ -8,6 +8,7 @@ import { MessageSecurityMode, SecurityPolicy, OPCUAClientOptions, CreateSubscrip
 // Centralized configuration object
 export const Config: any = {
     ENABLE_DIAGNOSTICS: process.env.ENABLE_DIAGNOSTICS === 'true' || true,
+    SHOW_SUCCESSFUL_TAG_SUBSCRIPTION_LOGS: process.env.SHOW_SUCCESSFUL_TAG_SUBSCRIPTION_LOGS === 'true',
     OPCUA_CONTROLLER_NAME: process.env.OPCUA_CONTROLLER_NAME || "DefaultController",
     OPCUA_SERVER_IP_ADDRESS: process.env.OPCUA_SERVER_IP_ADDRESS,
     OPCUA_PORT: process.env.OPCUA_PORT,
@@ -33,7 +34,7 @@ Config.DIAG_READS_TO_SKIP_AT_START = 10;
 Config.RECONNECT_DELAY_MS = 1000; // Time to wait before attempting reconnection
 Config.OPCUA_CONNECT_LOG_INTERVAL_MS = 10000;
 Config.CHUNK_SIZE = 100; // Number of nodes to read per chunk
-Config.PUBLISHING_INTERVAL = 0; // OPC UA Publishing Interval in ms
+Config.PUBLISHING_INTERVAL = 500; // change this to 0 to disable (only fires update when value changes) OPC UA Publishing Interval in ms
 Config.SAMPLING_INTERVAL = 100; // OPC UA Sampling Interval in ms, affects how often we check for changes
 
 Config.OPCUA_OPTIONS = {

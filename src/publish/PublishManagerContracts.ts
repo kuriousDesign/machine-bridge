@@ -58,9 +58,6 @@ export interface BootstrapCacheSnapshot {
 }
 
 export interface BridgeStatusSnapshot {
-    // Accessed directly from PublishManagerCore via getBootstrapCacheSnapshot()
-    // and propagated externally on the bridge/status payload as bootstrapCache.
-    bootstrapCache?: BootstrapCacheSnapshot;
     machineId?: string | null;
     mqttConnected: boolean;
     opcuaState: number;

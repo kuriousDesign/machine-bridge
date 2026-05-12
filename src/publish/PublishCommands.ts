@@ -33,11 +33,20 @@ export function patchKioskControlData(
 
 export async function handlePublishBridgeCommand(params: {
     deviceMapEntries: [number, unknown][];
+    getBridgeCachePayload: () => unknown;
     kioskControlData: KioskControlData;
     message: TopicData;
     mqttClientManager: MqttClientManager;
+    publishCachedTopics: () => Promise<void>;
 }): Promise<KioskControlData> {
-    const { deviceMapEntries, kioskControlData, message, mqttClientManager } = params;
+    const {
+        deviceMapEntries,
+        getBridgeCachePayload,
+        kioskControlData,
+        message,
+        mqttClientManager,
+        publishCachedTopics,
+    } = params;
 
     const cmdData = message.payload as {
         allowedKioskIds?: string[];
@@ -84,6 +93,10 @@ export async function handlePublishBridgeCommand(params: {
             } else {
                 console.log('DeviceMap not yet available, cannot publish to bridge/deviceMap');
             }
+            break;
+        case BridgeCmds.GET_CACHE:
+            await publishCachedTopics();
+            await mqttClientManager.publish(MqttTopics.BRIDGE_CACHE, getBridgeCachePayload());
             break;
         case BridgeCmds.DISCONNECT:
             break;

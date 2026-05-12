@@ -1,0 +1,3 @@
+STATUS      DESCRIPTION
+            kiosk control cmds and responses need to handled in hmi writer manager, not in publisher manager
+            

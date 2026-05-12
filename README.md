@@ -2,11 +2,34 @@
 run npm install to install all packages and dependencies
 run npm run dev to launch local server
 
-## Local SDK Development Flow (Option A)
+## SDK Source Switching
 
-This project is configured to use the local SDK folder:
+This repo can use either the local workspace SDK or a published npm version.
 
-- `@kuriousdesign/machine-sdk`: `file:../machine-sdk`
+The active source is controlled by these `.env` variables:
+
+- `MACHINE_SDK_SOURCE=local|npm`
+- `MACHINE_SDK_LOCAL_PATH=file:../machine-sdk`
+- `MACHINE_SDK_NPM_VERSION=^1.0.112`
+
+Sync the dependency from `.env`, then install:
+
+```bash
+npm run deps:install
+```
+
+Quick switch commands:
+
+```bash
+npm run sdk:use-local && npm install
+npm run sdk:use-npm && npm install
+```
+
+`npm run deps:sync-sdk` updates `package.json` to match the current `.env` selection. `npm run deps:install` does that and then runs `npm install`.
+
+## Local SDK Development Flow
+
+When using `MACHINE_SDK_SOURCE=local`, the bridge resolves `@kuriousdesign/machine-sdk` from the local workspace folder.
 
 ### First-time setup
 
@@ -58,19 +81,15 @@ cd ../machine-bridge && docker compose up --build
 
 If you use plain `docker compose up` after SDK changes, the container may keep an older built SDK layer.
 
-## Switch Back To npm Package (Production)
+## Switch Back To npm Package
 
-1. Update dependency in `package.json`:
-
-```json
-"@kuriousdesign/machine-sdk": "^1.0.97"
-```
+1. Set `MACHINE_SDK_SOURCE=npm` in `.env`, or run `npm run sdk:use-npm`.
 
 2. Install clean dependencies:
 
 ```bash
 rm -rf node_modules
-npm install
+npm run deps:install
 ```
 
 3. Build and verify:
@@ -85,10 +104,14 @@ npm run build
 docker compose up --build
 ```
 
-Note: publish the required SDK version first, then bump the version here.
+Note: publish the required SDK version first, then update `MACHINE_SDK_NPM_VERSION` if needed.
 
 # DESCRIPTION
 This websocket server provides a cloud-based server to facilitate communication between a plc (machine) with internet connection and an HMI and/or remote monitoring dashboard UIs
+
+# DOCUMENTATION
+- See [docs/README.md](docs/README.md) for bridge-specific documentation.
+- MQTT/API hook reference: [docs/mqtt-api-hooks.md](docs/mqtt-api-hooks.md)
 
 # CONNECTION
 the websocket server acts as a middleman between the machine data/control and hmi/dashboards

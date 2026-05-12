@@ -28,6 +28,7 @@ export interface ReadItemValidationResult {
 }
 
 const DEVICE_STORE_TAG = 'Devices';
+const WARNING_ICON = process.stderr.isTTY ? '\x1b[33m⚠\x1b[0m' : '⚠';
 
 function isUnsupportedPollingTag(tagId: string): boolean {
     return /\.SFTYSts$/i.test(tagId);
@@ -65,7 +66,7 @@ export async function validateReadItemDetailed(session: ClientSession, item: Rea
     if (isUnsupportedPollingTag(item.tagId)) {
         const detail = 'Skipped polling for extension object that does not decode reliably in subscriptions';
         if (showWarning) {
-            console.warn(`Skipping unsupported polling tag: ${item.tagId} (${detail})`);
+            console.warn(`${WARNING_ICON} [OPCUA][VALIDATE] Skipping unsupported polling tag: ${item.tagId} (${detail})`);
         }
         return {
             detail,
@@ -88,7 +89,7 @@ export async function validateReadItemDetailed(session: ClientSession, item: Rea
             };
         } else {
             if (showWarning){
-                console.warn(`Invalid tag to read from opcua server: ${item.tagId} (status=${data?.statusCode?.toString()})`);
+                console.warn(`${WARNING_ICON} [OPCUA][VALIDATE] Invalid tag to read from opcua server: ${item.tagId} (status=${data?.statusCode?.toString()})`);
             }
             return {
                 detail: data?.statusCode?.toString() ?? 'unknown status',
@@ -98,7 +99,7 @@ export async function validateReadItemDetailed(session: ClientSession, item: Rea
         }
     } catch (err) {
         const errMsg = (err instanceof Error) ? err.message : String(err);
-        console.warn(`Read test failed for ${item.tagId}: ${errMsg}. Skipping polling for this node.`);
+        console.warn(`${WARNING_ICON} [OPCUA][VALIDATE] Read test failed for ${item.tagId}: ${errMsg}. Skipping polling for this node.`);
         return {
             detail: errMsg,
             item,
@@ -119,7 +120,8 @@ export async function validateReadItems(session: ClientSession, items: ReadItemI
                 return result.item;
             }
 
-            console.warn(`Skipping invalid/unsupported node for polling: ${result.item.tagId}`);
+            const detailSuffix = result.detail ? ` (${result.detail})` : '';
+            console.warn(`${WARNING_ICON} [OPCUA][VALIDATE] Skipping invalid/unsupported node for polling: ${result.item.tagId}${detailSuffix}`);
             return null;
         })
         .filter((item): item is ReadItemInfo => item !== null);
@@ -141,7 +143,9 @@ export function getOptionalDeviceBootstrapReadItems(
     });
 
     readItems.forEach((item) => {
-        console.log(`[OPCUA] Added Optional Device Bootstrap Item - TagId: ${item.tagId}, MqttTopic: ${item.mqttTopic}`);
+        if (Config.SHOW_SUCCESSFUL_TAG_SUBSCRIPTION_LOGS) {
+            console.log(`[OPCUA] Added Optional Device Bootstrap Item - TagId: ${item.tagId}, MqttTopic: ${item.mqttTopic}`);
+        }
     });
 
     return readItems;
@@ -169,9 +173,11 @@ export async function getDeviceReadItems(
         });
 
     });
-    readIteams.map((item) => {
-        console.log(`[OPCUA] Added Device Polling Item - TagId: ${item.tagId}, MqttTopic: ${item.mqttTopic}, UpdatePeriod: ${item.update_period}`);
-    });
+    if (Config.SHOW_SUCCESSFUL_TAG_SUBSCRIPTION_LOGS) {
+        readIteams.map((item) => {
+            console.log(`[OPCUA] Added Device Polling Item - TagId: ${item.tagId}, MqttTopic: ${item.mqttTopic}, UpdatePeriod: ${item.update_period}`);
+        });
+    }
     return readIteams;
 }
 
@@ -197,9 +203,11 @@ export function getMachineHwReadItems(tags: object): ReadItemInfo[] {
             attributeId: AttributeIds.Value,
         });
     });
-    itemsToRead.map((item) => {
-        console.log(`[OPCUA] Added MachineHw Polling Item - TagId: ${item.tagId}, MqttTopic: ${item.mqttTopic}, UpdatePeriod: ${item.update_period}`);
-    });
+    if (Config.SHOW_SUCCESSFUL_TAG_SUBSCRIPTION_LOGS) {
+        itemsToRead.map((item) => {
+            console.log(`[OPCUA] Added MachineHw Polling Item - TagId: ${item.tagId}, MqttTopic: ${item.mqttTopic}, UpdatePeriod: ${item.update_period}`);
+        });
+    }
     return itemsToRead;
 }
 
@@ -216,9 +224,11 @@ export function getMachineReadItems(machineId: string): ReadItemInfo[] {
         const topic = `${PlcNamespaces.Machine.toLowerCase()}/${key.toLowerCase()}`;
         pushReadItem(itemsToRead, makeReadItem(tag, topic));
     });
-    itemsToRead.map((item) => {
-        console.log(`[OPCUA] Added Machine Polling Item - TagId: ${item.tagId}, MqttTopic: ${item.mqttTopic}, UpdatePeriod: ${item.update_period}`);
-    });
+    if (Config.SHOW_SUCCESSFUL_TAG_SUBSCRIPTION_LOGS) {
+        itemsToRead.map((item) => {
+            console.log(`[OPCUA] Added Machine Polling Item - TagId: ${item.tagId}, MqttTopic: ${item.mqttTopic}, UpdatePeriod: ${item.update_period}`);
+        });
+    }
     const hwItems = getMachineHwReadItems(MachineHwTagsApolloTubeLiner00251);
     hwItems.forEach((item) => itemsToRead.push(item));
     

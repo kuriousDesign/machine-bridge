@@ -1,7 +1,7 @@
 {
-  "generatedAt": 1778624997022,
+  "generatedAt": 1778682164052,
   "machineId": "00225",
-  "lastBootstrapCompletedAt": 1778624997007,
+  "lastBootstrapCompletedAt": 1778682164035,
   "counts": {
     "allPollingItemCount": 120,
     "availableOptionalDeviceBootstrapTagCount": 5,
@@ -15,7 +15,7 @@
   "items": [
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997006,
+      "lastReadAt": 1778682164034,
       "mqttTopic": "machine/1/4/cfg",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00225.CONCfg",
       "pollDetail": "BadNodeIdUnknown (0x80340000)",
@@ -39,7 +39,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/14/cfg",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00225.FEEDCfg",
       "pollDetail": "subscription eligible",
@@ -51,7 +51,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/14/sts",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00225.FEEDSts",
       "pollDetail": "subscription eligible",
@@ -63,7 +63,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/2/cfg",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00225.HMICfg",
       "pollDetail": "subscription eligible",
@@ -75,7 +75,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/2/sts",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00225.HMISts",
       "pollDetail": "subscription eligible",
@@ -87,7 +87,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/job",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00225.Job",
       "pollDetail": "subscription eligible",
@@ -99,7 +99,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/pdmsts",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00225.PdmSts",
       "pollDetail": "subscription eligible",
@@ -111,7 +111,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/recipestore",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00225.RecipeStore",
       "pollDetail": "subscription eligible",
@@ -123,7 +123,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/3/cfg",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00225.SFTYCfg",
       "pollDetail": "subscription eligible",
@@ -147,7 +147,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997006,
+      "lastReadAt": 1778682164034,
       "mqttTopic": "machine/1/cfg",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00225.SYSCfg",
       "pollDetail": "BadNodeIdUnknown (0x80340000)",
@@ -171,7 +171,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/taskqueue",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00225.TaskQueue",
       "pollDetail": "subscription eligible",
@@ -183,7 +183,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/6/cfg",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00225.UDPCfg",
       "pollDetail": "subscription eligible",
@@ -195,7 +195,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/6/sts",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00225.UDPSts",
       "pollDetail": "subscription eligible",
@@ -207,7 +207,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/13/cfg",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00225.VISCfg",
       "pollDetail": "subscription eligible",
@@ -219,7 +219,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/13/sts",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00225.VISSts",
       "pollDetail": "subscription eligible",
@@ -231,7 +231,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624996942,
+      "lastReadAt": 1778682163873,
       "mqttTopic": "machine/cfg",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Cfg",
       "pollDetail": null,
@@ -243,7 +243,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/currenttimems",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.CurrentTimeMs",
       "pollDetail": "subscription eligible",
@@ -255,7 +255,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/log",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.DeviceLogs[1]",
       "pollDetail": "subscription eligible",
@@ -267,7 +267,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/13/log",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.DeviceLogs[13]",
       "pollDetail": "subscription eligible",
@@ -279,7 +279,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/14/log",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.DeviceLogs[14]",
       "pollDetail": "subscription eligible",
@@ -291,7 +291,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/2/log",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.DeviceLogs[2]",
       "pollDetail": "subscription eligible",
@@ -303,7 +303,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/3/log",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.DeviceLogs[3]",
       "pollDetail": "subscription eligible",
@@ -315,7 +315,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/log",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.DeviceLogs[4]",
       "pollDetail": "subscription eligible",
@@ -327,7 +327,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/6/log",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.DeviceLogs[6]",
       "pollDetail": "subscription eligible",
@@ -339,7 +339,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164034,
       "mqttTopic": "machine/1/apiopcua/hmireq",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[1].ApiOpcua.HmiReq",
       "pollDetail": "subscription eligible",
@@ -351,7 +351,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/apiopcua/hmiresp",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[1].ApiOpcua.HmiResp",
       "pollDetail": "subscription eligible",
@@ -363,7 +363,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/apiopcua/internalreq",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[1].ApiOpcua.InternalReq",
       "pollDetail": "subscription eligible",
@@ -375,7 +375,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/apiopcua/internalresp",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[1].ApiOpcua.InternalResp",
       "pollDetail": "subscription eligible",
@@ -387,7 +387,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997006,
+      "lastReadAt": 1778682164034,
       "mqttTopic": "machine/1/errors",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[1].Errors",
       "pollDetail": "subscription eligible",
@@ -399,7 +399,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997006,
+      "lastReadAt": 1778682164034,
       "mqttTopic": "machine/1/execmethod",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[1].ExecMethod",
       "pollDetail": "subscription eligible",
@@ -411,7 +411,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997006,
+      "lastReadAt": 1778682164034,
       "mqttTopic": "machine/1/is",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[1].Is",
       "pollDetail": "subscription eligible",
@@ -423,7 +423,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164034,
       "mqttTopic": "machine/1/mutedchildrenarray",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[1].MutedChildrenArray",
       "pollDetail": "subscription eligible",
@@ -435,7 +435,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997006,
+      "lastReadAt": 1778682164034,
       "mqttTopic": "machine/1/process",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[1].Process",
       "pollDetail": "subscription eligible",
@@ -447,7 +447,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164034,
       "mqttTopic": "machine/1/script",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[1].Script",
       "pollDetail": "subscription eligible",
@@ -459,7 +459,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997006,
+      "lastReadAt": 1778682164034,
       "mqttTopic": "machine/1/task",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[1].Task",
       "pollDetail": "subscription eligible",
@@ -471,7 +471,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997006,
+      "lastReadAt": 1778682164034,
       "mqttTopic": "machine/1/warnings",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[1].Warnings",
       "pollDetail": "subscription eligible",
@@ -483,7 +483,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/13/apiopcua/hmireq",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[13].ApiOpcua.HmiReq",
       "pollDetail": "subscription eligible",
@@ -495,7 +495,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/13/apiopcua/hmiresp",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[13].ApiOpcua.HmiResp",
       "pollDetail": "subscription eligible",
@@ -507,7 +507,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/13/apiopcua/internalreq",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[13].ApiOpcua.InternalReq",
       "pollDetail": "subscription eligible",
@@ -519,7 +519,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/13/apiopcua/internalresp",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[13].ApiOpcua.InternalResp",
       "pollDetail": "subscription eligible",
@@ -531,7 +531,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/13/errors",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[13].Errors",
       "pollDetail": "subscription eligible",
@@ -543,7 +543,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/13/execmethod",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[13].ExecMethod",
       "pollDetail": "subscription eligible",
@@ -555,7 +555,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/13/is",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[13].Is",
       "pollDetail": "subscription eligible",
@@ -567,7 +567,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/13/mutedchildrenarray",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[13].MutedChildrenArray",
       "pollDetail": "subscription eligible",
@@ -579,7 +579,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/13/process",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[13].Process",
       "pollDetail": "subscription eligible",
@@ -591,7 +591,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/13/script",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[13].Script",
       "pollDetail": "subscription eligible",
@@ -603,7 +603,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/13/task",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[13].Task",
       "pollDetail": "subscription eligible",
@@ -615,7 +615,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/13/warnings",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[13].Warnings",
       "pollDetail": "subscription eligible",
@@ -627,7 +627,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/14/apiopcua/hmireq",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[14].ApiOpcua.HmiReq",
       "pollDetail": "subscription eligible",
@@ -639,7 +639,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/14/apiopcua/hmiresp",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[14].ApiOpcua.HmiResp",
       "pollDetail": "subscription eligible",
@@ -651,7 +651,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/14/apiopcua/internalreq",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[14].ApiOpcua.InternalReq",
       "pollDetail": "subscription eligible",
@@ -663,7 +663,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/14/apiopcua/internalresp",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[14].ApiOpcua.InternalResp",
       "pollDetail": "subscription eligible",
@@ -675,7 +675,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/14/errors",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[14].Errors",
       "pollDetail": "subscription eligible",
@@ -687,7 +687,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/14/execmethod",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[14].ExecMethod",
       "pollDetail": "subscription eligible",
@@ -699,7 +699,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/14/is",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[14].Is",
       "pollDetail": "subscription eligible",
@@ -711,7 +711,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/14/mutedchildrenarray",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[14].MutedChildrenArray",
       "pollDetail": "subscription eligible",
@@ -723,7 +723,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/14/process",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[14].Process",
       "pollDetail": "subscription eligible",
@@ -735,7 +735,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/14/script",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[14].Script",
       "pollDetail": "subscription eligible",
@@ -747,7 +747,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/14/task",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[14].Task",
       "pollDetail": "subscription eligible",
@@ -759,7 +759,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/14/warnings",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[14].Warnings",
       "pollDetail": "subscription eligible",
@@ -771,7 +771,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/2/apiopcua/hmireq",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[2].ApiOpcua.HmiReq",
       "pollDetail": "subscription eligible",
@@ -783,7 +783,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/2/apiopcua/hmiresp",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[2].ApiOpcua.HmiResp",
       "pollDetail": "subscription eligible",
@@ -795,7 +795,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/2/apiopcua/internalreq",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[2].ApiOpcua.InternalReq",
       "pollDetail": "subscription eligible",
@@ -807,7 +807,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/2/apiopcua/internalresp",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[2].ApiOpcua.InternalResp",
       "pollDetail": "subscription eligible",
@@ -819,7 +819,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/2/errors",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[2].Errors",
       "pollDetail": "subscription eligible",
@@ -831,7 +831,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/2/execmethod",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[2].ExecMethod",
       "pollDetail": "subscription eligible",
@@ -843,7 +843,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/2/is",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[2].Is",
       "pollDetail": "subscription eligible",
@@ -855,7 +855,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/2/mutedchildrenarray",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[2].MutedChildrenArray",
       "pollDetail": "subscription eligible",
@@ -867,7 +867,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/2/process",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[2].Process",
       "pollDetail": "subscription eligible",
@@ -879,7 +879,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/2/script",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[2].Script",
       "pollDetail": "subscription eligible",
@@ -891,7 +891,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/2/task",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[2].Task",
       "pollDetail": "subscription eligible",
@@ -903,7 +903,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/2/warnings",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[2].Warnings",
       "pollDetail": "subscription eligible",
@@ -915,7 +915,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/3/apiopcua/hmireq",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[3].ApiOpcua.HmiReq",
       "pollDetail": "subscription eligible",
@@ -927,7 +927,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/3/apiopcua/hmiresp",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[3].ApiOpcua.HmiResp",
       "pollDetail": "subscription eligible",
@@ -939,7 +939,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/3/apiopcua/internalreq",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[3].ApiOpcua.InternalReq",
       "pollDetail": "subscription eligible",
@@ -951,7 +951,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/3/apiopcua/internalresp",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[3].ApiOpcua.InternalResp",
       "pollDetail": "subscription eligible",
@@ -963,7 +963,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/3/errors",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[3].Errors",
       "pollDetail": "subscription eligible",
@@ -975,7 +975,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/3/execmethod",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[3].ExecMethod",
       "pollDetail": "subscription eligible",
@@ -987,7 +987,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/3/is",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[3].Is",
       "pollDetail": "subscription eligible",
@@ -999,7 +999,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/3/mutedchildrenarray",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[3].MutedChildrenArray",
       "pollDetail": "subscription eligible",
@@ -1011,7 +1011,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/3/process",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[3].Process",
       "pollDetail": "subscription eligible",
@@ -1023,7 +1023,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/3/script",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[3].Script",
       "pollDetail": "subscription eligible",
@@ -1035,7 +1035,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/3/task",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[3].Task",
       "pollDetail": "subscription eligible",
@@ -1047,7 +1047,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/3/warnings",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[3].Warnings",
       "pollDetail": "subscription eligible",
@@ -1059,7 +1059,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/apiopcua/hmireq",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[4].ApiOpcua.HmiReq",
       "pollDetail": "subscription eligible",
@@ -1071,7 +1071,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/apiopcua/hmiresp",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[4].ApiOpcua.HmiResp",
       "pollDetail": "subscription eligible",
@@ -1083,7 +1083,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/apiopcua/internalreq",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[4].ApiOpcua.InternalReq",
       "pollDetail": "subscription eligible",
@@ -1095,7 +1095,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/apiopcua/internalresp",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[4].ApiOpcua.InternalResp",
       "pollDetail": "subscription eligible",
@@ -1107,7 +1107,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/errors",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[4].Errors",
       "pollDetail": "subscription eligible",
@@ -1119,7 +1119,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/execmethod",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[4].ExecMethod",
       "pollDetail": "subscription eligible",
@@ -1131,7 +1131,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/is",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[4].Is",
       "pollDetail": "subscription eligible",
@@ -1143,7 +1143,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/mutedchildrenarray",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[4].MutedChildrenArray",
       "pollDetail": "subscription eligible",
@@ -1155,7 +1155,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/process",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[4].Process",
       "pollDetail": "subscription eligible",
@@ -1167,7 +1167,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/script",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[4].Script",
       "pollDetail": "subscription eligible",
@@ -1179,7 +1179,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/task",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[4].Task",
       "pollDetail": "subscription eligible",
@@ -1191,7 +1191,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/4/warnings",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[4].Warnings",
       "pollDetail": "subscription eligible",
@@ -1203,7 +1203,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/6/apiopcua/hmireq",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[6].ApiOpcua.HmiReq",
       "pollDetail": "subscription eligible",
@@ -1215,7 +1215,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/6/apiopcua/hmiresp",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[6].ApiOpcua.HmiResp",
       "pollDetail": "subscription eligible",
@@ -1227,7 +1227,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/6/apiopcua/internalreq",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[6].ApiOpcua.InternalReq",
       "pollDetail": "subscription eligible",
@@ -1239,7 +1239,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/6/apiopcua/internalresp",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[6].ApiOpcua.InternalResp",
       "pollDetail": "subscription eligible",
@@ -1251,7 +1251,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/6/errors",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[6].Errors",
       "pollDetail": "subscription eligible",
@@ -1263,7 +1263,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/6/execmethod",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[6].ExecMethod",
       "pollDetail": "subscription eligible",
@@ -1275,7 +1275,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/6/is",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[6].Is",
       "pollDetail": "subscription eligible",
@@ -1287,7 +1287,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/6/mutedchildrenarray",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[6].MutedChildrenArray",
       "pollDetail": "subscription eligible",
@@ -1299,7 +1299,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/6/process",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[6].Process",
       "pollDetail": "subscription eligible",
@@ -1311,7 +1311,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/6/script",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[6].Script",
       "pollDetail": "subscription eligible",
@@ -1323,7 +1323,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/6/task",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[6].Task",
       "pollDetail": "subscription eligible",
@@ -1335,7 +1335,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/1/6/warnings",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Devices[6].Warnings",
       "pollDetail": "subscription eligible",
@@ -1347,7 +1347,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/errors",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Errors",
       "pollDetail": "subscription eligible",
@@ -1359,7 +1359,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/estopcircuit_ok",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.EstopCircuit_OK",
       "pollDetail": "subscription eligible",
@@ -1371,7 +1371,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/estopcircuitdelayed_ok",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.EstopCircuitDelayed_OK",
       "pollDetail": "subscription eligible",
@@ -1383,7 +1383,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/ethercatmaster_ok",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.EthercatMaster_OK",
       "pollDetail": "subscription eligible",
@@ -1395,7 +1395,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/ethercatslaves_ok",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.EthercatSlaves_OK",
       "pollDetail": "subscription eligible",
@@ -1407,7 +1407,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/fencecircuit_ok",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.FenceCircuit_OK",
       "pollDetail": "subscription eligible",
@@ -1419,7 +1419,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/guarddoors_locked",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.GuardDoors_LOCKED",
       "pollDetail": "subscription eligible",
@@ -1431,7 +1431,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/heartbeathmi",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.HeartbeatHMI",
       "pollDetail": "subscription eligible",
@@ -1443,7 +1443,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/heartbeatplc",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.HeartbeatPLC",
       "pollDetail": "subscription eligible",
@@ -1455,7 +1455,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/machinelog",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.MachineLog",
       "pollDetail": "subscription eligible",
@@ -1467,7 +1467,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/manualmode",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.ManualMode",
       "pollDetail": "subscription eligible",
@@ -1479,7 +1479,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/networkhealth_ok",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.NetworkHealth_OK",
       "pollDetail": "subscription eligible",
@@ -1491,7 +1491,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624996947,
+      "lastReadAt": 1778682163886,
       "mqttTopic": "machine/registereddevices",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.RegisteredDevices",
       "pollDetail": null,
@@ -1503,7 +1503,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/settings",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Settings",
       "pollDetail": "subscription eligible",
@@ -1515,7 +1515,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/user",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.User",
       "pollDetail": "subscription eligible",
@@ -1527,7 +1527,7 @@
     },
     {
       "lastPolledAt": null,
-      "lastReadAt": 1778624997007,
+      "lastReadAt": 1778682164035,
       "mqttTopic": "machine/warnings",
       "nodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine.Warnings",
       "pollDetail": "subscription eligible",

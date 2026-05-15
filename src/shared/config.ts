@@ -28,13 +28,13 @@ Config.NODE_LIST_PREFIX = nodeListString + Config.OPCUA_CONTROLLER_NAME + '.Appl
 
 Config.BRIDGE_STATUS_PUBLISH_INTERVAL_MS = 1000;
 Config.POLLING_RATE_MS = 250;
-Config.REPUBLISH_RATE_MS = 500;
+Config.REPUBLISH_RATE_MS = 5000; // only used when ENABLE_STALE_POLLING_REPUBLISH is true, to prevent tight loop of republishing unchanged values
 //Config.LOOP_DELAY_MS = 250; // Small delay to prevent tight loop
 Config.DIAG_READS_TO_SKIP_AT_START = 10;
 Config.RECONNECT_DELAY_MS = 1000; // Time to wait before attempting reconnection
 Config.OPCUA_CONNECT_LOG_INTERVAL_MS = 10000;
 Config.CHUNK_SIZE = 100; // Number of nodes to read per chunk
-Config.PUBLISHING_INTERVAL = 500; // change this to 0 to disable (only fires update when value changes) OPC UA Publishing Interval in ms
+Config.PUBLISHING_INTERVAL = 0; // change this to 0 to disable (only fires update when value changes) OPC UA Publishing Interval in ms
 Config.SAMPLING_INTERVAL = 100; // OPC UA Sampling Interval in ms, affects how often we check for changes
 
 Config.OPCUA_OPTIONS = {

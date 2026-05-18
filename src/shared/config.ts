@@ -1,8 +1,28 @@
 // config.ts
 import 'dotenv/config'; // Load .env FIRST
+import os from 'os';
 import mqtt from 'mqtt';
 import { nodeListString } from '@kuriousdesign/machine-sdk';
-import { MessageSecurityMode, SecurityPolicy, OPCUAClientOptions, CreateSubscriptionRequestOptions, DataChangeFilter, MonitoringParametersOptions, DataChangeTrigger, DeadbandType } from 'node-opcua';
+import { makeApplicationUrn, MessageSecurityMode, SecurityPolicy, OPCUAClientOptions, CreateSubscriptionRequestOptions, DataChangeFilter, MonitoringParametersOptions, DataChangeTrigger, DeadbandType } from 'node-opcua';
+
+const sharedApplicationName = process.env.OPCUA_APPLICATION_NAME || 'OpcuaMqttBridge';
+
+export const ApplicationIdentity = {
+    applicationName: sharedApplicationName,
+    applicationUri: process.env.OPCUA_APPLICATION_URI || makeApplicationUrn(os.hostname(), sharedApplicationName),
+} as const;
+
+export function createSharedOpcuaClientOptions(overrides: Partial<OPCUAClientOptions> = {}): OPCUAClientOptions {
+    return {
+        applicationName: ApplicationIdentity.applicationName,
+        applicationUri: ApplicationIdentity.applicationUri,
+        securityMode: MessageSecurityMode.None,
+        securityPolicy: SecurityPolicy.None,
+        endpointMustExist: true,
+        keepSessionAlive: true,
+        ...overrides,
+    } as OPCUAClientOptions;
+}
 
 
 // Centralized configuration object
@@ -19,6 +39,7 @@ export const Config: any = {
     MQTT_BROKER_USERNAME: process.env.MQTT_BROKER_USERNAME || "admin",
     MQTT_BROKER_PASSWORD: process.env.MQTT_BROKER_PASSWORD || "Admin1234",
     MQTT_BROKER_TYPE: process.env.MQTT_BROKER_TYPE,
+    ApplicationIdentity,
 
 };
 
@@ -37,15 +58,10 @@ Config.CHUNK_SIZE = 100; // Number of nodes to read per chunk
 Config.PUBLISHING_INTERVAL = 0; // change this to 0 to disable (only fires update when value changes) OPC UA Publishing Interval in ms
 Config.SAMPLING_INTERVAL = 100; // OPC UA Sampling Interval in ms, affects how often we check for changes
 
-Config.OPCUA_OPTIONS = {
-    applicationName: 'OpcuaMqttBridge',
-    securityMode: MessageSecurityMode.None,
-    securityPolicy: SecurityPolicy.None,
-    endpointMustExist: true,
-    keepSessionAlive: true, // Let node-opcua handle internal session heartbeat
+Config.OPCUA_OPTIONS = createSharedOpcuaClientOptions({
     requestedSessionTimeout: 60000,
     defaultTransactionTimeout: 30000,
-} as OPCUAClientOptions;
+}) as OPCUAClientOptions;
 
 Config.SUBSCRIPTION_OPTIONS = {
     maxNotificationsPerPublish: 2000,

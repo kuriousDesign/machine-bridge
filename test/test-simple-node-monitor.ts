@@ -34,11 +34,12 @@ import {
 
 import "dotenv/config"; // auto-loads .env
 
-import { DeviceRegistration, MachineTags, PlcNamespaces, initialMachine, nodeListString, nodeTypeString } from '@kuriousdesign/machine-sdk';
+import { DeviceRegistration, PlcNamespaces, initialMachine, nodeListString, nodeTypeString } from '@kuriousdesign/machine-sdk';
+import Config, { createSharedOpcuaClientOptions } from '../src/shared/config';
 
 
 const opcuaControllerName = process.env.OPCUA_CONTROLLER_NAME || "DefaultController";
-const opcuaEndpoint = `opc.tcp://${process.env.OPCUA_SERVER_IP_ADDRESS}:${process.env.OPCUA_PORT}`;
+const opcuaEndpoint = Config.OPCUA_ENDPOINT || `opc.tcp://${process.env.OPCUA_SERVER_IP_ADDRESS}:${process.env.OPCUA_PORT}`;
 const nodeTypePrefix = nodeTypeString + opcuaControllerName + '.Application.';
 const nodeListPrefix = nodeListString + opcuaControllerName + '.Application.';
 
@@ -58,15 +59,9 @@ interface MonitoredItemToMonitor {
     attributeId: number;
     nodeId: string;
 }
-const opcuaOptions: OPCUAClientOptions = {
-    applicationName: 'OpcuaMqttBridge',
+const opcuaOptions: OPCUAClientOptions = createSharedOpcuaClientOptions({
     connectionStrategy: connectionStrategy,
-    securityMode: MessageSecurityMode.None,
-    securityPolicy: SecurityPolicy.None,
-    endpointMustExist: true,
-    keepSessionAlive: true,
-    //requestedSessionTimeout: 300000, 
-};
+});
 
 const PUBLISHING_INTERVAL = 1000; // in ms
 

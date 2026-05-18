@@ -24,6 +24,28 @@ export interface HmiWriteManagerCallbacks {
     onSessionReset?: (reason: string, error: Error, resetCount: number) => void;
 }
 
+type WriteTagRequest = {
+    tag: string;
+    value: any;
+};
+
+type WriteRecipeRequest = {
+    index: number;
+    recipe: any;
+};
+
+type WriteJobRequest = {
+    job: any;
+};
+
+type WriteActiveRecipeIndexRequest = {
+    index: number;
+};
+
+const HMI_WRITE_RECIPE_TOPIC = MqttTopics.HMI_WRITE_RECIPE;
+const HMI_WRITE_JOB_TOPIC = MqttTopics.HMI_WRITE_JOB;
+const HMI_WRITE_ACTIVE_RECIPE_INDEX_TOPIC = MqttTopics.HMI_WRITE_ACTIVE_RECIPE_INDEX;
+
 export default class HmiWriteManager {
     private state: HmiWriteManagerState = HmiWriteManagerState.Idle;
     private dependencies: HmiWriteManagerDependencies | null = null;
@@ -31,6 +53,7 @@ export default class HmiWriteManager {
     private opcuaWriteSession = new OpcuaWriteSession(DeviceId.HMI, 'HMI_MANAGER', () => this.dependencies?.getMachineId() ?? null);
     private subscribedTopics = new Set<string>();
     private sessionResetCount = 0;
+    private pendingWriteTags: WriteTagRequest[] = [];
 
     constructor(
         private readonly callbacks: HmiWriteManagerCallbacks = {},
@@ -66,6 +89,9 @@ export default class HmiWriteManager {
         }
 
         await this.syncWriteTagSubscription();
+        await this.syncWriteRecipeSubscription();
+        await this.syncWriteJobSubscription();
+        await this.syncWriteActiveRecipeIndexSubscription();
 
         for (const device of devices) {
             const topic = `${MqttTopics.HMI_ACTION_REQ}/${device.id}`;
@@ -129,14 +155,124 @@ export default class HmiWriteManager {
         this.subscribedTopics.add(Config.BRIDGE_API_WRITE_TAG);
     }
 
+    private async syncWriteRecipeSubscription(): Promise<void> {
+        if (!this.dependencies) {
+            throw new Error('HMI manager dependencies are not configured');
+        }
+
+        if (this.subscribedTopics.has(HMI_WRITE_RECIPE_TOPIC)) {
+            return;
+        }
+
+        console.log('[HMI_MANAGER] Subscribing to recipe write topic:', HMI_WRITE_RECIPE_TOPIC);
+        await this.dependencies.mqttClientManager.subscribe(HMI_WRITE_RECIPE_TOPIC, (recvTopic: string, message: Buffer) => {
+            void this.enqueueWriteRecipe(recvTopic, message);
+        });
+        this.subscribedTopics.add(HMI_WRITE_RECIPE_TOPIC);
+    }
+
+    private async syncWriteJobSubscription(): Promise<void> {
+        if (!this.dependencies) {
+            throw new Error('HMI manager dependencies are not configured');
+        }
+
+        if (this.subscribedTopics.has(HMI_WRITE_JOB_TOPIC)) {
+            return;
+        }
+
+        console.log('[HMI_MANAGER] Subscribing to job write topic:', HMI_WRITE_JOB_TOPIC);
+        await this.dependencies.mqttClientManager.subscribe(HMI_WRITE_JOB_TOPIC, (recvTopic: string, message: Buffer) => {
+            void this.enqueueWriteJob(recvTopic, message);
+        });
+        this.subscribedTopics.add(HMI_WRITE_JOB_TOPIC);
+    }
+
+    private async syncWriteActiveRecipeIndexSubscription(): Promise<void> {
+        if (!this.dependencies) {
+            throw new Error('HMI manager dependencies are not configured');
+        }
+
+        if (this.subscribedTopics.has(HMI_WRITE_ACTIVE_RECIPE_INDEX_TOPIC)) {
+            return;
+        }
+
+        console.log('[HMI_MANAGER] Subscribing to active recipe index write topic:', HMI_WRITE_ACTIVE_RECIPE_INDEX_TOPIC);
+        await this.dependencies.mqttClientManager.subscribe(HMI_WRITE_ACTIVE_RECIPE_INDEX_TOPIC, (recvTopic: string, message: Buffer) => {
+            void this.enqueueWriteActiveRecipeIndex(recvTopic, message);
+        });
+        this.subscribedTopics.add(HMI_WRITE_ACTIVE_RECIPE_INDEX_TOPIC);
+    }
+
     private async enqueueWriteTag(topic: string, message: Buffer): Promise<void> {
+        const writeTagRequests = this.parseWriteTagRequests(message);
+        if (writeTagRequests.length === 0) {
+            return;
+        }
+
+        this.pendingWriteTags.push(...writeTagRequests);
+
         this.actionQueue = this.actionQueue
             .then(async () => {
-                const writeTagData = JSON.parse(message.toString()) as { tag: string; value: any };
-                await this.handleWriteTag(topic, writeTagData);
+                const batchedWriteTags = this.drainPendingWriteTags();
+                if (batchedWriteTags.length === 0) {
+                    return;
+                }
+
+                await this.handleWriteTagBatch(topic, batchedWriteTags);
             })
             .catch((error) => {
                 console.error('[HMI_MANAGER] Failed to process write_tag request:', error);
+            });
+
+        await this.actionQueue;
+    }
+
+    private async enqueueWriteRecipe(topic: string, message: Buffer): Promise<void> {
+        this.actionQueue = this.actionQueue
+            .then(async () => {
+                const writeRecipeRequest = this.parseWriteRecipeRequest(message);
+                if (!writeRecipeRequest) {
+                    return;
+                }
+
+                await this.handleWriteRecipe(topic, writeRecipeRequest);
+            })
+            .catch((error) => {
+                console.error('[HMI_MANAGER] Failed to process recipe write request:', error);
+            });
+
+        await this.actionQueue;
+    }
+
+    private async enqueueWriteJob(topic: string, message: Buffer): Promise<void> {
+        this.actionQueue = this.actionQueue
+            .then(async () => {
+                const writeJobRequest = this.parseWriteJobRequest(message);
+                if (!writeJobRequest) {
+                    return;
+                }
+
+                await this.handleWriteJob(topic, writeJobRequest);
+            })
+            .catch((error) => {
+                console.error('[HMI_MANAGER] Failed to process job write request:', error);
+            });
+
+        await this.actionQueue;
+    }
+
+    private async enqueueWriteActiveRecipeIndex(topic: string, message: Buffer): Promise<void> {
+        this.actionQueue = this.actionQueue
+            .then(async () => {
+                const writeActiveRecipeIndexRequest = this.parseWriteActiveRecipeIndexRequest(message);
+                if (!writeActiveRecipeIndexRequest) {
+                    return;
+                }
+
+                await this.handleWriteActiveRecipeIndex(topic, writeActiveRecipeIndexRequest);
+            })
+            .catch((error) => {
+                console.error('[HMI_MANAGER] Failed to process active recipe index write request:', error);
             });
 
         await this.actionQueue;
@@ -175,23 +311,167 @@ export default class HmiWriteManager {
         }
     }
 
-    private async handleWriteTag(topic: string, writeTagData: { tag: string; value: any }): Promise<void> {
-        console.log('[HMI_MANAGER] Handling write tag request for tag:', writeTagData.tag);
+    private parseWriteTagRequests(message: Buffer): WriteTagRequest[] {
+        const payload = JSON.parse(message.toString()) as WriteTagRequest | WriteTagRequest[];
+        const writeTagRequests = Array.isArray(payload) ? payload : [payload];
+
+        return writeTagRequests.filter((writeTagRequest) => {
+            if (!writeTagRequest || typeof writeTagRequest.tag !== 'string' || writeTagRequest.tag.trim().length === 0) {
+                console.warn('[HMI_MANAGER] Ignoring invalid write_tag payload:', writeTagRequest);
+                return false;
+            }
+
+            return true;
+        });
+    }
+
+    private drainPendingWriteTags(): WriteTagRequest[] {
+        const pendingWriteTags = this.pendingWriteTags;
+        this.pendingWriteTags = [];
+        return pendingWriteTags;
+    }
+
+    private parseWriteRecipeRequest(message: Buffer): WriteRecipeRequest | null {
+        const payload = JSON.parse(message.toString()) as Partial<WriteRecipeRequest>;
+        if (typeof payload.index !== 'number' || !Number.isInteger(payload.index) || payload.index < 0) {
+            console.warn('[HMI_MANAGER] Ignoring invalid recipe write index:', payload);
+            return null;
+        }
+
+        if (payload.recipe === null || typeof payload.recipe !== 'object') {
+            console.warn('[HMI_MANAGER] Ignoring invalid recipe write payload:', payload);
+            return null;
+        }
+
+        return {
+            index: payload.index,
+            recipe: payload.recipe,
+        };
+    }
+
+    private parseWriteJobRequest(message: Buffer): WriteJobRequest | null {
+        const payload = JSON.parse(message.toString()) as Partial<WriteJobRequest>;
+        if (payload.job === null || typeof payload.job !== 'object') {
+            console.warn('[HMI_MANAGER] Ignoring invalid job write payload:', payload);
+            return null;
+        }
+
+        return {
+            job: payload.job,
+        };
+    }
+
+    private parseWriteActiveRecipeIndexRequest(message: Buffer): WriteActiveRecipeIndexRequest | null {
+        const payload = JSON.parse(message.toString()) as Partial<WriteActiveRecipeIndexRequest>;
+        if (typeof payload.index !== 'number' || !Number.isInteger(payload.index) || payload.index < 0) {
+            console.warn('[HMI_MANAGER] Ignoring invalid active recipe index write payload:', payload);
+            return null;
+        }
+
+        return {
+            index: payload.index,
+        };
+    }
+
+    private async handleWriteTagBatch(topic: string, writeTagRequests: WriteTagRequest[]): Promise<void> {
+        const writeTagSummary = writeTagRequests.map((writeTagRequest) => writeTagRequest.tag).join(', ');
+        console.log(`[HMI_MANAGER] Handling ${writeTagRequests.length} write tag request(s): ${writeTagSummary}`);
 
         try {
             await this.opcuaWriteSession.ensureConnected();
             const driver = this.opcuaWriteSession.getDriver();
             if (!driver) {
-                console.warn(`[HMI_MANAGER] Skipping write_tag for ${writeTagData.tag} while OPC UA is unavailable.`);
+                console.warn('[HMI_MANAGER] Skipping write_tag batch while OPC UA is unavailable.');
                 return;
             }
 
-            const result = await driver.writeNestedObject(writeTagData.tag, writeTagData.value, true);
+            const result = await driver.writeTagList(writeTagRequests, true);
             if (!result.success) {
-                console.warn(`[HMI_MANAGER] Write tag request failed for ${writeTagData.tag}: ${result.message}`);
+                console.warn(`[HMI_MANAGER] Write tag batch failed for ${writeTagSummary}: ${result.message}`);
             }
         } catch (error) {
             await this.handleSessionFailure(`write_tag failed for topic ${topic}`, error);
+            throw error;
+        }
+    }
+
+    private async handleWriteRecipe(topic: string, writeRecipeRequest: WriteRecipeRequest): Promise<void> {
+        console.log('[HMI_MANAGER] Handling recipe write request for index:', writeRecipeRequest.index);
+
+        try {
+            await this.opcuaWriteSession.ensureConnected();
+            const driver = this.opcuaWriteSession.getDriver();
+            if (!driver) {
+                console.warn(`[HMI_MANAGER] Skipping recipe write for index ${writeRecipeRequest.index} while OPC UA is unavailable.`);
+                return;
+            }
+
+            const result = await driver.writeTagList([
+                {
+                    tag: `machine.recipeStore.recipes[${writeRecipeRequest.index}]`,
+                    value: writeRecipeRequest.recipe,
+                },
+            ], true);
+
+            if (!result.success) {
+                console.warn(`[HMI_MANAGER] Recipe write request failed for index ${writeRecipeRequest.index}: ${result.message}`);
+            }
+        } catch (error) {
+            await this.handleSessionFailure(`recipe write failed for topic ${topic}`, error);
+            throw error;
+        }
+    }
+
+    private async handleWriteJob(topic: string, writeJobRequest: WriteJobRequest): Promise<void> {
+        console.log('[HMI_MANAGER] Handling job write request');
+
+        try {
+            await this.opcuaWriteSession.ensureConnected();
+            const driver = this.opcuaWriteSession.getDriver();
+            if (!driver) {
+                console.warn('[HMI_MANAGER] Skipping job write while OPC UA is unavailable.');
+                return;
+            }
+
+            const result = await driver.writeTagList([
+                {
+                    tag: 'machine.job',
+                    value: writeJobRequest.job,
+                },
+            ], true);
+
+            if (!result.success) {
+                console.warn(`[HMI_MANAGER] Job write request failed: ${result.message}`);
+            }
+        } catch (error) {
+            await this.handleSessionFailure(`job write failed for topic ${topic}`, error);
+            throw error;
+        }
+    }
+
+    private async handleWriteActiveRecipeIndex(topic: string, writeActiveRecipeIndexRequest: WriteActiveRecipeIndexRequest): Promise<void> {
+        console.log('[HMI_MANAGER] Handling active recipe index write request:', writeActiveRecipeIndexRequest.index);
+
+        try {
+            await this.opcuaWriteSession.ensureConnected();
+            const driver = this.opcuaWriteSession.getDriver();
+            if (!driver) {
+                console.warn(`[HMI_MANAGER] Skipping active recipe index write for index ${writeActiveRecipeIndexRequest.index} while OPC UA is unavailable.`);
+                return;
+            }
+
+            const result = await driver.writeTagList([
+                {
+                    tag: 'machine.job.activeRecipeIndex',
+                    value: writeActiveRecipeIndexRequest.index,
+                },
+            ], true);
+
+            if (!result.success) {
+                console.warn(`[HMI_MANAGER] Active recipe index write failed for index ${writeActiveRecipeIndexRequest.index}: ${result.message}`);
+            }
+        } catch (error) {
+            await this.handleSessionFailure(`active recipe index write failed for topic ${topic}`, error);
             throw error;
         }
     }

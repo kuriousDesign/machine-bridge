@@ -6,6 +6,17 @@ import { writeExtensionObject } from "./opcua-helpers";
 // Debug: Log the imported ApiReqRespStates to verify its structure
 //console.log('ApiReqRespStates:', ApiReqRespStates);
 
+type NestedWriteValue = {
+    tag: string;
+    value: any;
+};
+
+type RuntimeWritePlanItem = {
+    tag: string;
+    dataType: DataType;
+    value: any;
+};
+
 
 export default class CodesysOpcuaDriver {
     private id: number;
@@ -24,6 +35,7 @@ export default class CodesysOpcuaDriver {
     private machineId: string | null = null;
     private loggedTagNormalizations = new Set<string>();
     private uniqueActionRequestCtr: number = 0;
+    private cachedTagDataTypes = new Map<string, DataType>();
 
     public setMachineId(machineId: string | null): void {
         const normalizedMachineId = machineId?.trim() || null;
@@ -33,6 +45,7 @@ export default class CodesysOpcuaDriver {
 
         this.machineId = normalizedMachineId;
         this.cachedNestedTagDataTypesMap.clear();
+        this.cachedTagDataTypes.clear();
         this.loggedTagNormalizations.clear();
 
         if (this.machineId) {
@@ -267,15 +280,128 @@ export default class CodesysOpcuaDriver {
 
     private cachedNestedTagDataTypesMap: Map<string, any> = new Map();
 
+    private buildFlattenedWriteItems(baseTag: string, value: any): Array<{ nodeId: string; value: any; dataType: DataType | null }> {
+        const normalizedBaseTag = this.normalizeProjectSpecificMachineTag(baseTag);
+        const writeItems: Array<{ nodeId: string; value: any; dataType: DataType | null }> = [];
+        this.traverseAndFlatten(normalizedBaseTag, value, writeItems);
+        return writeItems;
+    }
+
+    private async getCachedTagDataType(tag: string): Promise<DataType | null> {
+        const normalizedTag = this.normalizeProjectSpecificMachineTag(tag);
+        const cachedType = this.cachedTagDataTypes.get(normalizedTag);
+        if (cachedType !== undefined) {
+            return cachedType;
+        }
+
+        const dataType = await this.readTagDataType(normalizedTag);
+        if (dataType !== null) {
+            this.cachedTagDataTypes.set(normalizedTag, dataType);
+        }
+
+        return dataType;
+    }
+
+    private async buildRuntimeWritePlan(writeValues: NestedWriteValue[]): Promise<RuntimeWritePlanItem[]> {
+        const mergedWriteValues = new Map<string, any>();
+
+        for (const writeValue of writeValues) {
+            const flattenedWriteItems = this.buildFlattenedWriteItems(writeValue.tag, writeValue.value);
+            for (const flattenedWriteItem of flattenedWriteItems) {
+                mergedWriteValues.set(flattenedWriteItem.nodeId, flattenedWriteItem.value);
+            }
+        }
+
+        if (mergedWriteValues.size === 0) {
+            return [];
+        }
+
+        const runtimeWritePlan: RuntimeWritePlanItem[] = [];
+        for (const [tag, value] of mergedWriteValues.entries()) {
+            const dataType = await this.getCachedTagDataType(tag);
+            if (dataType === null) {
+                console.warn(`Skipping runtime write plan item for ${tag} because its OPC UA data type is unavailable.`);
+                continue;
+            }
+
+            runtimeWritePlan.push({
+                tag,
+                dataType,
+                value,
+            });
+        }
+
+        return runtimeWritePlan;
+    }
+
+    private async executeRuntimeWritePlan(runtimeWritePlan: RuntimeWritePlanItem[], skipValidation: boolean): Promise<{ success: boolean; message: string; details?: any }> {
+        if (runtimeWritePlan.length === 0) {
+            return { success: false, message: "No cached data types to write" };
+        }
+
+        try {
+            const writeResults: Array<{ nodeId: string; success: boolean; error?: string }> = [];
+
+            for (const runtimeWritePlanItem of runtimeWritePlan) {
+                const result = await this.writeTag(
+                    runtimeWritePlanItem.tag,
+                    runtimeWritePlanItem.value,
+                    runtimeWritePlanItem.dataType,
+                    skipValidation,
+                );
+
+                if (!result.success) {
+                    writeResults.push({
+                        nodeId: runtimeWritePlanItem.tag,
+                        success: false,
+                        error: result.message,
+                    });
+
+                    if (this.isOpcuaConnectionClosedError(result.message)) {
+                        console.warn(`Stopping runtime write plan because the OPC UA connection is unavailable at ${runtimeWritePlanItem.tag}.`);
+                        break;
+                    }
+
+                    continue;
+                }
+
+                writeResults.push({ nodeId: runtimeWritePlanItem.tag, success: true });
+            }
+
+            const successCount = writeResults.filter((result) => result.success).length;
+            const failed = writeResults.filter((result) => !result.success);
+            const message = `Wrote ${successCount}/${writeResults.length} tags`;
+            const fullSuccess = failed.length === 0;
+
+            if (!fullSuccess) {
+                console.warn("Some writes failed:", failed);
+            }
+
+            return {
+                success: fullSuccess,
+                message,
+                details: {
+                    total: writeResults.length,
+                    success: successCount,
+                    failed: failed.length,
+                    errors: failed,
+                },
+            };
+        } catch (error) {
+            const msg = error instanceof Error ? error.message : String(error);
+            console.error("Runtime write plan execution failed:", msg);
+            return { success: false, message: `Critical failure: ${msg}` };
+        }
+    }
+
     async createAndCacheNestedTagDataTypes(
         baseTag: string,
         value: any
     ): Promise<any> {
         baseTag = this.normalizeProjectSpecificMachineTag(baseTag);
-        const writeItems: Array<{ nodeId: string; value: any, dataType: any }> = [];
-        this.traverseAndFlatten(baseTag, value, writeItems);
+        const writeItems = this.buildFlattenedWriteItems(baseTag, value);
         const dataTypePromises = writeItems.map(item =>
-            this.readTagDataType(item.nodeId).then(dataType => {
+            this.getCachedTagDataType(item.nodeId).then(dataType => {
             item.dataType = dataType;
             })
         );
@@ -285,92 +411,17 @@ export default class CodesysOpcuaDriver {
         return writeItems;
     }
 
-    async writeNestedObject(baseTag: string, value: any, skipValidation: boolean = false): Promise<{ success: boolean; message: string; details?: any }> {
-        baseTag = this.normalizeProjectSpecificMachineTag(baseTag);
-        let writeValues: Array<{ nodeId: string; value: any, dataType: any }> = [];
-        this.traverseAndFlatten(baseTag, value, writeValues);
+    async writeTagList(writeValues: NestedWriteValue[], skipValidation: boolean = false): Promise<{ success: boolean; message: string; details?: any }> {
         if (writeValues.length === 0) {
             return { success: false, message: "No values to write" };
         }
 
-        let cachedWritesToPerform = this.cachedNestedTagDataTypesMap.get(baseTag);
-        if (!cachedWritesToPerform) {
-            cachedWritesToPerform = await this.createAndCacheNestedTagDataTypes(baseTag, value);
-        }
+        const runtimeWritePlan = await this.buildRuntimeWritePlan(writeValues);
+        return this.executeRuntimeWritePlan(runtimeWritePlan, skipValidation);
+    }
 
-        if (cachedWritesToPerform.length === 0) {
-            return { success: false, message: "No cached data types to write" };
-        }
-
-        const writeValuesByNodeId = new Map(
-            writeValues.map((item) => [item.nodeId, item.value])
-        );
-
-        //console.log(`Preparing to write ${cachedWritesToPerform.length} tags under ${baseTag}`);
-        try {
-            const writeResults: Array<{ nodeId: string; success: boolean; error?: string }> = [];
-
-            // Write sequentially so a dropped OPC UA channel only produces one local failure
-            // instead of a full fan-out of BadConnectionClosed errors.
-            for (const cachedItem of cachedWritesToPerform) {
-                const value = writeValuesByNodeId.get(cachedItem.nodeId);
-                if (value === undefined) {
-                    writeResults.push({
-                        nodeId: cachedItem.nodeId,
-                        success: false,
-                        error: `No value found for node ${cachedItem.nodeId}`
-                    });
-                    continue;
-                }
-
-                const result = await this.writeTag(cachedItem.nodeId, value, cachedItem.dataType, skipValidation);
-                if (!result.success) {
-                    writeResults.push({
-                        nodeId: cachedItem.nodeId,
-                        success: false,
-                        error: result.message
-                    });
-
-                    if (this.isOpcuaConnectionClosedError(result.message)) {
-                        console.warn(`Stopping nested write for ${baseTag} because the OPC UA connection is unavailable.`);
-                        break;
-                    }
-
-                    continue;
-                }
-
-                writeResults.push({ nodeId: cachedItem.nodeId, success: true });
-            }
-
-            // 4. Summarize results
-            const successCount = writeResults.filter(r => r.success).length;
-            const failed = writeResults.filter(r => !r.success);
-
-            const message = `Wrote ${successCount}/${writeResults.length} tags`;
-            const fullSuccess = failed.length === 0;
-
-            if (!fullSuccess) {
-                console.warn("Some writes failed:", failed);
-            }
-
-            //console.log('.');
-
-            return {
-                success: fullSuccess,
-                message,
-                details: {
-                    total: writeResults.length,
-                    success: successCount,
-                    failed: failed.length,
-                    errors: failed
-                }
-            };
-
-        } catch (error) {
-            const msg = error instanceof Error ? error.message : String(error);
-            console.error(`writeNestedObject failed for ${baseTag}:`, msg);
-            return { success: false, message: `Critical failure: ${msg}` };
-        }
+    async writeNestedObject(baseTag: string, value: any, skipValidation: boolean = false): Promise<{ success: boolean; message: string; details?: any }> {
+        return this.writeTagList([{ tag: baseTag, value }], skipValidation);
     }
 
     async writeTag(tag: string, value: any, dataType: DataType = DataType.Int16, skipValidation: boolean = false): Promise<{ success: boolean; message: string }> {

@@ -1,9 +1,7 @@
 import {
     ClientSession,
-    MessageSecurityMode,
     OPCUAClient,
     OPCUAClientOptions,
-    SecurityPolicy,
 } from 'node-opcua';
 
 import 'dotenv/config';
@@ -52,14 +50,26 @@ async function main(): Promise<void> {
         }
 
         console.log(`Found enum DataType ${enumLabel} at ${metadata.nodeId}`);
-        console.log(`${metadata.source}:`);
-
-        metadata.entries.forEach((entry) => {
-            console.log(`${entry.value}: ${entry.label}`);
-        });
+        console.log(`Source: ${metadata.source}`);
 
         if (metadata.entries.length === 0) {
             console.warn(`No EnumValues or EnumStrings metadata was exposed for ${enumLabel}.`);
+            return;
+        }
+
+        for (const entry of metadata.entries) {
+            console.log('---');
+            console.log(`value: ${entry.value}`);
+            console.log(`label: ${entry.label}`);
+            console.log(`description: ${entry.description ?? '<none>'}`);
+        }
+
+        const describedEntries = metadata.entries.filter((entry) => !!entry.description?.trim());
+        console.log('---');
+        console.log(`entries with descriptions: ${describedEntries.length}/${metadata.entries.length}`);
+
+        if (metadata.source === 'EnumStrings') {
+            console.warn('EnumStrings source usually does not include per-entry descriptions.');
         }
     } finally {
         await session.close();
@@ -68,6 +78,6 @@ async function main(): Promise<void> {
 }
 
 void main().catch((error) => {
-    console.error('Enum inspection failed:', error);
+    console.error('Enum comment inspection failed:', error);
     process.exitCode = 1;
 });

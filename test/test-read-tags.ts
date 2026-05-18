@@ -12,23 +12,19 @@ import {
 import "dotenv/config"; // auto-loads .env
 
 import { PlcNamespaces, initialMachine, nodeListString } from '@kuriousdesign/machine-sdk';
+import Config, { createSharedOpcuaClientOptions } from '../src/shared/config';
 
 // --- Feature Flag & Configuration ---
 const ENABLE_DIAGNOSTICS = process.env.ENABLE_DIAGNOSTICS === 'true' || false;
 
 const opcuaControllerName = process.env.OPCUA_CONTROLLER_NAME || "DefaultController";
-const opcuaEndpoint = `opc.tcp://${process.env.OPCUA_SERVER_IP_ADDRESS}:${process.env.OPCUA_PORT}`;
+const opcuaEndpoint = Config.OPCUA_ENDPOINT || `opc.tcp://${process.env.OPCUA_SERVER_IP_ADDRESS}:${process.env.OPCUA_PORT}`;
 const nodeListPrefix = nodeListString + opcuaControllerName + '.Application.';
 
 const POLLING_RATE_MS = 200; 
 const DIAG_READS_TO_SKIP_AT_START = 10;
 
-const opcuaOptions: OPCUAClientOptions = {
-    applicationName: 'OpcuaMqttBridge',
-    securityMode: MessageSecurityMode.None,
-    securityPolicy: SecurityPolicy.None,
-    endpointMustExist: true,
-};
+const opcuaOptions: OPCUAClientOptions = createSharedOpcuaClientOptions();
 
 interface ReadItemInfo {
     nodeId: string;

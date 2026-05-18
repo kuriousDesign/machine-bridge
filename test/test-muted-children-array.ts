@@ -25,9 +25,10 @@ import {
 import 'dotenv/config';
 
 import { nodeListString } from '@kuriousdesign/machine-sdk';
+import Config, { createSharedOpcuaClientOptions } from '../src/shared/config';
 
 const OPCUA_CONTROLLER_NAME = process.env.OPCUA_CONTROLLER_NAME || 'DefaultController';
-const OPCUA_ENDPOINT = `opc.tcp://${process.env.OPCUA_SERVER_IP_ADDRESS}:${process.env.OPCUA_PORT}`;
+const OPCUA_ENDPOINT = Config.OPCUA_ENDPOINT || `opc.tcp://${process.env.OPCUA_SERVER_IP_ADDRESS}:${process.env.OPCUA_PORT}`;
 const NODE_LIST_PREFIX = `${nodeListString}${OPCUA_CONTROLLER_NAME}.Application.`;
 const TARGET_TAG = process.env.TEST_TAG_ID || 'Machine.Devices[1].MutedChildrenArray';
 const TARGET_NODE_ID = process.env.TEST_NODE_ID || `${NODE_LIST_PREFIX}${TARGET_TAG}`;
@@ -35,13 +36,7 @@ const MONITOR_DURATION_MS = Number(process.env.TEST_MONITOR_DURATION_MS || 15000
 const TARGET_PARENT_TAG = TARGET_TAG.includes('.') ? TARGET_TAG.slice(0, TARGET_TAG.lastIndexOf('.')) : TARGET_TAG;
 const TARGET_PARENT_NODE_ID = `${NODE_LIST_PREFIX}${TARGET_PARENT_TAG}`;
 
-const opcuaOptions: OPCUAClientOptions = {
-    applicationName: 'MutedChildrenArrayProbe',
-    endpointMustExist: true,
-    keepSessionAlive: true,
-    securityMode: MessageSecurityMode.None,
-    securityPolicy: SecurityPolicy.None,
-};
+const opcuaOptions: OPCUAClientOptions = createSharedOpcuaClientOptions();
 
 const subscriptionOptions: CreateSubscriptionRequestOptions = {
     maxNotificationsPerPublish: 100,

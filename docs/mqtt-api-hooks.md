@@ -218,7 +218,83 @@ client -> bridge
 
 The HMI writer subscribes to this topic once it is running. The bridge uses `driver.writeNestedObject(tag, value, true)` to write the provided nested object into OPC UA.
 
+When multiple `write_tag` messages arrive back-to-back, the HMI writer drains them into a single batch and builds one runtime write plan before writing OPC UA leaf nodes sequentially. The topic still accepts the original single `{ tag, value }` payload, and may also accept an array of those payloads.
+
 Use this only when you already know the exact OPC UA tag path and need a direct bridge-side write.
+
+## HMI Recipe Write Hook
+
+### Topic
+
+`bridge/api/hmi_writes/recipe`
+
+### Direction
+
+client -> bridge
+
+### Payload
+
+```ts
+{
+  index: 3,
+  recipe: {
+    dbId: "6642d4...",
+    index: 3,
+    tubeTypeString: "..."
+  }
+}
+```
+
+### Behavior
+
+The HMI writer resolves the machine-specific recipe path inside the bridge and writes only `recipeStore.recipes[index]` through the driver runtime write-plan path. This keeps the UI decoupled from exact PLC recipe tag naming while limiting write size to a single recipe.
+
+## HMI Job Write Hook
+
+### Topic
+
+`bridge/api/hmi_writes/job`
+
+### Direction
+
+client -> bridge
+
+### Payload
+
+```ts
+{
+  job: {
+    jobName: "WO-123",
+    activeRecipeIndex: 2
+  }
+}
+```
+
+### Behavior
+
+The HMI writer resolves the machine-specific job path inside the bridge and writes the job payload through the same runtime write-plan path used for other HMI writes. The UI does not need to know whether the PLC job tag is machine-specific.
+
+## HMI Active Recipe Index Write Hook
+
+### Topic
+
+`bridge/api/hmi_writes/active_recipe_index`
+
+### Direction
+
+client -> bridge
+
+### Payload
+
+```ts
+{
+  index: 2
+}
+```
+
+### Behavior
+
+The HMI writer updates only `machine.job.activeRecipeIndex` through the bridge. This keeps recipe activation buttons out of the raw PLC tag API while limiting the write surface to the single active recipe index field.
 
 ## External Service Status Write Hook
 

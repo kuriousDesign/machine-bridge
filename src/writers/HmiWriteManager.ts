@@ -1,4 +1,4 @@
-import { DeviceActionRequestData, DeviceId, DeviceRegistration, MqttTopics } from '@kuriousdesign/machine-sdk';
+import { DeviceActionRequestData, DeviceId, DeviceRegistration, getProjectMachineTag, MqttTopics, PlcNamespaces } from '@kuriousdesign/machine-sdk';
 
 import Config from '../shared/config';
 import MqttClientManager from '../shared/MqttClientManager';
@@ -124,6 +124,11 @@ export default class HmiWriteManager {
 
     public getState(): HmiWriteManagerState {
         return this.state;
+    }
+
+    private getMachineWriteRootTag(): string {
+        const machineId = this.dependencies?.getMachineId()?.trim();
+        return machineId ? getProjectMachineTag(machineId) : PlcNamespaces.Machine;
     }
 
     private async enqueueAction(topic: string, message: Buffer): Promise<void> {
@@ -315,7 +320,7 @@ export default class HmiWriteManager {
         const payload = JSON.parse(message.toString()) as WriteTagRequest | WriteTagRequest[];
         const writeTagRequests = Array.isArray(payload) ? payload : [payload];
 
-        return writeTagRequests.filter((writeTagRequest) => {
+        const validWriteTagRequests = writeTagRequests.filter((writeTagRequest) => {
             if (!writeTagRequest || typeof writeTagRequest.tag !== 'string' || writeTagRequest.tag.trim().length === 0) {
                 console.warn('[HMI_MANAGER] Ignoring invalid write_tag payload:', writeTagRequest);
                 return false;
@@ -323,6 +328,13 @@ export default class HmiWriteManager {
 
             return true;
         });
+
+        if (validWriteTagRequests.length > 0) {
+            const requestedTags = validWriteTagRequests.map((writeTagRequest) => writeTagRequest.tag).join(', ');
+            console.log(`[HMI_MANAGER] Received write_tag request for ${validWriteTagRequests.length} tag(s): ${requestedTags}`);
+        }
+
+        return validWriteTagRequests;
     }
 
     private drainPendingWriteTags(): WriteTagRequest[] {
@@ -375,7 +387,7 @@ export default class HmiWriteManager {
 
     private async handleWriteTagBatch(topic: string, writeTagRequests: WriteTagRequest[]): Promise<void> {
         const writeTagSummary = writeTagRequests.map((writeTagRequest) => writeTagRequest.tag).join(', ');
-        console.log(`[HMI_MANAGER] Handling ${writeTagRequests.length} write tag request(s): ${writeTagSummary}`);
+        console.log(`[HMI_MANAGER] Processing write_tag request from ${topic} for ${writeTagRequests.length} tag(s): ${writeTagSummary}`);
 
         try {
             await this.opcuaWriteSession.ensureConnected();
@@ -406,9 +418,10 @@ export default class HmiWriteManager {
                 return;
             }
 
+            const machineWriteRootTag = this.getMachineWriteRootTag();
             const result = await driver.writeTagList([
                 {
-                    tag: `machine.recipeStore.recipes[${writeRecipeRequest.index}]`,
+                    tag: `${machineWriteRootTag}.recipeStore.recipes[${writeRecipeRequest.index}]`,
                     value: writeRecipeRequest.recipe,
                 },
             ], true);
@@ -433,9 +446,10 @@ export default class HmiWriteManager {
                 return;
             }
 
+            const machineWriteRootTag = this.getMachineWriteRootTag();
             const result = await driver.writeTagList([
                 {
-                    tag: 'machine.job',
+                    tag: `${machineWriteRootTag}.job`,
                     value: writeJobRequest.job,
                 },
             ], true);
@@ -460,9 +474,10 @@ export default class HmiWriteManager {
                 return;
             }
 
+            const machineWriteRootTag = this.getMachineWriteRootTag();
             const result = await driver.writeTagList([
                 {
-                    tag: 'machine.job.activeRecipeIndex',
+                    tag: `${machineWriteRootTag}.job.activeRecipeIndex`,
                     value: writeActiveRecipeIndexRequest.index,
                 },
             ], true);

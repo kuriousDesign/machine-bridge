@@ -110,7 +110,7 @@ export async function buildValidatedPollingItems(
         try {
             const data = await session.read({
                 nodeId: item.nodeId,
-                attributeId: AttributeIds.Value,
+                attributeId: AttributeIds.DataType,
             });
 
             if (data.statusCode === StatusCodes.Good) {

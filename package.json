@@ -21,6 +21,7 @@
     "test-read-enum-comments": "ts-node test/test-read-enum-comments.ts",
     "test-read-enum-comments-from-variable": "ts-node test/test-read-enum-comments-from-variable.ts",
     "test-read-enum-deviceids": "ts-node test/test-read-enum-deviceids.ts",
+    "test-read-struct-diagnostic": "ts-node test/test-read-struct-diagnostic.ts",
     "test-muted-children-array": "ts-node test/test-muted-children-array.ts",
     "test-generate-machine-devices-types": "npm run type-generator",
     "dev-poller": "nodemon --exec ts-node src/index-poller.ts",

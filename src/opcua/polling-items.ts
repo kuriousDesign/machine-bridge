@@ -31,7 +31,7 @@ const DEVICE_STORE_TAG = 'Devices';
 const WARNING_ICON = process.stderr.isTTY ? '\x1b[33m⚠\x1b[0m' : '⚠';
 
 function isUnsupportedPollingTag(tagId: string): boolean {
-    return /\.SFTYSts$/i.test(tagId);
+    return false;
 }
 
 function makeReadItem(tagId: string, mqttTopic: string, updatePeriod: number = 1): ReadItemInfo {

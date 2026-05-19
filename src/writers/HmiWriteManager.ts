@@ -1,4 +1,4 @@
-import { DeviceActionRequestData, DeviceId, DeviceRegistration, getProjectMachineTag, MqttTopics, PlcNamespaces } from '@kuriousdesign/machine-sdk';
+import { DeviceActionRequestData, DeviceId, DeviceRegistration, getProjectMachineTag, MqttTopics, PlcNamespaces, TopicData } from '@kuriousdesign/machine-sdk';
 
 import Config from '../shared/config';
 import MqttClientManager from '../shared/MqttClientManager';
@@ -16,6 +16,7 @@ export interface HmiWriteManagerDependencies {
     mqttClientManager: MqttClientManager;
     getDeviceMap: () => Map<number, DeviceRegistration>;
     getMachineId: () => string | null;
+    getKnownMachineTagRoots: () => string[];
 }
 
 export interface HmiWriteManagerCallbacks {
@@ -42,6 +43,23 @@ type WriteActiveRecipeIndexRequest = {
     index: number;
 };
 
+function unwrapTopicPayload<T>(message: Buffer): T {
+    const envelope = JSON.parse(message.toString()) as Partial<TopicData>;
+    return (envelope?.payload ?? envelope) as T;
+}
+
+function isValidActionRequest(request: Partial<DeviceActionRequestData> | null | undefined): request is DeviceActionRequestData {
+    if (!request) {
+        return false;
+    }
+
+    if (!Number.isFinite(request.ActionType) || !Number.isFinite(request.ActionId)) {
+        return false;
+    }
+
+    return Array.isArray(request.ParamArray);
+}
+
 const HMI_WRITE_RECIPE_TOPIC = MqttTopics.HMI_WRITE_RECIPE;
 const HMI_WRITE_JOB_TOPIC = MqttTopics.HMI_WRITE_JOB;
 const HMI_WRITE_ACTIVE_RECIPE_INDEX_TOPIC = MqttTopics.HMI_WRITE_ACTIVE_RECIPE_INDEX;
@@ -50,7 +68,12 @@ export default class HmiWriteManager {
     private state: HmiWriteManagerState = HmiWriteManagerState.Idle;
     private dependencies: HmiWriteManagerDependencies | null = null;
     private actionQueue: Promise<void> = Promise.resolve();
-    private opcuaWriteSession = new OpcuaWriteSession(DeviceId.HMI, 'HMI_MANAGER', () => this.dependencies?.getMachineId() ?? null);
+    private opcuaWriteSession = new OpcuaWriteSession(
+        DeviceId.HMI,
+        'HMI_MANAGER',
+        () => this.dependencies?.getMachineId() ?? null,
+        () => this.dependencies?.getKnownMachineTagRoots() ?? [],
+    );
     private subscribedTopics = new Set<string>();
     private sessionResetCount = 0;
     private pendingWriteTags: WriteTagRequest[] = [];
@@ -134,7 +157,14 @@ export default class HmiWriteManager {
     private async enqueueAction(topic: string, message: Buffer): Promise<void> {
         this.actionQueue = this.actionQueue
             .then(async () => {
-                const request = JSON.parse(message.toString()) as DeviceActionRequestData;
+                const envelope = JSON.parse(message.toString()) as Partial<TopicData>;
+                const request = (envelope?.payload ?? envelope) as Partial<DeviceActionRequestData>;
+
+                if (!isValidActionRequest(request)) {
+                    console.warn('[HMI_MANAGER] Ignoring invalid HMI action request payload:', envelope);
+                    return;
+                }
+
                 await this.handleActionRequest(topic, request);
             })
             .catch((error) => {
@@ -317,7 +347,7 @@ export default class HmiWriteManager {
     }
 
     private parseWriteTagRequests(message: Buffer): WriteTagRequest[] {
-        const payload = JSON.parse(message.toString()) as WriteTagRequest | WriteTagRequest[];
+        const payload = unwrapTopicPayload<WriteTagRequest | WriteTagRequest[]>(message);
         const writeTagRequests = Array.isArray(payload) ? payload : [payload];
 
         const validWriteTagRequests = writeTagRequests.filter((writeTagRequest) => {
@@ -344,7 +374,7 @@ export default class HmiWriteManager {
     }
 
     private parseWriteRecipeRequest(message: Buffer): WriteRecipeRequest | null {
-        const payload = JSON.parse(message.toString()) as Partial<WriteRecipeRequest>;
+        const payload = unwrapTopicPayload<Partial<WriteRecipeRequest>>(message);
         if (typeof payload.index !== 'number' || !Number.isInteger(payload.index) || payload.index < 0) {
             console.warn('[HMI_MANAGER] Ignoring invalid recipe write index:', payload);
             return null;
@@ -362,7 +392,7 @@ export default class HmiWriteManager {
     }
 
     private parseWriteJobRequest(message: Buffer): WriteJobRequest | null {
-        const payload = JSON.parse(message.toString()) as Partial<WriteJobRequest>;
+        const payload = unwrapTopicPayload<Partial<WriteJobRequest>>(message);
         if (payload.job === null || typeof payload.job !== 'object') {
             console.warn('[HMI_MANAGER] Ignoring invalid job write payload:', payload);
             return null;
@@ -374,7 +404,7 @@ export default class HmiWriteManager {
     }
 
     private parseWriteActiveRecipeIndexRequest(message: Buffer): WriteActiveRecipeIndexRequest | null {
-        const payload = JSON.parse(message.toString()) as Partial<WriteActiveRecipeIndexRequest>;
+        const payload = unwrapTopicPayload<Partial<WriteActiveRecipeIndexRequest>>(message);
         if (typeof payload.index !== 'number' || !Number.isInteger(payload.index) || payload.index < 0) {
             console.warn('[HMI_MANAGER] Ignoring invalid active recipe index write payload:', payload);
             return null;

@@ -12,15 +12,20 @@ import Config from '../shared/config';
 
 export async function republishStalePollingValues(params: {
     mqttClientManager: MqttClientManager;
+    shouldRepublishReadInfo?: (readInfo: ReadItemInfo, tag: string) => boolean;
     tagReadInfoMap: Map<string, ReadItemInfo>;
 }): Promise<void> {
-    const { mqttClientManager, tagReadInfoMap } = params;
+    const { mqttClientManager, shouldRepublishReadInfo, tagReadInfoMap } = params;
 
     if (!Config.ENABLE_STALE_POLLING_REPUBLISH) {
         return;
     }
 
     tagReadInfoMap.forEach((readInfo, tag) => {
+        if (shouldRepublishReadInfo && !shouldRepublishReadInfo(readInfo, tag)) {
+            return;
+        }
+
         if (readInfo.last_publish_time <= 0) {
             return;
         }

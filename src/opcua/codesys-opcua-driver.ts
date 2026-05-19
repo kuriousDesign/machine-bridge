@@ -36,6 +36,61 @@ export default class CodesysOpcuaDriver {
     private loggedTagNormalizations = new Set<string>();
     private uniqueActionRequestCtr: number = 0;
     private cachedTagDataTypes = new Map<string, DataType>();
+    private baseMachineRootSegments = new Map<string, string>();
+    private projectMachineRootSegments = new Map<string, string>();
+
+    private static readonly projectSpecificNestedSegmentAliases = new Map<string, Map<string, string>>([
+        ['Job', new Map<string, string>([
+            ['activebatchnumber', 'ActiveBatchNumber'],
+            ['activerecipeindex', 'ActiveRecipeIndex'],
+            ['assemblyname', 'AssemblyName'],
+            ['assemblynumber', 'AssemblyNumber'],
+            ['batchid', 'BatchId'],
+            ['goodcnt', 'GoodCnt'],
+            ['jobcompleted', 'JobCompleted'],
+            ['jobendtime', 'JobEndTime'],
+            ['jobname', 'JobName'],
+            ['jobstarttime', 'JobStartTime'],
+            ['lotid', 'LotId'],
+            ['lotqty', 'LotQty'],
+            ['operationnumber', 'OperationNumber'],
+            ['operatorid', 'OperatorId'],
+            ['salesorderid', 'SalesOrderId'],
+            ['scrapcnt', 'ScrapCnt'],
+            ['setupcompleted', 'SetupCompleted'],
+            ['setupendtime', 'SetupEndTime'],
+            ['setupstarttime', 'SetupStartTime'],
+            ['tubetypestring', 'TubeTypeString'],
+            ['workinstruction', 'WorkInstruction'],
+            ['workorderid', 'WorkOrderId'],
+        ])],
+        ['PdmSts', new Map<string, string>([
+            ['activecnt', 'ActiveCnt'],
+            ['allfixturesareempty', 'AllFixturesAreEmpty'],
+            ['allstationsareempty', 'AllStationsAreEmpty'],
+            ['batchcntflag', 'BatchCntFlag'],
+            ['doneshelfisempty', 'DoneShelfIsEmpty'],
+            ['doneshelfisfull', 'DoneShelfIsFull'],
+            ['doneshelfspacesleftcnt', 'DoneShelfSpacesLeftCnt'],
+            ['finishedcnt', 'FinishedCnt'],
+            ['fixturelocationwhenloaded', 'FixtureLocationWhenLoaded'],
+            ['infixture', 'InFixture'],
+            ['loadedbadsensor', 'LoadedBadSensor'],
+            ['oneormorerejectpartsincell', 'OneOrMoreRejectPartsInCell'],
+            ['oneormorerejectpartsinrobot', 'OneOrMoreRejectPartsInRobot'],
+            ['parts', 'Parts'],
+            ['processsts', 'ProcessSts'],
+            ['validation', 'Validation'],
+            ['linerweight_g', 'LinerWeight_g'],
+            ['postweight_g', 'PostWeight_g'],
+            ['preweight_g', 'PreWeight_g'],
+            ['serialnumber', 'SerialNumber'],
+            ['statusmsg', 'StatusMsg'],
+            ['timestampvision_sec', 'TimestampVision_sec'],
+            ['visionsts', 'VisionSts'],
+            ['weightsts', 'WeightSts'],
+        ])],
+    ]);
 
     public setMachineId(machineId: string | null): void {
         const normalizedMachineId = machineId?.trim() || null;
@@ -50,6 +105,30 @@ export default class CodesysOpcuaDriver {
 
         if (this.machineId) {
             console.log(`[OPCUA] Using machineId-aware write tag resolution for ${this.machineId}`);
+        }
+    }
+
+    public setKnownMachineTagRoots(tagIds: string[]): void {
+        this.baseMachineRootSegments.clear();
+        this.projectMachineRootSegments.clear();
+
+        const projectPrefix = this.machineId ? `${getProjectMachineTag(this.machineId)}.` : null;
+
+        for (const tagId of tagIds) {
+            if (tagId.startsWith(`${PlcNamespaces.Machine}.`)) {
+                const rootSegment = tagId.slice(`${PlcNamespaces.Machine}.`.length).split(/[.[]/, 1)[0];
+                if (rootSegment) {
+                    this.baseMachineRootSegments.set(rootSegment.toLowerCase(), rootSegment);
+                }
+                continue;
+            }
+
+            if (projectPrefix && tagId.startsWith(projectPrefix)) {
+                const rootSegment = tagId.slice(projectPrefix.length).split(/[.[]/, 1)[0];
+                if (rootSegment) {
+                    this.projectMachineRootSegments.set(rootSegment.toLowerCase(), rootSegment);
+                }
+            }
         }
     }
 
@@ -76,27 +155,47 @@ export default class CodesysOpcuaDriver {
         return `${this.nodePrefix}${tag}`;
     }
 
+    private normalizeProjectSpecificLeafSegments(rootSegment: string, remainder: string): string {
+        const aliasMap = CodesysOpcuaDriver.projectSpecificNestedSegmentAliases.get(rootSegment);
+        if (!aliasMap || !remainder) {
+            return remainder;
+        }
+
+        return remainder.replace(/(^|\.|\[)([A-Za-z_][A-Za-z0-9_]*)(?=\.|\[|$)/g, (match, prefix: string, segment: string) => {
+            const aliasedSegment = aliasMap.get(segment.toLowerCase());
+            if (!aliasedSegment) {
+                return match;
+            }
+
+            return `${prefix}${aliasedSegment}`;
+        });
+    }
+
     private normalizeProjectSpecificMachineTag(tag: string): string {
-        if (!this.machineId || !tag.startsWith(`${PlcNamespaces.Machine}.`)) {
-            return tag;
+        const normalizedInputTag = tag.startsWith('machine.')
+            ? `${PlcNamespaces.Machine}.${tag.slice('machine.'.length)}`
+            : tag;
+
+        if (!this.machineId || !normalizedInputTag.startsWith(`${PlcNamespaces.Machine}.`)) {
+            return normalizedInputTag;
         }
 
-        const remainder = tag.slice(`${PlcNamespaces.Machine}.`.length);
-        const exemptRoots = new Set<string>([
-            BaseMachineBootstrapTags.cfg,
-            BaseMachineBootstrapTags.registeredDevices,
-            ...Object.values(BaseMachinePollingTags),
-            'Devices',
-            'DeviceLogs',
-        ]);
+        const remainder = normalizedInputTag.slice(`${PlcNamespaces.Machine}.`.length);
+        const [rawFirstSegment = ''] = remainder.split(/[.[]/, 1);
+        const firstSegmentKey = rawFirstSegment.toLowerCase();
+        const canonicalBaseRoot = this.baseMachineRootSegments.get(firstSegmentKey);
+        const canonicalProjectRoot = this.projectMachineRootSegments.get(firstSegmentKey);
+        const tail = remainder.slice(rawFirstSegment.length);
 
-        const firstSegment = remainder.split(/[.[]/, 1)[0];
-        if (exemptRoots.has(firstSegment)) {
-            return tag;
+        let normalizedTag = normalizedInputTag;
+        if (canonicalBaseRoot) {
+            normalizedTag = `${PlcNamespaces.Machine}.${canonicalBaseRoot}${tail}`;
+        } else if (canonicalProjectRoot) {
+            const normalizedTail = this.normalizeProjectSpecificLeafSegments(canonicalProjectRoot, tail);
+            normalizedTag = `${getProjectMachineTag(this.machineId)}.${canonicalProjectRoot}${normalizedTail}`;
         }
 
-        const normalizedTag = `${getProjectMachineTag(this.machineId)}.${remainder}`;
-        if (normalizedTag !== tag && !this.loggedTagNormalizations.has(tag)) {
+        if (normalizedTag !== normalizedInputTag && !this.loggedTagNormalizations.has(tag)) {
             this.loggedTagNormalizations.add(tag);
             console.log(`[OPCUA] Resolved project-specific tag ${tag} -> ${normalizedTag}`);
         }

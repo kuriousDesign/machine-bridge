@@ -1,4 +1,8 @@
-import { DeviceId, DeviceRegistration, OptionalDevicePollingTags, TopicData } from '@kuriousdesign/machine-sdk';
+import { DeviceId, DeviceRegistration, DeviceTypes, OptionalDevicePollingTags, TopicData } from '@kuriousdesign/machine-sdk';
+
+function isExternalServiceDevice(device: DeviceRegistration): boolean {
+    return device.isExternalService || device.deviceType === DeviceTypes.ExtService;
+}
 
 import Config from '../shared/config';
 import MqttClientManager from '../shared/MqttClientManager';
@@ -16,6 +20,7 @@ export interface ExternalServiceWriteManagerDependencies {
     mqttClientManager: MqttClientManager;
     getDeviceMap: () => Map<number, DeviceRegistration>;
     getMachineId: () => string | null;
+    getKnownMachineTagRoots: () => string[];
 }
 
 export interface ExternalServiceWriteManagerCallbacks {
@@ -24,10 +29,19 @@ export interface ExternalServiceWriteManagerCallbacks {
     onSessionReset?: (reason: string, error: Error, resetCount: number) => void;
 }
 
+function cloneJsonValue<T>(value: T): T {
+    return JSON.parse(JSON.stringify(value)) as T;
+}
+
 export default class ExternalServiceWriteManager {
     private state: ExternalServiceWriteManagerState = ExternalServiceWriteManagerState.Idle;
     private dependencies: ExternalServiceWriteManagerDependencies | null = null;
-    private opcuaWriteSession = new OpcuaWriteSession(DeviceId.HMI, 'EXT_SERVICE_MANAGER', () => this.dependencies?.getMachineId() ?? null);
+    private opcuaWriteSession = new OpcuaWriteSession(
+        DeviceId.HMI,
+        'EXT_SERVICE_MANAGER',
+        () => this.dependencies?.getMachineId() ?? null,
+        () => this.dependencies?.getKnownMachineTagRoots() ?? [],
+    );
     private writeQueue: Promise<void> = Promise.resolve();
     private subscribedTopics = new Set<string>();
     private sessionResetCount = 0;
@@ -66,7 +80,7 @@ export default class ExternalServiceWriteManager {
         }
 
         for (const device of devices) {
-            if (!device.isExternalService) {
+            if (!isExternalServiceDevice(device)) {
                 continue;
             }
 
@@ -153,24 +167,26 @@ export default class ExternalServiceWriteManager {
                 return;
             }
 
-            const completeData = payload as Record<string, unknown>;
+            const plcWriteData = cloneJsonValue(payload as Record<string, unknown>);
             const deviceTag = OptionalDevicePollingTags(device, machineId).Sts;
 
             if (
-                typeof completeData === 'object'
-                && completeData !== null
-                && 'iExtService' in completeData
-                && typeof completeData.iExtService === 'object'
-                && completeData.iExtService !== null
-                && 'o' in (completeData.iExtService as Record<string, unknown>)
+                typeof plcWriteData === 'object'
+                && plcWriteData !== null
+                && 'iExtService' in plcWriteData
+                && typeof plcWriteData.iExtService === 'object'
+                && plcWriteData.iExtService !== null
+                && 'o' in (plcWriteData.iExtService as Record<string, unknown>)
             ) {
-                delete (completeData.iExtService as Record<string, unknown>).o;
+                delete (plcWriteData.iExtService as Record<string, unknown>).o;
             }
 
-            const result = await driver.writeNestedObject(deviceTag, completeData, true);
+            const result = await driver.writeNestedObject(deviceTag, plcWriteData, true);
             if (!result.success) {
                 console.warn(`[EXT_SERVICE_MANAGER] External service write failed for ${deviceTag}: ${result.message}`);
+                return;
             }
+
         } catch (error) {
             await this.handleSessionFailure(`external service write failed for topic ${topic}`, error);
             throw error;

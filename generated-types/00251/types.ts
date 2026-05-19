@@ -1629,6 +1629,7 @@ export interface VisCfg {
 export interface IExtServiceInputs {
     ActiveTaskId: number;
     ErrorId: number;
+    flipBit: boolean;
     heartbeatVal: number;
     lastTaskId: number;
     StepNum: number;

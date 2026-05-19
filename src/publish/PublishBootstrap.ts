@@ -1,5 +1,5 @@
 import { AttributeIds, ClientSession, StatusCodes } from 'node-opcua';
-import { BaseMachineBootstrapTags, DeviceRegistration, MachineCfg, PlcNamespaces, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
+import { BaseMachineBootstrapTags, DeviceRegistration, DeviceTypes, MachineCfg, PlcNamespaces, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
 
 import { getDeviceReadItems, getMachineReadItems, getOptionalDeviceBootstrapReadItems, ReadItemInfo, ReadItemValidationResult, validateReadItemsDetailed } from '../opcua/polling-items';
 import Config from '../shared/config';
@@ -77,6 +77,7 @@ export async function loadRegisteredDevices(
     console.log('[BOOTSTRAP] Building device map (clearing previous map)');
     deviceMap.clear();
     filteredDevices.forEach((deviceReg) => {
+        deviceReg.isExternalService = deviceReg.isExternalService || deviceReg.deviceType === DeviceTypes.ExtService;
         const topicPath = buildFullTopicPath(deviceReg, deviceMap);
         const devicePath = topicPath.split('/');
         deviceReg.devicePath = devicePath;

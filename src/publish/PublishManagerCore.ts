@@ -22,7 +22,7 @@ import path from 'node:path';
 
 import Config from '../shared/config'; // <--- Use the central config
 
-import { BaseMachinePollingTags, DeviceId, DeviceRegistration, initialKioskControlData, KioskControlData, MachineCfg, PlcNamespaces, TopicData } from '@kuriousdesign/machine-sdk';
+import { BaseMachinePollingTags, DeviceId, DeviceRegistration, OptionalDevicePollingTags, initialKioskControlData, KioskControlData, MachineCfg, PlcNamespaces, TopicData } from '@kuriousdesign/machine-sdk';
 import CodesysOpcuaDriver from '../opcua/codesys-opcua-driver';
 import { ReadItemInfo, ReadItemValidationResult } from '../opcua/polling-items';
 import MqttClientManager from '../shared/MqttClientManager';
@@ -32,7 +32,7 @@ import { buildValidatedPollingItems, getMachineCfgNodeId, getRegisteredDevicesNo
 import { handlePublishBridgeCommand, subscribeToPublishBridgeCommands } from './PublishCommands';
 import { connectPublishOpcuaSession, disconnectPublishOpcuaSession, logPublishOpcuaConnectionFailure, resetPublishOpcuaConnectionFailureTracking, teardownPublishOpcuaConnection } from './PublishConnectionLifecycle';
 import { BootstrapCacheSnapshot, BridgeStatusSnapshot, OpcuaItemSnapshot, OpcuaItemSource, OpcuaPollStatus, OpcuaReadStatus, PublishManagerStatus } from './PublishManagerContracts';
-import { republishStalePollingValues } from './PublishPolling';
+import { readPollingChunkValues, republishStalePollingValues } from './PublishPolling';
 import { publishBridgeStatus, syncPublishHeartbeat } from './PublishStatus';
 import { handlePublishPollingItemChange, subscribeToPublishPollingItems, terminatePublishSubscriptions } from './PublishSubscriptions';
 import { logBootstrapCacheSnapshot } from './BootstrapLogHelpers';
@@ -121,6 +121,7 @@ export default class PublishManagerCore {
     //private deviceStsStore: Map<number, any> = new Map();
     private tagReadInfoMap: Map<string, ReadItemInfo> = new Map();
     private opcuaItemSnapshotMap: Map<string, OpcuaItemSnapshot> = new Map();
+    private bootstrapReplayTopicMap: Map<string, unknown> = new Map();
     private lastOpcuaItemDumpJson: string | null = null;
     private connectionFailureCount: number = 0;
     private connectionFailureStartedAt: number | null = null;
@@ -145,6 +146,16 @@ export default class PublishManagerCore {
 
         if (!this.shutdownRequested && this.state !== OpcuaState.Disconnecting) {
             this.state = OpcuaState.Reconnecting;
+        }
+    }
+
+    private async forceReconnectCycle(reason: string): Promise<void> {
+        console.warn(`[OPCUA] Forcing reconnect cycle: ${reason}`);
+        await this.teardownExistingOpcuaConnection();
+
+        if (!this.shutdownRequested && this.state !== OpcuaState.Disconnecting) {
+            this.state = OpcuaState.Reconnecting;
+            this.setPublishStatus(PublishManagerStatus.Reconnecting);
         }
     }
 
@@ -311,6 +322,105 @@ export default class PublishManagerCore {
         };
     }
 
+    private getCachedTopicTimestamp(readInfo: ReadItemInfo): number {
+        if (readInfo.last_publish_time > 0) {
+            return readInfo.last_publish_time;
+        }
+
+        if (this.lastBootstrapCompletedAt) {
+            return this.lastBootstrapCompletedAt;
+        }
+
+        return Date.now();
+    }
+
+    private async primeCachedPollingValues(): Promise<void> {
+        if (!this.session || this.allPollingItems.length === 0) {
+            this.allPollingValues = [];
+            return;
+        }
+
+        const allPollingValues = new Array<unknown>(this.allPollingItems.length);
+        const chunkCount = Math.ceil(this.allPollingItems.length / Config.CHUNK_SIZE);
+
+        for (let chunkIndex = 0; chunkIndex < chunkCount; chunkIndex += 1) {
+            try {
+                await readPollingChunkValues({
+                    allPollingItems: this.allPollingItems,
+                    allPollingValues,
+                    chunkIndex,
+                    decipherOpcuaValue: (data) => decipherOpcuaValue(data),
+                    session: this.session,
+                });
+            } catch (error) {
+                const startingIndex = chunkIndex * Config.CHUNK_SIZE;
+                const endingIndex = Math.min(startingIndex + Config.CHUNK_SIZE, this.allPollingItems.length);
+                const errorMessage = error instanceof Error ? error.message : String(error);
+
+                console.warn(`[BOOTSTRAP] Bulk polling read failed for items ${startingIndex}-${endingIndex - 1}. Falling back to per-node reads. ${errorMessage}`);
+
+                for (let index = startingIndex; index < endingIndex; index += 1) {
+                    const item = this.allPollingItems[index];
+
+                    try {
+                        allPollingValues[index] = await this.readOpcuaValue(item.nodeId);
+                    } catch (itemError) {
+                        const itemErrorMessage = itemError instanceof Error ? itemError.message : String(itemError);
+                        console.warn(`[BOOTSTRAP] Skipping cached polling prime for ${item.tagId}: ${itemErrorMessage}`);
+                        allPollingValues[index] = null;
+                    }
+                }
+            }
+        }
+
+        this.allPollingValues = allPollingValues;
+        const primedAt = Date.now();
+        const publishPromises: Promise<void>[] = [];
+
+        this.allPollingItems.forEach((item, index) => {
+            item.value = allPollingValues[index] ?? null;
+            if (item.value !== null && typeof item.value !== 'undefined') {
+                item.last_publish_time = primedAt;
+                publishPromises.push(this.mqttClientManager.publish(item.mqttTopic, item.value));
+            }
+            this.tagReadInfoMap.set(item.tagId, item);
+        });
+
+        if (publishPromises.length > 0) {
+            await Promise.all(publishPromises);
+        }
+    }
+
+    private setBootstrapReplayTopic(item: Pick<ReadItemInfo, 'mqttTopic'>, payload: unknown): void {
+        if (payload === null || typeof payload === 'undefined') {
+            return;
+        }
+
+        this.bootstrapReplayTopicMap.set(item.mqttTopic, payload);
+    }
+
+    private isBootstrapReplayReadable(item: Pick<ReadItemInfo, 'mqttTopic'>): boolean {
+        return !item.mqttTopic.endsWith('/cfg');
+    }
+
+    private async primeBootstrapReplayTopics(items: ReadItemInfo[]): Promise<void> {
+        for (const item of items) {
+            if (!this.isBootstrapReplayReadable(item)) {
+                continue;
+            }
+
+            try {
+                const value = await this.readOpcuaValue(item.nodeId);
+
+                item.value = value;
+                this.setBootstrapReplayTopic(item, value);
+            } catch (error) {
+                const errorMessage = error instanceof Error ? error.message : String(error);
+                console.warn(`[BOOTSTRAP] Skipping bootstrap replay topic ${item.mqttTopic}: ${errorMessage}`);
+            }
+        }
+    }
+
     private getBridgeCachePayload(): {
         bootstrapCache: BootstrapCacheSnapshot;
         cachedTopics: Array<{
@@ -321,15 +431,33 @@ export default class PublishManagerCore {
         machineId: string | null;
     } {
         const bootstrapCache = this.getBootstrapCacheSnapshot();
-        const cachedTopics = Array.from(this.tagReadInfoMap.values())
+        const cachedTopicMap = new Map<string, {
+            payload: unknown;
+            timestamp: number;
+            topic: string;
+        }>();
+
+        this.bootstrapReplayTopicMap.forEach((payload, topic) => {
+            cachedTopicMap.set(topic, {
+                payload,
+                timestamp: this.lastBootstrapCompletedAt ?? Date.now(),
+                topic,
+            });
+        });
+
+        Array.from(this.tagReadInfoMap.values())
             .filter((readInfo) => {
-                return readInfo.last_publish_time > 0 && readInfo.value !== null && typeof readInfo.value !== 'undefined';
+                return readInfo.value !== null && typeof readInfo.value !== 'undefined';
             })
-            .map((readInfo) => ({
-                payload: readInfo.value,
-                timestamp: readInfo.last_publish_time,
-                topic: readInfo.mqttTopic,
-            }));
+            .forEach((readInfo) => {
+                cachedTopicMap.set(readInfo.mqttTopic, {
+                    payload: readInfo.value,
+                    timestamp: this.getCachedTopicTimestamp(readInfo),
+                    topic: readInfo.mqttTopic,
+                });
+            });
+
+        const cachedTopics = Array.from(cachedTopicMap.values()).sort((left, right) => left.topic.localeCompare(right.topic));
 
         return {
             bootstrapCache,
@@ -485,11 +613,18 @@ export default class PublishManagerCore {
                         break;
                     }
                     this.setPublishStatus(PublishManagerStatus.LoadingBootstrapData);
-                    await this.executeBootstrap();
+                    try {
+                        await this.executeBootstrap();
+                    } catch (error) {
+                        const errorMessage = error instanceof Error ? error.message : String(error);
+                        await this.forceReconnectCycle(`bootstrap failed: ${errorMessage}`);
+                        break;
+                    }
                     this.tagReadInfoMap.clear();
                     this.allPollingItems.map((item) => {
                         this.tagReadInfoMap.set(item.tagId, item);
                     });
+                    await this.primeCachedPollingValues();
 
                     console.log("Total all polling items:", this.allPollingItems.length);
                     this.setPublishStatus(PublishManagerStatus.CreatingSubscriptions);
@@ -502,11 +637,13 @@ export default class PublishManagerCore {
                     console.log("Total validated polling items:", this.allPollingItems.length);
                     this.externalServiceWriteManager.configure({
                         getMachineId: () => this.machineId || null,
+                        getKnownMachineTagRoots: () => this.machinePollingItems.map((item) => item.tagId),
                         mqttClientManager: this.mqttClientManager,
                         getDeviceMap: () => this.deviceMap,
                     });
                     this.hmiWriteManager.configure({
                         getMachineId: () => this.machineId || null,
+                        getKnownMachineTagRoots: () => this.machinePollingItems.map((item) => item.tagId),
                         mqttClientManager: this.mqttClientManager,
                         getDeviceMap: () => this.deviceMap,
                     });
@@ -583,9 +720,21 @@ export default class PublishManagerCore {
         this.callbacks.onError?.(normalizedError);
     }
 
+    private isExternalServiceStatusReadInfo(readInfo: ReadItemInfo): boolean {
+        if (!this.machineId) {
+            return false;
+        }
+
+        return Array.from(this.deviceMap.values()).some((device) => (
+            device.isExternalService
+            && OptionalDevicePollingTags(device, this.machineId).Sts === readInfo.tagId
+        ));
+    }
+
     private async checkAndPublishData(): Promise<void> {
         await republishStalePollingValues({
             mqttClientManager: this.mqttClientManager,
+            shouldRepublishReadInfo: (readInfo) => !this.isExternalServiceStatusReadInfo(readInfo),
             tagReadInfoMap: this.tagReadInfoMap,
         });
     }
@@ -655,6 +804,7 @@ export default class PublishManagerCore {
         }
 
         this.opcuaItemSnapshotMap.clear();
+        this.bootstrapReplayTopicMap.clear();
 
         const machineCfgItem: ReadItemInfo = {
             attributeId: AttributeIds.Value,
@@ -672,6 +822,8 @@ export default class PublishManagerCore {
                 machineCfgItem.nodeId,
                 (nodeId) => this.readOpcuaValue(nodeId),
             );
+            machineCfgItem.value = machineCfg;
+            this.setBootstrapReplayTopic(machineCfgItem, machineCfg);
             this.recordBootstrapItemResult(machineCfgItem, 'machineCfg', true, 'loaded machine cfg');
         } catch (error) {
             this.recordBootstrapItemResult(machineCfgItem, 'machineCfg', false, error instanceof Error ? error.message : String(error));
@@ -696,6 +848,8 @@ export default class PublishManagerCore {
                 (nodeId) => this.readOpcuaValue(nodeId),
                 this.deviceMap,
             );
+            registeredDevicesItem.value = this.registeredDevices;
+            this.setBootstrapReplayTopic(registeredDevicesItem, this.registeredDevices);
             this.recordBootstrapItemResult(registeredDevicesItem, 'registeredDevices', true, `loaded ${this.registeredDevices.length} registered device(s)`);
         } catch (error) {
             this.recordBootstrapItemResult(registeredDevicesItem, 'registeredDevices', false, error instanceof Error ? error.message : String(error));
@@ -720,6 +874,7 @@ export default class PublishManagerCore {
         this.allPollingItems = bootstrapResult.allPollingItems;
         this.optionalDeviceBootstrapItems = bootstrapResult.optionalDeviceBootstrapItems;
         this.availableOptionalDeviceBootstrapItems = bootstrapResult.availableOptionalDeviceBootstrapItems;
+        await this.primeBootstrapReplayTopics(this.availableOptionalDeviceBootstrapItems);
         this.lastBootstrapCompletedAt = Date.now();
         logBootstrapCacheSnapshot(this.getBootstrapCacheSnapshot());
         await this.writeOpcuaItemDumpFile();
@@ -758,7 +913,7 @@ export default class PublishManagerCore {
         console.log("✅ OPC UA fully disconnected.");
     }
 
-    private async readOpcuaValue(nodeId: string): Promise<any> {
+    private async readOpcuaValue(nodeId: string, options?: { throwOnBadNodeIdUnknown?: boolean }): Promise<any> {
         if (!this.session) {
             throw new Error("OPC UA session is not initialized");
         }
@@ -773,6 +928,9 @@ export default class PublishManagerCore {
         if (data.statusCode === StatusCodes.Good) {
             return value;
         } else {
+            if (options?.throwOnBadNodeIdUnknown && data.statusCode === StatusCodes.BadNodeIdUnknown) {
+                throw new Error(`Failed to read OPC UA value from ${nodeId}: ${data.statusCode}`);
+            }
             console.warn(`Failed to read OPC UA value from ${nodeId}: ${data.statusCode}`);
             return null;
         }
@@ -845,15 +1003,23 @@ export default class PublishManagerCore {
     private timeWasSynced: boolean = false;
 
     private async updateHeartbeat(): Promise<void> {
-        const nextHeartbeatState = await syncPublishHeartbeat({
-            codesysOpcuaDriver: this.codesysOpcuaDriver,
-            heartbeatHmiNodeId: this.heartbeatHmiNodeId,
-            heartbeatHmiValue: this.heartbeatHmiValue,
-            heartbeatPlcNodeId: this.heartbeatPlcNodeId,
-            readOpcuaValue: (nodeId) => this.readOpcuaValue(nodeId),
-            timeWasSynced: this.timeWasSynced,
-            writeOpcuaValue: (nodeId, value, dataType) => this.writeOpcuaValue(nodeId, value, dataType),
-        });
+        let nextHeartbeatState;
+
+        try {
+            nextHeartbeatState = await syncPublishHeartbeat({
+                codesysOpcuaDriver: this.codesysOpcuaDriver,
+                heartbeatHmiNodeId: this.heartbeatHmiNodeId,
+                heartbeatHmiValue: this.heartbeatHmiValue,
+                heartbeatPlcNodeId: this.heartbeatPlcNodeId,
+                readOpcuaValue: (nodeId) => this.readOpcuaValue(nodeId, { throwOnBadNodeIdUnknown: true }),
+                timeWasSynced: this.timeWasSynced,
+                writeOpcuaValue: (nodeId, value, dataType) => this.writeOpcuaValue(nodeId, value, dataType),
+            });
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            await this.forceReconnectCycle(`heartbeat sync failed: ${errorMessage}`);
+            return;
+        }
 
         this.heartbeatPlcValue = nextHeartbeatState.heartbeatPlcValue;
         this.heartbeatHmiValue = nextHeartbeatState.heartbeatHmiValue;
@@ -883,7 +1049,9 @@ export default class PublishManagerCore {
                 opcuaSubscriptions: this.opcuaSubscriptions,
             },
             onPollingItemChange: (pollingItem, dataValue) => {
-                void this.handlePollingItemChange(pollingItem, dataValue);
+                setImmediate(() => {
+                    void this.handlePollingItemChange(pollingItem, dataValue);
+                });
             },
             onPollingValidationResults: (results) => {
                 this.recordPollingValidationResults(results);

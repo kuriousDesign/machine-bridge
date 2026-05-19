@@ -78,7 +78,7 @@ export async function validateReadItemDetailed(session: ClientSession, item: Rea
     try {
         const data = await session.read({
             nodeId: item.nodeId,
-            attributeId: AttributeIds.DataType,
+            attributeId: AttributeIds.Value,
         } as ReadValueIdOptions);
 
         if (data && data.statusCode && data.statusCode === StatusCodes.Good) {

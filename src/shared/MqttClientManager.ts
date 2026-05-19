@@ -246,7 +246,7 @@ export default class MqttClientManager {
             };
 
             const publishOptions: PublishOptions =
-                typeof retainOrOptions === 'boolean'
+                typeof retainOrOptions === "boolean"
                     ? { retain: retainOrOptions, qos: 0 }
                     : { retain: retainOrOptions.retain ?? false, qos: retainOrOptions.qos ?? 0 };
 

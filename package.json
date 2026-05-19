@@ -14,6 +14,7 @@
     "dev": "nodemon --exec ts-node src/index.ts",
     "generate-cert": "ts-node src/type-generator/generate-cert.ts",
     "generate-types": "npm run type-generator --",
+    "copy-generated-types:ui": "node scripts/copy-generated-types-to-ui.js",
     "type-generator": "ts-node src/type-generator/generate-machine-types.ts",
     "get-types": "npm run type-generator",
     "generate-machine-types": "npm run type-generator",

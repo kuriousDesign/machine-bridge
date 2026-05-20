@@ -326,6 +326,40 @@ function renderPropertyName(name: string): string {
     return /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(name) ? name : JSON.stringify(name);
 }
 
+function countUpperCase(value: string): number {
+    return Array.from(value).filter((character) => /[A-Z]/.test(character)).length;
+}
+
+function countAlpha(value: string): number {
+    return Array.from(value).filter((character) => /[A-Za-z]/.test(character)).length;
+}
+
+function isUpperCaseChar(character: string | undefined): boolean {
+    return typeof character === 'string' && /^[A-Z]$/.test(character);
+}
+
+// Mirror node-opcua's lowerFirstLetter behavior so generated types match runtime payload keys.
+function toRuntimePropertyName(name: string): string {
+    if (!name) {
+        return name;
+    }
+
+    if (name.length >= 2 && countUpperCase(name) === countAlpha(name)) {
+        return name;
+    }
+
+    if (name.includes('_')) {
+        return name.split('_').map(toRuntimePropertyName).join('_');
+    }
+
+    let result = name.substring(0, 1).toLowerCase() + name.substring(1);
+    if (result.length > 3 && isUpperCaseChar(name[1]) && isUpperCaseChar(name[2])) {
+        result = name.substring(0, 2).toLowerCase() + name.substring(2);
+    }
+
+    return result;
+}
+
 function indent(level: number): string {
     return '    '.repeat(level);
 }
@@ -932,7 +966,7 @@ function renderInlineAnonymousObject(node: ObjectSchemaNode, context: RenderCont
     const lines = ['{'];
 
     for (const child of node.children) {
-        lines.push(`${indent(level + 1)}${renderPropertyName(child.browseName)}: ${renderTypeReference(child, context, level + 1)};`);
+        lines.push(`${indent(level + 1)}${renderPropertyName(toRuntimePropertyName(child.browseName))}: ${renderTypeReference(child, context, level + 1)};`);
     }
 
     lines.push(`${indent(level)}}`);
@@ -967,7 +1001,7 @@ function ensureDeclaration(node: SchemaNode, context: RenderContext): string | n
 
     const lines = [`export interface ${typeName} {`];
     for (const child of node.children) {
-        lines.push(`${indent(1)}${renderPropertyName(child.browseName)}: ${renderTypeReference(child, context, 1)};`);
+        lines.push(`${indent(1)}${renderPropertyName(toRuntimePropertyName(child.browseName))}: ${renderTypeReference(child, context, 1)};`);
     }
     lines.push('}');
     addDeclaration(context, typeName, lines.join('\n'));

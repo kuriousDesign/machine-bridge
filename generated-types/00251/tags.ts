@@ -2109,6 +2109,9 @@ export const machineTags: MachineTagNode = {
                                         ErrorId: {
                                             tag: "Machine_00251.AbbSts.IController.i.data.ErrorId",
                                         },
+                                        flipBit: {
+                                            tag: "Machine_00251.AbbSts.IController.i.data.flipBit",
+                                        },
                                         GripperCloseReq: {
                                             tag: "Machine_00251.AbbSts.IController.i.data.GripperCloseReq",
                                         },
@@ -18071,6 +18074,11 @@ export const machineTags: MachineTagNode = {
         },
         RobCfg: {
             tag: "Machine_00251.RobCfg",
+            children: {
+                placeholder: {
+                    tag: "Machine_00251.RobCfg.placeholder",
+                },
+            } as const,
         },
         RobSts: {
             tag: "Machine_00251.RobSts",
@@ -18344,6 +18352,11 @@ export const machineTags: MachineTagNode = {
                 },
                 Cfg: {
                     tag: "Machine_00251.RobSts.Cfg",
+                    children: {
+                        placeholder: {
+                            tag: "Machine_00251.RobSts.Cfg.placeholder",
+                        },
+                    } as const,
                 },
                 GripperIsCalibrated: {
                     tag: "Machine_00251.RobSts.GripperIsCalibrated",
@@ -18395,6 +18408,9 @@ export const machineTags: MachineTagNode = {
                                         },
                                         ErrorId: {
                                             tag: "Machine_00251.RobSts.IController.i.data.ErrorId",
+                                        },
+                                        flipBit: {
+                                            tag: "Machine_00251.RobSts.IController.i.data.flipBit",
                                         },
                                         GripperCloseReq: {
                                             tag: "Machine_00251.RobSts.IController.i.data.GripperCloseReq",
@@ -18974,6 +18990,11 @@ export const machineTags: MachineTagNode = {
         },
         SftySts: {
             tag: "Machine_00251.SftySts",
+            children: {
+                placeholder: {
+                    tag: "Machine_00251.SftySts.placeholder",
+                },
+            } as const,
         },
         SqueeCfg: {
             tag: "Machine_00251.SqueeCfg",
@@ -20243,6 +20264,22 @@ export const machineTags: MachineTagNode = {
                 },
                 TravelLimitPositive: {
                     tag: "Machine_00251.SqueeSts.TravelLimitPositive",
+                },
+            } as const,
+        },
+        SysCfg: {
+            tag: "Machine_00251.SysCfg",
+            children: {
+                placeholder: {
+                    tag: "Machine_00251.SysCfg.placeholder",
+                },
+            } as const,
+        },
+        SysSts: {
+            tag: "Machine_00251.SysSts",
+            children: {
+                placeholder: {
+                    tag: "Machine_00251.SysSts.placeholder",
                 },
             } as const,
         },
@@ -23065,6 +23102,9 @@ export const machineTags: MachineTagNode = {
                                 ErrorId: {
                                     tag: "Machine_00251.VisSts.IExtService.i.ErrorId",
                                 },
+                                flipBit: {
+                                    tag: "Machine_00251.VisSts.IExtService.i.flipBit",
+                                },
                                 heartbeatVal: {
                                     tag: "Machine_00251.VisSts.IExtService.i.heartbeatVal",
                                 },
@@ -23261,6 +23301,9 @@ export const machineTags: MachineTagNode = {
                                 },
                                 ErrorId: {
                                     tag: "Machine_00251.VisStsExtService.IExtService.i.ErrorId",
+                                },
+                                flipBit: {
+                                    tag: "Machine_00251.VisStsExtService.IExtService.i.flipBit",
                                 },
                                 heartbeatVal: {
                                     tag: "Machine_00251.VisStsExtService.IExtService.i.heartbeatVal",

@@ -5,7 +5,7 @@
 export const machineTypeSource = {
     "controllerName": "CODESYS Control for Linux SL",
     "endpoint": "opc.tcp://127.0.0.1:4840",
-    "generatedAt": "2026-05-18T23:01:47.604Z",
+    "generatedAt": "2026-05-20T18:49:15.269Z",
     "rootNodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00251",
     "rootTag": "Machine_00251"
 } as const;
@@ -35,144 +35,145 @@ export interface CoordinateFrame {
     name: string;
 }
 export interface RctrlCfg {
-    AtLinearPosTol: number;
-    AtRotationalPosTol: number;
-    ControllerId: number;
-    ControllerType: RctrlControllerTypes;
-    IgnoreLimitSwitches: boolean;
-    Ignores: Array<boolean>;
-    IgnoreSoftwareLimits: boolean;
-    LinearUnit: string;
-    MotionProfiles: Array<AxisMotionProfileData>;
-    Positions: Array<RobPositionData>;
-    RotationalUnit: string;
-    ToolFrames: Array<CoordinateFrame>;
-    UserFrames: Array<CoordinateFrame>;
+    atLinearPosTol: number;
+    atRotationalPosTol: number;
+    controllerId: number;
+    controllerType: RctrlControllerTypes;
+    ignoreLimitSwitches: boolean;
+    ignores: Array<boolean>;
+    ignoreSoftwareLimits: boolean;
+    linearUnit: string;
+    motionProfiles: Array<AxisMotionProfileData>;
+    positions: Array<RobPositionData>;
+    rotationalUnit: string;
+    toolFrames: Array<CoordinateFrame>;
+    userFrames: Array<CoordinateFrame>;
 }
 export interface ApplicatorSetpoint {
-    BallValveOn: boolean;
-    Speed: number;
-    SqueegeeDiameter: number;
-    StepperPosition: number;
-    ZOffset: number;
+    ballValveOn: boolean;
+    speed: number;
+    squeegeeDiameter: number;
+    stepperPosition: number;
+    zOffset: number;
 }
 export interface AbbDataOutputs {
-    ApplicatorCollisionPayloadOffset: number;
-    ApplicatorPreloadPauseDuration: number;
-    ApplicatorSetpoints: Array<ApplicatorSetpoint>;
-    ApplicatorToolId: number;
-    ApplicatorToolPresent: boolean;
-    BrushIsActive: boolean;
-    BrushLinearSpeed: number;
-    BrushToolPresent: boolean;
-    CameraId: number;
-    CameraSpeed: number;
-    CameraToolPresent: boolean;
-    CleanerId: number;
-    ClearErrorsReq: boolean;
+    applicatorCollisionPayloadOffset: number;
+    applicatorPreloadPauseDuration: number;
+    applicatorSetpoints: Array<ApplicatorSetpoint>;
+    applicatorToolId: number;
+    applicatorToolPresent: boolean;
+    brushIsActive: boolean;
+    brushLinearSpeed: number;
+    brushToolPresent: boolean;
+    cameraId: number;
+    cameraSpeed: number;
+    cameraToolPresent: boolean;
+    cleanerId: number;
+    clearErrorsReq: boolean;
     deviceCmdReqId: number;
-    DryCycle: boolean;
-    EoatPickDone: boolean;
-    EoatReleaseDone: boolean;
-    ExecMethodReqId: number;
-    FalseBottomStaysOpen: boolean;
-    GripperIsClosed: boolean;
-    GripperIsOpen: boolean;
+    dryCycle: boolean;
+    eoatPickDone: boolean;
+    eoatReleaseDone: boolean;
+    execMethodReqId: number;
+    falseBottomStaysOpen: boolean;
+    gripperIsClosed: boolean;
+    gripperIsOpen: boolean;
     heartbeatVal: number;
-    KillReq: boolean;
-    PauseReq: boolean;
-    PlcPartState: number;
-    RecordingIsActive: boolean;
-    ResetReq: boolean;
-    SqueegeeAtHome: boolean;
-    StartReq: boolean;
-    StopReq: boolean;
-    TareDone: boolean;
-    TaskParam0: number;
-    TaskParam1: number;
-    TaskParam2: number;
-    TaskParam3: number;
-    TaskReqId: number;
-    TransferPartDataDone: boolean;
-    TubeHeightMax: number;
-    TubeMassKg: number;
-    TubeOuterDiameterMax: number;
-    TubeTypeId: number;
-    UniqueTaskReqId: number;
-    UpdatePartDataDone: boolean;
-    WeighingFingerId: number;
-    WeighToolPresent: boolean;
-    WeighTubeDone: boolean;
+    killReq: boolean;
+    pauseReq: boolean;
+    plcPartState: number;
+    recordingIsActive: boolean;
+    resetReq: boolean;
+    squeegeeAtHome: boolean;
+    startReq: boolean;
+    stopReq: boolean;
+    tareDone: boolean;
+    taskParam0: number;
+    taskParam1: number;
+    taskParam2: number;
+    taskParam3: number;
+    taskReqId: number;
+    transferPartDataDone: boolean;
+    tubeHeightMax: number;
+    tubeMassKg: number;
+    tubeOuterDiameterMax: number;
+    tubeTypeId: number;
+    uniqueTaskReqId: number;
+    updatePartDataDone: boolean;
+    weighingFingerId: number;
+    weighToolPresent: boolean;
+    weighTubeDone: boolean;
 }
 export interface RctrlHmiManual {
-    AbbDataOutputs: AbbDataOutputs;
+    abbDataOutputs: AbbDataOutputs;
 }
 export interface AbbDataInputs {
-    ActivePartLocationId: number;
-    ActiveTaskId: number;
-    ActiveToolId: number;
-    ActiveToolVariantId: number;
-    ActualWaypoint: number;
-    AutoRecoverOK: boolean;
-    AutoRecoveryNeeded: boolean;
-    BrushStartReq: boolean;
-    BrushStopReq: boolean;
-    ControllerErrorId: number;
-    EoatPickReq: boolean;
-    EoatReleaseReq: boolean;
-    ErrorId: number;
-    GripperCloseReq: boolean;
-    GripperOpenReq: boolean;
+    activePartLocationId: number;
+    activeTaskId: number;
+    activeToolId: number;
+    activeToolVariantId: number;
+    actualWaypoint: number;
+    autoRecoverOK: boolean;
+    autoRecoveryNeeded: boolean;
+    brushStartReq: boolean;
+    brushStopReq: boolean;
+    controllerErrorId: number;
+    eoatPickReq: boolean;
+    eoatReleaseReq: boolean;
+    errorId: number;
+    flipBit: boolean;
+    gripperCloseReq: boolean;
+    gripperOpenReq: boolean;
     heartbeatVal: number;
-    InTransitZone: boolean;
+    inTransitZone: boolean;
     lastCrossedSetpointId: number;
     lastTaskId: number;
-    NewPartState: number;
-    RecordingStartReq: boolean;
-    RecordingStopReq: boolean;
-    RecoverTaskId: number;
-    RecoveryTaskStepNum: number;
-    RecoveryWaypointId: number;
-    StartingWaypoint: number;
-    StepNum: number;
-    TareReq: boolean;
-    TargetWaypoint: number;
-    TaskStepNum: number;
-    TcpPosX: number;
-    TcpPosY: number;
-    TcpPosZ: number;
-    TcpRotP: number;
-    TcpRotR: number;
-    TcpRotW: number;
-    TCPSpeed: number;
-    TransferDataCurrentPartLocationId: number;
-    TransferDataTargetPartLocationId: number;
-    TransferPartDataReq: boolean;
-    UniqueTaskActiveId: number;
-    UpdatePartDataReq: boolean;
-    WeighTubeReq: boolean;
+    newPartState: number;
+    recordingStartReq: boolean;
+    recordingStopReq: boolean;
+    recoverTaskId: number;
+    recoveryTaskStepNum: number;
+    recoveryWaypointId: number;
+    startingWaypoint: number;
+    stepNum: number;
+    tareReq: boolean;
+    targetWaypoint: number;
+    taskStepNum: number;
+    tcpPosX: number;
+    tcpPosY: number;
+    tcpPosZ: number;
+    tcpRotP: number;
+    tcpRotR: number;
+    tcpRotW: number;
+    tcPSpeed: number;
+    transferDataCurrentPartLocationId: number;
+    transferDataTargetPartLocationId: number;
+    transferPartDataReq: boolean;
+    uniqueTaskActiveId: number;
+    updatePartDataReq: boolean;
+    weighTubeReq: boolean;
     zOffsetFromFalseBottom: number;
 }
 export interface AbbSysOutputs {
-    AutoOn: boolean;
-    ControlOnState: boolean;
-    CycleOn: boolean;
-    EmergencyStop_NOT_OK: boolean;
-    ExecutionError: boolean;
-    LimitSpeed: number;
-    MotorsOffState: boolean;
-    MotorsOnState: boolean;
-    RunChainOk: boolean;
+    autoOn: boolean;
+    controlOnState: boolean;
+    cycleOn: boolean;
+    emergencyStop_NOT_OK: boolean;
+    executionError: boolean;
+    limitSpeed: number;
+    motorsOffState: boolean;
+    motorsOnState: boolean;
+    runChainOk: boolean;
 }
 export interface AbbInputs {
     data: AbbDataInputs;
     sysOutputs: AbbSysOutputs;
 }
 export interface AbbSysInputs {
-    LoadAndStart: boolean;
-    MotorsOff: boolean;
-    MotorsOn: boolean;
-    Stop: boolean;
+    loadAndStart: boolean;
+    motorsOff: boolean;
+    motorsOn: boolean;
+    stop: boolean;
 }
 export interface AbbOutputs {
     data: AbbDataOutputs;
@@ -183,53 +184,53 @@ export interface AbbControllerInterface {
     o: AbbOutputs;
 }
 export interface RctrlSts {
-    ActiveToolId: number;
-    ActualPosition: RobPositionData;
-    ActualTCPSpeed: number;
-    ActualWaypoint: number;
-    Cfg: RctrlCfg;
-    IController: AbbControllerInterface;
+    activeToolId: number;
+    actualPosition: RobPositionData;
+    actualTCPSpeed: number;
+    actualWaypoint: number;
+    cfg: RctrlCfg;
+    iController: AbbControllerInterface;
     isAtPosAndStandstill: boolean;
-    IsConnected: boolean;
+    isConnected: boolean;
     isJogging: boolean;
     isMoving: boolean;
     isStandstill: boolean;
-    IsTeachMode: boolean;
-    RobotProgramIsCyclingInAuto: boolean;
-    TargetPosition: RobPositionData;
-    TargetWaypoint: number;
+    isTeachMode: boolean;
+    robotProgramIsCyclingInAuto: boolean;
+    targetPosition: RobPositionData;
+    targetWaypoint: number;
 }
 export interface RecipeData {
-    ApplicatorCollisionPayloadOffset: number;
-    ApplicatorHasVariableSqueegee: boolean;
-    ApplicatorPreloadPauseDuration: number;
-    ApplicatorSetpoints: Array<ApplicatorSetpoint>;
-    ApplicatorToolId: number;
-    ApplicatorToolString: string;
-    BrushToolSpeed_RPM: number;
-    CameraId: number;
-    CameraSpeed: number;
-    CameraString: string;
-    CleanerId: number;
-    CleanerString: string;
+    applicatorCollisionPayloadOffset: number;
+    applicatorHasVariableSqueegee: boolean;
+    applicatorPreloadPauseDuration: number;
+    applicatorSetpoints: Array<ApplicatorSetpoint>;
+    applicatorToolId: number;
+    applicatorToolString: string;
+    brushToolSpeed_RPM: number;
+    cameraId: number;
+    cameraSpeed: number;
+    cameraString: string;
+    cleanerId: number;
+    cleanerString: string;
     dbId: string;
-    FalseBottomStaysOpen: boolean;
+    falseBottomStaysOpen: boolean;
     index: number;
-    LinerPotPressure: number;
-    LinerTypeString: string;
-    LinerWeightMax: number;
-    LinerWeightMin: number;
-    MeasuredSqueegeeDiaAtSetpoint1: number;
-    Nickname: string;
-    RobotSpeedWhileBrushing: number;
-    TubeHeightMax: number;
-    TubeMassKg: number;
-    TubeOuterDiameterMax: number;
-    TubeTypeId: number;
-    TubeTypeString: string;
-    UsesBrushTool: boolean;
-    WeighingFingerId: number;
-    WeighingFingerString: string;
+    linerPotPressure: number;
+    linerTypeString: string;
+    linerWeightMax: number;
+    linerWeightMin: number;
+    measuredSqueegeeDiaAtSetpoint1: number;
+    nickname: string;
+    robotSpeedWhileBrushing: number;
+    tubeHeightMax: number;
+    tubeMassKg: number;
+    tubeOuterDiameterMax: number;
+    tubeTypeId: number;
+    tubeTypeString: string;
+    usesBrushTool: boolean;
+    weighingFingerId: number;
+    weighingFingerString: string;
 }
 export enum TwoPosDeviceOutputModes {
     MAINTAINED = 0,
@@ -247,10 +248,10 @@ export enum TwoPosValveTypes {
     V3_2_EXHAUST = 4,
 }
 export interface TwoPosCfg {
-    LabelA: string;
-    LabelB: string;
-    MissingSensA: boolean;
-    MissingSensB: boolean;
+    labelA: string;
+    labelB: string;
+    missingSensA: boolean;
+    missingSensB: boolean;
     moveTimeAtoB: Date | string;
     moveTimeBtoA: Date | string;
     outputMode: TwoPosDeviceOutputModes;
@@ -259,35 +260,35 @@ export interface TwoPosCfg {
     valveType: TwoPosValveTypes;
 }
 export interface TwoPosSts {
-    ActualPosition: number;
-    AtPosA: boolean;
-    AtPosB: boolean;
-    Cfg: TwoPosCfg;
+    actualPosition: number;
+    atPosA: boolean;
+    atPosB: boolean;
+    cfg: TwoPosCfg;
     overrideA: boolean;
     overrideB: boolean;
-    PermA: boolean;
-    PermB: boolean;
-    StickyA: boolean;
-    StickyB: boolean;
+    permA: boolean;
+    permB: boolean;
+    stickyA: boolean;
+    stickyB: boolean;
 }
 export interface TwoPosGantryPoseChildPosition {
-    ChildId: number;
-    PositionId: number;
+    childId: number;
+    positionId: number;
 }
 export interface TwoPosGantryPose {
-    ChildPositions: Array<TwoPosGantryPoseChildPosition>;
+    childPositions: Array<TwoPosGantryPoseChildPosition>;
 }
 export interface TwoPosGantryCfg {
-    NumAxes: number;
-    Poses: Array<TwoPosGantryPose>;
-    UseSimultaneousMoves: boolean;
+    numAxes: number;
+    poses: Array<TwoPosGantryPose>;
+    useSimultaneousMoves: boolean;
 }
 export interface TwoPosGantrySts {
-    ActualPosition: number;
-    Cfg: TwoPosGantryCfg;
+    actualPosition: number;
+    cfg: TwoPosGantryCfg;
 }
 export interface HmiCfg {
-    StartingScreen: string;
+    startingScreen: string;
 }
 export enum AxisDriveTypes {
     STINGRAY = 0,
@@ -317,40 +318,40 @@ export enum AxisSensors {
     POSITIVE_LIM_SW = 3,
 }
 export interface AxisCfg {
-    AtPosTol: number;
-    AutoPositionVerifyDuringReset: boolean;
-    AxesPositionToleranceForSkew: number;
-    AxisType: number;
-    DriveId: number;
-    DriveType: AxisDriveTypes;
-    GearingPositionTolerance: number;
-    HardStopNegative: number;
-    HardStopPositive: number;
+    atPosTol: number;
+    autoPositionVerifyDuringReset: boolean;
+    axesPositionToleranceForSkew: number;
+    axisType: number;
+    driveId: number;
+    driveType: AxisDriveTypes;
+    gearingPositionTolerance: number;
+    hardStopNegative: number;
+    hardStopPositive: number;
     hasDynamicNegativeLimit: boolean;
     hasDynamicPositiveLimit: boolean;
     hasRailBrakes: boolean;
-    HomingToHardstopDir: number;
-    IgnoreLimitSwitches: boolean;
-    Ignores: Array<boolean>;
-    IgnoreSoftwareLimits: boolean;
-    KeepMasteredStatusAtStartup: boolean;
-    MaxCurrentNormalOperation: number;
-    MaxCurrentWhileHomingToHardstop: number;
-    MotionProfiles: Array<AxisMotionProfileData>;
-    OperationalPositionMax: number;
-    OperationalPositionMin: number;
-    PositionReferencingMethod: PositionReferencingMethods;
-    ScaleFactorUnitsPerEncoderCount: number;
-    SearchDistance: number;
-    SensorPositions: Array<number>;
-    ShippingPosition: number;
-    SoftMotionScalingParams: SoftMotionScalingParams;
-    SoftwareLimitNegative: number;
-    SoftwareLimitPositive: number;
-    Unit: string;
+    homingToHardstopDir: number;
+    ignoreLimitSwitches: boolean;
+    ignores: Array<boolean>;
+    ignoreSoftwareLimits: boolean;
+    keepMasteredStatusAtStartup: boolean;
+    maxCurrentNormalOperation: number;
+    maxCurrentWhileHomingToHardstop: number;
+    motionProfiles: Array<AxisMotionProfileData>;
+    operationalPositionMax: number;
+    operationalPositionMin: number;
+    positionReferencingMethod: PositionReferencingMethods;
+    scaleFactorUnitsPerEncoderCount: number;
+    searchDistance: number;
+    sensorPositions: Array<number>;
+    shippingPosition: number;
+    softMotionScalingParams: SoftMotionScalingParams;
+    softwareLimitNegative: number;
+    softwareLimitPositive: number;
+    unit: string;
     updateScalingIsNeeded: boolean;
-    ValidationSensor: AxisSensors;
-    VerificationSensorOffsetFromZero: number;
+    validationSensor: AxisSensors;
+    verificationSensorOffsetFromZero: number;
 }
 export enum AxisLimitEnforcements {
     UNKNOWN = 0,
@@ -364,26 +365,26 @@ export enum DualAxisStopTypes {
     MASTER_FAULT = 3,
 }
 export interface AxisInterlockCfgData {
-    Description: string;
-    Direction: number;
-    Ignored: boolean;
-    InterlockType: number;
-    SenderId: number;
-    TargetId: number;
+    description: string;
+    direction: number;
+    ignored: boolean;
+    interlockType: number;
+    senderId: number;
+    targetId: number;
 }
 export interface AxisInterlockStsData {
     conditionsAreMet: boolean;
     isAllowed: boolean;
     isIgnoredByCfg: boolean;
     isOverridden: boolean;
-    OverridenTimeLeft: Date | string;
+    overridenTimeLeft: Date | string;
 }
 export interface AxisInterlockData {
-    Cfg: AxisInterlockCfgData;
-    Sts: AxisInterlockStsData;
+    cfg: AxisInterlockCfgData;
+    sts: AxisInterlockStsData;
 }
 export interface AxisInterlocks {
-    List: Array<AxisInterlockData>;
+    list: Array<AxisInterlockData>;
 }
 export interface AxisPermissiveStsData {
     conditionsAreMet: boolean;
@@ -392,12 +393,12 @@ export interface AxisPermissiveStsData {
     isOverridden: boolean;
 }
 export interface RailBrakeInputs {
-    RailBrake1_CLOSED: boolean;
-    RailBrake1_ERROR: boolean;
-    RailBrake1_OPEN: boolean;
-    RailBrake2_CLOSED: boolean;
-    RailBrake2_ERROR: boolean;
-    RailBrake2_OPEN: boolean;
+    railBrake1_CLOSED: boolean;
+    railBrake1_ERROR: boolean;
+    railBrake1_OPEN: boolean;
+    railBrake2_CLOSED: boolean;
+    railBrake2_ERROR: boolean;
+    railBrake2_OPEN: boolean;
 }
 export enum enumRcAxisMode {
     NONE = 0,
@@ -421,32 +422,32 @@ export enum SM3BasicSMCCONTROLLERMODE {
     SMC_CURRENT = 4,
 }
 export interface AxisSts {
-    ActiveStreamType: number;
+    activeStreamType: number;
     actualAcceleration: number;
-    ActualControllerMode: number;
-    ActualCurrent: number;
+    actualControllerMode: number;
+    actualCurrent: number;
     actualMasterAxisDevId: number;
     actualPosition: number;
-    ActualTorque: number;
+    actualTorque: number;
     actualVelocity: number;
-    AxesPositionDifference_CORRECTABLE: boolean;
-    AxesPositionDifference_OK: boolean;
-    AxisRefState: number;
-    CalculatedStoppingPosition: number;
-    Cfg: AxisCfg;
-    ConfiguredSoftLimitTravelRange: number;
-    DriveHasError: boolean;
-    DriveHwLimitsEnforcement: AxisLimitEnforcements;
-    DriveIsStoppingMotor: boolean;
-    DriveState: number;
-    DriveStatusMsg: string;
-    DriveStoppedMotor: boolean;
-    DriveSwLimitsEnforcement: AxisLimitEnforcements;
-    DualAxisStopType: DualAxisStopTypes;
-    EtherCatComms_OK: boolean;
-    HomeOffsetFromZero: number;
+    axesPositionDifference_CORRECTABLE: boolean;
+    axesPositionDifference_OK: boolean;
+    axisRefState: number;
+    calculatedStoppingPosition: number;
+    cfg: AxisCfg;
+    configuredSoftLimitTravelRange: number;
+    driveHasError: boolean;
+    driveHwLimitsEnforcement: AxisLimitEnforcements;
+    driveIsStoppingMotor: boolean;
+    driveState: number;
+    driveStatusMsg: string;
+    driveStoppedMotor: boolean;
+    driveSwLimitsEnforcement: AxisLimitEnforcements;
+    dualAxisStopType: DualAxisStopTypes;
+    etherCatComms_OK: boolean;
+    homeOffsetFromZero: number;
     ignoringRailBrakes: boolean;
-    Interlocks: AxisInterlocks;
+    interlocks: AxisInterlocks;
     isAtPosAndStandstill: boolean;
     isEnabled: boolean;
     isGeared: boolean;
@@ -459,23 +460,23 @@ export interface AxisSts {
     isStreaming: boolean;
     isTorquing: boolean;
     mutingSwAndHwLimitsWhileHoming: boolean;
-    Permissives: Array<AxisPermissiveStsData>;
-    PositionDifference: number;
-    RailBrakes: RailBrakeInputs;
-    RcControlMode: enumRcAxisMode;
-    RcHomingState: enumRcAxisHomingState;
-    RecordedPosition: number;
-    RestrictedToSlow: boolean;
-    Sensors: Array<boolean>;
+    permissives: Array<AxisPermissiveStsData>;
+    positionDifference: number;
+    railBrakes: RailBrakeInputs;
+    rcControlMode: enumRcAxisMode;
+    rcHomingState: enumRcAxisHomingState;
+    recordedPosition: number;
+    restrictedToSlow: boolean;
+    sensors: Array<boolean>;
     setAccel: number;
     setJerk: number;
     setPosition: number;
     setTorque: number;
     setVelocity: number;
-    SkippingPositionCorrectionBeforeGearing: boolean;
-    SoftMotionErrorId: number;
-    SoftMotionHasError: boolean;
-    TargetControllerMode: SM3BasicSMCCONTROLLERMODE;
+    skippingPositionCorrectionBeforeGearing: boolean;
+    softMotionErrorId: number;
+    softMotionHasError: boolean;
+    targetControllerMode: SM3BasicSMCCONTROLLERMODE;
     targetDir: number;
     targetEncoderSetpoint: number;
     targetMasterAxisDevId: number;
@@ -486,110 +487,110 @@ export interface AxisSts {
     targetSetpoint: number;
     targetTorque: number;
     targetVelocity: number;
-    TravelLimitNegative: number;
-    TravelLimitPositive: number;
+    travelLimitNegative: number;
+    travelLimitPositive: number;
 }
 export interface DeviceActionRequestData {
-    ActionId: number;
-    ActionType: number;
-    ParamArray: Array<number>;
-    SenderId: number;
-    UniqueActionRequestId: number;
+    actionId: number;
+    actionType: number;
+    paramArray: Array<number>;
+    senderId: number;
+    uniqueActionRequestId: number;
 }
 export interface ApiOpcuaReqData {
-    ActionRequestData: DeviceActionRequestData;
+    actionRequestData: DeviceActionRequestData;
     checkSum: number;
     id: number;
-    Sts: number;
+    sts: number;
 }
 export interface ApiOpcuaData {
-    HmiReq: ApiOpcuaReqData;
-    HmiResp: ApiOpcuaReqData;
-    InternalReq: ApiOpcuaReqData;
-    InternalResp: ApiOpcuaReqData;
-    OrchReq: ApiOpcuaReqData;
-    OrchResp: ApiOpcuaReqData;
-    Req: ApiOpcuaReqData;
-    Resp: ApiOpcuaReqData;
+    hmiReq: ApiOpcuaReqData;
+    hmiResp: ApiOpcuaReqData;
+    internalReq: ApiOpcuaReqData;
+    internalResp: ApiOpcuaReqData;
+    orchReq: ApiOpcuaReqData;
+    orchResp: ApiOpcuaReqData;
+    req: ApiOpcuaReqData;
+    resp: ApiOpcuaReqData;
 }
 export interface DeviceCfg {
-    AutoReset: boolean;
-    ControllableByHmi: boolean;
-    Ignore: boolean;
-    OutboundAxisInterlocks: Array<AxisInterlockCfgData>;
-    SafetyZoneId: number;
+    autoReset: boolean;
+    controllableByHmi: boolean;
+    ignore: boolean;
+    outboundAxisInterlocks: Array<AxisInterlockCfgData>;
+    safetyZoneId: number;
 }
 export interface FaultData {
-    AutoReset: boolean;
-    Code: number;
-    DeviceId: number;
-    LogFlag: boolean;
-    Msg: string;
-    ParentStepNum: number;
-    ResetFlag: boolean;
-    StepNum: number;
-    TimeStamp: bigint | number;
+    autoReset: boolean;
+    code: number;
+    deviceId: number;
+    logFlag: boolean;
+    msg: string;
+    parentStepNum: number;
+    resetFlag: boolean;
+    stepNum: number;
+    timeStamp: bigint | number;
 }
 export interface DeviceFaultData {
-    ChildrenPresent: boolean;
-    List: Array<FaultData>;
-    Present: boolean;
+    childrenPresent: boolean;
+    list: Array<FaultData>;
+    present: boolean;
 }
 export interface ProcessData {
-    ActiveId: number;
-    ActiveName: string;
-    DeviceStateThatCalled: number;
-    DeviceStepThatCalled: number;
+    activeId: number;
+    activeName: string;
+    deviceStateThatCalled: number;
+    deviceStepThatCalled: number;
     firstScan: boolean;
     isDone: boolean;
     isError: boolean;
     isStepNum: number;
-    LastId: number;
-    NextStepNum: number;
-    ParamArray: Array<number>;
-    RequestId: number;
-    RequestParamArray: Array<number>;
-    SenderId: number;
-    StepDescription: string;
-    StepTime: bigint | number;
-    UniqueActionRequestId: number;
+    lastId: number;
+    nextStepNum: number;
+    paramArray: Array<number>;
+    requestId: number;
+    requestParamArray: Array<number>;
+    senderId: number;
+    stepDescription: string;
+    stepTime: bigint | number;
+    uniqueActionRequestId: number;
 }
 export interface DeviceInstants {
-    InstantKill_ON: boolean;
-    InstantManual_ON: boolean;
-    InstantReset_ON: boolean;
-    InstantStop_ON: boolean;
+    instantKill_ON: boolean;
+    instantManual_ON: boolean;
+    instantReset_ON: boolean;
+    instantStop_ON: boolean;
 }
 export interface DeviceSts {
-    Aborting: boolean;
-    AllChildrenIdle: boolean;
-    AllChildrenIdleOrError: boolean;
-    AllChildrenInactive: boolean;
-    AllChildrenKilled: boolean;
-    ColorCode: number;
-    CommanderId: number;
-    Done: boolean;
-    Error: boolean;
-    Idle: boolean;
-    IdleOrError: boolean;
+    aborting: boolean;
+    allChildrenIdle: boolean;
+    allChildrenIdleOrError: boolean;
+    allChildrenInactive: boolean;
+    allChildrenKilled: boolean;
+    colorCode: number;
+    commanderId: number;
+    done: boolean;
+    error: boolean;
+    idle: boolean;
+    idleOrError: boolean;
     IIFKM: boolean;
-    Inactive: boolean;
+    inactive: boolean;
     IPR: boolean;
     KEI: boolean;
-    Killed: boolean;
-    Manual: boolean;
-    Paused: boolean;
-    PauseRequested: boolean;
-    RecordingLogs: boolean;
-    Resetting: boolean;
+    killed: boolean;
+    manual: boolean;
+    paused: boolean;
+    pauseRequested: boolean;
+    recordingLogs: boolean;
+    resetting: boolean;
     RRI: boolean;
-    Running: boolean;
-    RunningOrStopping: boolean;
-    State: number;
-    StatusMsg: string;
-    StepDescription: string;
-    StepNum: number;
-    Stopping: boolean;
+    running: boolean;
+    runningOrStopping: boolean;
+    state: number;
+    statusMsg: string;
+    stepDescription: string;
+    stepNum: number;
+    stopping: boolean;
 }
 export enum DeviceTypes {
     BASE = 0,
@@ -609,44 +610,44 @@ export enum DeviceTypes {
     HMI = 14,
 }
 export interface DeviceRegistration {
-    ChildIdArray: Array<number>;
-    DeviceType: DeviceTypes;
-    Id: number;
+    childIdArray: Array<number>;
+    deviceType: DeviceTypes;
+    id: number;
     isExternalService: boolean;
-    Mnemonic: string;
-    ParentId: number;
+    mnemonic: string;
+    parentId: number;
 }
 export interface DeviceSettings {
-    Bypass: boolean;
+    bypass: boolean;
 }
 export interface UdpData {
-    StreamVal: number;
+    streamVal: number;
 }
 export interface Device {
-    ApiOpcua: ApiOpcuaData;
-    Cfg: DeviceCfg;
+    apiOpcua: ApiOpcuaData;
+    cfg: DeviceCfg;
     connectionStatus: boolean;
-    Errors: DeviceFaultData;
-    ExecMethod: ProcessData;
+    errors: DeviceFaultData;
+    execMethod: ProcessData;
     instants: DeviceInstants;
-    Is: DeviceSts;
-    Mission: ProcessData;
-    MutedChildrenArray: Array<boolean>;
-    Process: ProcessData;
-    Registration: DeviceRegistration;
-    Script: ProcessData;
-    Settings: DeviceSettings;
-    SkipKillDuringAbortChildren: Array<boolean>;
-    Task: ProcessData;
-    Udp: UdpData;
-    Warnings: DeviceFaultData;
+    is: DeviceSts;
+    mission: ProcessData;
+    mutedChildrenArray: Array<boolean>;
+    process: ProcessData;
+    registration: DeviceRegistration;
+    script: ProcessData;
+    settings: DeviceSettings;
+    skipKillDuringAbortChildren: Array<boolean>;
+    task: ProcessData;
+    udp: UdpData;
+    warnings: DeviceFaultData;
 }
 export interface ComponentAnimation {
-    AccentColor: number;
-    BackgroundColor: number;
-    FontColor: number;
+    accentColor: number;
+    backgroundColor: number;
+    fontColor: number;
     needsExpertUser: boolean;
-    Visibility: number;
+    visibility: number;
     wasClicked: boolean;
 }
 export interface HmiDevCtrlData {
@@ -678,134 +679,134 @@ export interface HmiAxisCtrlData {
     radioBtnMotionProfile: number;
 }
 export interface ButtonBar {
-    ClearFaultsBtn: ComponentAnimation;
-    EnergizeBtn: ComponentAnimation;
-    JobChangeBtn: ComponentAnimation;
-    LoadBtn: ComponentAnimation;
-    LockBtn: ComponentAnimation;
-    ResetBtn: ComponentAnimation;
-    ResetCncBtn: ComponentAnimation;
-    StartBtn: ComponentAnimation;
-    StopBtn: ComponentAnimation;
-    UnloadBtn: ComponentAnimation;
-    UnlockBtn: ComponentAnimation;
+    clearFaultsBtn: ComponentAnimation;
+    energizeBtn: ComponentAnimation;
+    jobChangeBtn: ComponentAnimation;
+    loadBtn: ComponentAnimation;
+    lockBtn: ComponentAnimation;
+    resetBtn: ComponentAnimation;
+    resetCncBtn: ComponentAnimation;
+    startBtn: ComponentAnimation;
+    stopBtn: ComponentAnimation;
+    unloadBtn: ComponentAnimation;
+    unlockBtn: ComponentAnimation;
 }
 export type BYTE = number | string | unknown;
 export interface HmiIbData {
-    InductBtn: ComponentAnimation;
+    inductBtn: ComponentAnimation;
     requestControlBtn: ComponentAnimation;
-    RetrieveAndStowBtn: ComponentAnimation;
-    RetrieveBtn: ComponentAnimation;
+    retrieveAndStowBtn: ComponentAnimation;
+    retrieveBtn: ComponentAnimation;
     selectedCubbyId: number;
     selectedMissionId: number;
-    StowBtn: ComponentAnimation;
-    VendBtn: ComponentAnimation;
+    stowBtn: ComponentAnimation;
+    vendBtn: ComponentAnimation;
 }
 export interface StatusBar {
-    BannerMode: number;
-    BatchQty: number;
-    CncTimeLeft: Date | string;
-    DateAndTime: Date | string;
-    FaultCodeData: FaultData;
-    GoodCnt: number;
-    JobName: string;
-    PartNumber: string;
-    Status: number;
-    StatusMsg: number;
+    bannerMode: number;
+    batchQty: number;
+    cncTimeLeft: Date | string;
+    dateAndTime: Date | string;
+    faultCodeData: FaultData;
+    goodCnt: number;
+    jobName: string;
+    partNumber: string;
+    status: number;
+    statusMsg: number;
 }
 export interface HmiStwgData {
-    DryCycleTestBtn: ComponentAnimation;
-    InductBtn: ComponentAnimation;
+    dryCycleTestBtn: ComponentAnimation;
+    inductBtn: ComponentAnimation;
     requestControlBtn: ComponentAnimation;
-    RetrieveBtn: ComponentAnimation;
-    StopBtn: ComponentAnimation;
-    StowBtn: ComponentAnimation;
+    retrieveBtn: ComponentAnimation;
+    stopBtn: ComponentAnimation;
+    stowBtn: ComponentAnimation;
 }
 export interface HmiData {
-    ActiveAxisSts: AxisSts;
-    ActiveCodesysHmiScreenName: string;
-    ActiveDev: Device;
-    ActiveDevCtrl: HmiDevCtrlData;
-    ActiveDeviceId: number;
-    ActivePage: number;
-    AxisCtrl: HmiAxisCtrlData;
-    ButtonBar: ButtonBar;
-    HeartbeatHMI: BYTE;
-    HeartbeatPLC: BYTE;
+    activeAxisSts: AxisSts;
+    activeCodesysHmiScreenName: string;
+    activeDev: Device;
+    activeDevCtrl: HmiDevCtrlData;
+    activeDeviceId: number;
+    activePage: number;
+    axisCtrl: HmiAxisCtrlData;
+    buttonBar: ButtonBar;
+    heartbeatHMI: BYTE;
+    heartbeatPLC: BYTE;
     IB: HmiIbData;
     isConnected: boolean;
-    RemoteControlPage: number;
-    ScreenChangeBtn: ComponentAnimation;
-    StatusBar: StatusBar;
+    remoteControlPage: number;
+    screenChangeBtn: ComponentAnimation;
+    statusBar: StatusBar;
     STWG: HmiStwgData;
 }
 export interface TwoPosInputs {
-    SensA_ON: boolean;
-    SensB_ON: boolean;
+    sensA_ON: boolean;
+    sensB_ON: boolean;
 }
 export interface AxisInputs {
-    Brakes: RailBrakeInputs;
-    Sensors: Array<boolean>;
+    brakes: RailBrakeInputs;
+    sensors: Array<boolean>;
 }
 export interface FixInputs {
-    PartPresentSensors: Array<boolean>;
+    partPresentSensors: Array<boolean>;
 }
 export interface PressureSwitchInputs {
-    ActualPressure_PSI: number;
+    actualPressure_PSI: number;
     AT_PRESSURE: boolean;
     TOO_HIGH: boolean;
 }
 export interface PotInputs {
-    BallValve_CLOSED: boolean;
-    BallValve_OPENED: boolean;
-    PotPressureSw: PressureSwitchInputs;
+    ballValve_CLOSED: boolean;
+    ballValve_OPENED: boolean;
+    potPressureSw: PressureSwitchInputs;
 }
 export interface RobInputs {
-    ApplicatorCalibrationSw_ON: boolean;
-    ApplicatorTool_PRESENT: boolean;
-    BrushTool_PRESENT: boolean;
-    CameraTool_PRESENT: boolean;
-    GripperTool_PRESENT: boolean;
+    applicatorCalibrationSw_ON: boolean;
+    applicatorTool_PRESENT: boolean;
+    brushTool_PRESENT: boolean;
+    cameraTool_PRESENT: boolean;
+    gripperTool_PRESENT: boolean;
 }
 export interface GuardLockInputs {
     LOCKED: boolean;
-    RequestToEnterPb_ON: boolean;
-    SafeInputs_OK: boolean;
-    Solenoid_UNLOCKED: boolean;
+    requestToEnterPb_ON: boolean;
+    safeInputs_OK: boolean;
+    solenoid_UNLOCKED: boolean;
     TONGUE_IN: boolean;
 }
 export interface SftyInputs {
-    DoorSwitches_ALL_OK: boolean;
-    EstopCircuit_OK: boolean;
-    EstopCircuitDelayed_OK: boolean;
-    EstopCircuitInputs_ALL_ON: boolean;
-    EstopCircuitReset_READY: boolean;
-    EstopInputs: Array<boolean>;
-    EstopPbs_ALL_OK: boolean;
-    FenceCircuit_OK: boolean;
-    FenceCircuitInputs_ALL_ON: boolean;
-    FenceCircuitReset_READY: boolean;
-    FenceConditionForEstop_OK: boolean;
-    GuardLocks: Array<GuardLockInputs>;
-    Psc1AlarmCode: number;
-    Psc1AlarmMsg: string;
-    Psc1FatalErrorCode: number;
-    Psc1FatalErrorMsg: string;
-    Psc1StatusCode: number;
-    Psc1StatusMsg: string;
-    SafeContactorsNC_OK: boolean;
-    SafeNC_ALL_OK: boolean;
-    SafeValveNC_OK: boolean;
-    UnlockGuardDoors_OUT: boolean;
+    doorSwitches_ALL_OK: boolean;
+    estopCircuit_OK: boolean;
+    estopCircuitDelayed_OK: boolean;
+    estopCircuitInputs_ALL_ON: boolean;
+    estopCircuitReset_READY: boolean;
+    estopInputs: Array<boolean>;
+    estopPbs_ALL_OK: boolean;
+    fenceCircuit_OK: boolean;
+    fenceCircuitInputs_ALL_ON: boolean;
+    fenceCircuitReset_READY: boolean;
+    fenceConditionForEstop_OK: boolean;
+    guardLocks: Array<GuardLockInputs>;
+    psc1AlarmCode: number;
+    psc1AlarmMsg: string;
+    psc1FatalErrorCode: number;
+    psc1FatalErrorMsg: string;
+    psc1StatusCode: number;
+    psc1StatusMsg: string;
+    safeContactorsNC_OK: boolean;
+    safeNC_ALL_OK: boolean;
+    safeValveNC_OK: boolean;
+    unlockGuardDoors_OUT: boolean;
 }
 export interface SysInputs {
-    PowerSupplies_OK: Array<boolean>;
-    PressureSwitches: Array<PressureSwitchInputs>;
+    powerSupplies_OK: Array<boolean>;
+    pressureSwitches: Array<PressureSwitchInputs>;
 }
 export interface inputs_00251 {
     CLAMP_S: TwoPosInputs;
     CLAMP_T: TwoPosInputs;
-    Dummy: AxisInputs;
+    dummy: AxisInputs;
     EOAT: TwoPosInputs;
     FIX_S: FixInputs;
     FIX_T: FixInputs;
@@ -819,76 +820,76 @@ export interface inputs_00251 {
     SYS: SysInputs;
 }
 export interface JobData {
-    ActiveBatchNumber: number;
-    ActiveRecipeIndex: number;
-    AssemblyName: string;
-    AssemblyNumber: string;
-    BatchId: string;
-    GoodCnt: number;
-    JobCompleted: boolean;
-    JobEndTime: string;
-    JobName: string;
-    JobStartTime: string;
-    LotId: string;
-    LotQty: number;
-    OperationNumber: string;
-    OperatorId: string;
-    SalesOrderId: string;
-    ScrapCnt: number;
-    SetupCompleted: boolean;
-    SetupEndTime: string;
-    SetupStartTime: string;
-    TubeTypeString: string;
-    WorkInstruction: string;
-    WorkOrderId: string;
+    activeBatchNumber: number;
+    activeRecipeIndex: number;
+    assemblyName: string;
+    assemblyNumber: string;
+    batchId: string;
+    goodCnt: number;
+    jobCompleted: boolean;
+    jobEndTime: string;
+    jobName: string;
+    jobStartTime: string;
+    lotId: string;
+    lotQty: number;
+    operationNumber: string;
+    operatorId: string;
+    salesOrderId: string;
+    scrapCnt: number;
+    setupCompleted: boolean;
+    setupEndTime: string;
+    setupStartTime: string;
+    tubeTypeString: string;
+    workInstruction: string;
+    workOrderId: string;
 }
 export interface TwoPosOutputs {
-    OutA: boolean;
-    OutB: boolean;
+    outA: boolean;
+    outB: boolean;
 }
 export interface LiteOutputs {
-    Green_ON: boolean;
-    Red_ON: boolean;
-    Yellow_ON: boolean;
+    green_ON: boolean;
+    red_ON: boolean;
+    yellow_ON: boolean;
 }
 export interface PotOutputs {
-    BallValveOpen_REQ: boolean;
-    PaintPot: TwoPosOutputs;
-    PressureSetpoint_PSI: number;
+    ballValveOpen_REQ: boolean;
+    paintPot: TwoPosOutputs;
+    pressureSetpoint_PSI: number;
 }
 export interface StrainGaugeInputs {
-    CalbrationNextStepReq: boolean;
-    CalibrateReq: boolean;
-    ReferenceWeight_g: number;
-    SampleReq: boolean;
-    TareReq: boolean;
+    calbrationNextStepReq: boolean;
+    calibrateReq: boolean;
+    referenceWeight_g: number;
+    sampleReq: boolean;
+    tareReq: boolean;
 }
 export interface RobOutputs {
-    LoadCell: StrainGaugeInputs;
+    loadCell: StrainGaugeInputs;
 }
 export interface GuardLockOutputs {
-    RequestToEnterPb_FLASH: boolean;
-    RequestToEnterPb_ILLUM: boolean;
-    Unlock_REQ: boolean;
+    requestToEnterPb_FLASH: boolean;
+    requestToEnterPb_ILLUM: boolean;
+    unlock_REQ: boolean;
 }
 export interface SftyOutputs {
-    ClearControllerAlarm_REQ: boolean;
-    ControllerAlarm_CLEAR: boolean;
-    EstopCircuit_RESET: boolean;
-    EstopPbIllumns: Array<boolean>;
-    GuardLocks: Array<GuardLockOutputs>;
-    RequestToEnterPb_ON: boolean;
-    ResetPb_FLASH: boolean;
-    ResetPb_ILLUM: boolean;
-    RobotTeachMode_ON: boolean;
+    clearControllerAlarm_REQ: boolean;
+    controllerAlarm_CLEAR: boolean;
+    estopCircuit_RESET: boolean;
+    estopPbIllumns: Array<boolean>;
+    guardLocks: Array<GuardLockOutputs>;
+    requestToEnterPb_ON: boolean;
+    resetPb_FLASH: boolean;
+    resetPb_ILLUM: boolean;
+    robotTeachMode_ON: boolean;
 }
 export interface WeidmullerIoPwmOutput {
-    ControlWord: number;
-    PulseDuration: number;
+    controlWord: number;
+    pulseDuration: number;
 }
 export interface SysOutputs {
-    StartPb_FLASH: boolean;
-    StartPb_ILLUM: boolean;
+    startPb_FLASH: boolean;
+    startPb_ILLUM: boolean;
 }
 export interface outputs_00251 {
     CLAMP_S: TwoPosOutputs;
@@ -905,113 +906,117 @@ export interface outputs_00251 {
     SYS: SysOutputs;
 }
 export interface PartValidationData {
-    LinerWeight_g: number;
-    PostWeight_g: number;
-    PreWeight_g: number;
-    SerialNumber: string;
-    StatusMsg: string;
-    TimestampVision_sec: number;
-    VisionSts: number;
-    WeightSts: number;
+    linerWeight_g: number;
+    postWeight_g: number;
+    preWeight_g: number;
+    serialNumber: string;
+    statusMsg: string;
+    timestampVision_sec: number;
+    visionSts: number;
+    weightSts: number;
 }
 export interface PartData {
-    FixtureLocationWhenLoaded: number;
-    InFixture: boolean;
-    LoadedBadSensor: boolean;
-    ProcessSts: number;
-    Validation: PartValidationData;
+    fixtureLocationWhenLoaded: number;
+    inFixture: boolean;
+    loadedBadSensor: boolean;
+    processSts: number;
+    validation: PartValidationData;
 }
 export interface PartDataStatus {
-    ActiveCnt: number;
-    AllFixturesAreEmpty: boolean;
-    AllStationsAreEmpty: boolean;
-    BatchCntFlag: boolean;
-    DoneShelfIsEmpty: boolean;
-    DoneShelfIsFull: boolean;
-    DoneShelfSpacesLeftCnt: number;
-    FinishedCnt: number;
-    OneOrMoreRejectPartsInCell: boolean;
-    OneOrMoreRejectPartsInRobot: boolean;
-    Parts: Array<PartData>;
-    RawShelfIsEmpty: boolean;
-    RawShelfPartsLeftCnt: number;
-    RobotHasMachinedParts: boolean;
-    RobotHasNoPostOpParts: boolean;
-    RobotHasOneFinishedPart: boolean;
-    RobotHasOnePreMachining: boolean;
-    RobotHasOnePreTopDeburring: boolean;
-    RobotHasOneRaw: boolean;
-    RobotHasTwoPreMachining: boolean;
-    RobotIsEmpty: boolean;
-    ShortFixtureIsEmpty: boolean;
-    TallFixtureIsEmpty: boolean;
+    activeCnt: number;
+    allFixturesAreEmpty: boolean;
+    allStationsAreEmpty: boolean;
+    batchCntFlag: boolean;
+    doneShelfIsEmpty: boolean;
+    doneShelfIsFull: boolean;
+    doneShelfSpacesLeftCnt: number;
+    finishedCnt: number;
+    oneOrMoreRejectPartsInCell: boolean;
+    oneOrMoreRejectPartsInRobot: boolean;
+    parts: Array<PartData>;
+    rawShelfIsEmpty: boolean;
+    rawShelfPartsLeftCnt: number;
+    robotHasMachinedParts: boolean;
+    robotHasNoPostOpParts: boolean;
+    robotHasOneFinishedPart: boolean;
+    robotHasOnePreMachining: boolean;
+    robotHasOnePreTopDeburring: boolean;
+    robotHasOneRaw: boolean;
+    robotHasTwoPreMachining: boolean;
+    robotIsEmpty: boolean;
+    shortFixtureIsEmpty: boolean;
+    tallFixtureIsEmpty: boolean;
 }
 export interface PotCfg {
     placeholder: boolean;
 }
 export interface PotSts {
-    ActualPressure: number;
-    AtTargetPressure: boolean;
-    BallValve_CLOSED: boolean;
-    BallValve_OPEN: boolean;
-    Cfg: PotCfg;
+    actualPressure: number;
+    atTargetPressure: boolean;
+    ballValve_CLOSED: boolean;
+    ballValve_OPEN: boolean;
+    cfg: PotCfg;
     isDepressurized: boolean;
     isPressurizing: boolean;
-    LinerIsFlowing: boolean;
-    State: number;
-    TargetPressure: number;
+    linerIsFlowing: boolean;
+    state: number;
+    targetPressure: number;
 }
 export interface RecipeStore {
-    NumRecipes: number;
-    Recipes: Array<RecipeData>;
+    numRecipes: number;
+    recipes: Array<RecipeData>;
 }
-export type RobCfg = unknown;
+export interface RobCfg {
+    placeholder: boolean;
+}
 export interface StrainGaugeSts {
-    CalibOffset: number;
-    CalibScaleFactor: number;
-    CurrentValue: number;
-    RawValue: number;
-    SampledStdDev: number;
-    SampledValue: number;
-    SampledValueRaw: number;
-    State: number;
-    StatusMsg: string;
-    TareOffset: number;
-    Unit: string;
+    calibOffset: number;
+    calibScaleFactor: number;
+    currentValue: number;
+    rawValue: number;
+    sampledStdDev: number;
+    sampledValue: number;
+    sampledValueRaw: number;
+    state: number;
+    statusMsg: string;
+    tareOffset: number;
+    unit: string;
 }
 export interface RobSts {
-    ActiveToolDeviceId: number;
-    ActiveToolId: number;
-    ActualPosition: RobPositionData;
-    ActualWaypoint: number;
-    ActualZone: number;
-    ActualZPositionRelativeToFalseBottom: number;
-    AdjustedSetpoints: Array<ApplicatorSetpoint>;
-    ApplicatorHasBeenPrimed: boolean;
-    ApplicatorIsDirty: boolean;
-    ApplyLinerStartSetpointMovesReq: boolean;
-    AutoRecoveryNeeded: boolean;
-    AutoRecoveryOk: boolean;
-    CameraIsRecording: boolean;
-    Cfg: RobCfg;
-    GripperIsCalibrated: boolean;
-    IController: AbbControllerInterface;
-    LastCrossedApplyLinerSetpointId: number;
-    LastRecordedLoadCellValue_g: number;
-    LoadCellCurrentValue_g: number;
-    LoadCellSts: StrainGaugeSts;
-    SqueegeeCalibrationOffset: number;
-    SqueegeeIsCalibrated: boolean;
-    SqueegeeIsHomed: boolean;
-    TargetWaypoint: number;
-    VisionIsCalibrated: boolean;
-    WeighTubeTareDone: boolean;
-    WeighTubeWeighDone: boolean;
+    activeToolDeviceId: number;
+    activeToolId: number;
+    actualPosition: RobPositionData;
+    actualWaypoint: number;
+    actualZone: number;
+    actualZPositionRelativeToFalseBottom: number;
+    adjustedSetpoints: Array<ApplicatorSetpoint>;
+    applicatorHasBeenPrimed: boolean;
+    applicatorIsDirty: boolean;
+    applyLinerStartSetpointMovesReq: boolean;
+    autoRecoveryNeeded: boolean;
+    autoRecoveryOk: boolean;
+    cameraIsRecording: boolean;
+    cfg: RobCfg;
+    gripperIsCalibrated: boolean;
+    iController: AbbControllerInterface;
+    lastCrossedApplyLinerSetpointId: number;
+    lastRecordedLoadCellValue_g: number;
+    loadCellCurrentValue_g: number;
+    loadCellSts: StrainGaugeSts;
+    squeegeeCalibrationOffset: number;
+    squeegeeIsCalibrated: boolean;
+    squeegeeIsHomed: boolean;
+    targetWaypoint: number;
+    visionIsCalibrated: boolean;
+    weighTubeTareDone: boolean;
+    weighTubeWeighDone: boolean;
 }
 export interface SftyCfg {
-    NumOfDoors: number;
+    numOfDoors: number;
 }
-export type SftySts = unknown;
+export interface SftySts {
+    placeholder: boolean;
+}
 export enum SM3ErrorSMCERROR {
     SMC_NO_ERROR = 0,
     SMC_DI_GENERAL_COMMUNICATION_ERROR = 1,
@@ -1506,34 +1511,34 @@ export enum SM3ErrorSMCERROR {
     SMC_LAST_INTERNAL_ERROR_CODE = 13999,
 }
 export interface AxisSimpleSts {
-    ActiveStreamType: number;
+    activeStreamType: number;
     actualAcceleration: number;
-    ActualControllerMode: number;
-    ActualCurrent: number;
+    actualControllerMode: number;
+    actualCurrent: number;
     actualMasterAxisDevId: number;
     actualPosition: number;
-    ActualTorque: number;
+    actualTorque: number;
     actualVelocity: number;
     atHomePosition: boolean;
     atOperationalPositionMax: boolean;
     atOperationalPositionMin: boolean;
-    AxesPositionDifference_CORRECTABLE: boolean;
-    AxesPositionDifference_OK: boolean;
-    CalculatedStoppingPosition: number;
-    Cfg: AxisCfg;
-    ConfiguredSoftLimitTravelRange: number;
-    DriveHasError: boolean;
-    DriveHwLimitsEnforcement: AxisLimitEnforcements;
-    DriveIsStoppingMotor: boolean;
-    DriveState: number;
-    DriveStatusMsg: string;
-    DriveStoppedMotor: boolean;
-    DriveSwLimitsEnforcement: AxisLimitEnforcements;
-    DualAxisStopType: DualAxisStopTypes;
-    EtherCatComms_OK: boolean;
-    HomeOffsetFromZero: number;
+    axesPositionDifference_CORRECTABLE: boolean;
+    axesPositionDifference_OK: boolean;
+    calculatedStoppingPosition: number;
+    cfg: AxisCfg;
+    configuredSoftLimitTravelRange: number;
+    driveHasError: boolean;
+    driveHwLimitsEnforcement: AxisLimitEnforcements;
+    driveIsStoppingMotor: boolean;
+    driveState: number;
+    driveStatusMsg: string;
+    driveStoppedMotor: boolean;
+    driveSwLimitsEnforcement: AxisLimitEnforcements;
+    dualAxisStopType: DualAxisStopTypes;
+    etherCatComms_OK: boolean;
+    homeOffsetFromZero: number;
     ignoringRailBrakes: boolean;
-    Interlocks: AxisInterlocks;
+    interlocks: AxisInterlocks;
     isAtPosAndStandstill: boolean;
     isEnabled: boolean;
     isGeared: boolean;
@@ -1546,23 +1551,23 @@ export interface AxisSimpleSts {
     isStreaming: boolean;
     isTorquing: boolean;
     mutingSwAndHwLimitsWhileHoming: boolean;
-    Permissives: Array<AxisPermissiveStsData>;
-    PositionDifference: number;
-    RailBrakes: RailBrakeInputs;
-    RcControlMode: enumRcAxisMode;
-    RcHomingState: enumRcAxisHomingState;
-    RecordedPosition: number;
-    RestrictedToSlow: boolean;
-    Sensors: Array<boolean>;
+    permissives: Array<AxisPermissiveStsData>;
+    positionDifference: number;
+    railBrakes: RailBrakeInputs;
+    rcControlMode: enumRcAxisMode;
+    rcHomingState: enumRcAxisHomingState;
+    recordedPosition: number;
+    restrictedToSlow: boolean;
+    sensors: Array<boolean>;
     setAccel: number;
     setJerk: number;
     setPosition: number;
     setTorque: number;
     setVelocity: number;
-    SkippingPositionCorrectionBeforeGearing: boolean;
-    SoftMotionErrorId: SM3ErrorSMCERROR;
-    SoftMotionHasError: boolean;
-    TargetControllerMode: number;
+    skippingPositionCorrectionBeforeGearing: boolean;
+    softMotionErrorId: SM3ErrorSMCERROR;
+    softMotionHasError: boolean;
+    targetControllerMode: number;
     targetDir: number;
     targetEncoderSetpoint: number;
     targetMasterAxisDevId: number;
@@ -1573,8 +1578,14 @@ export interface AxisSimpleSts {
     targetSetpoint: number;
     targetTorque: number;
     targetVelocity: number;
-    TravelLimitNegative: number;
-    TravelLimitPositive: number;
+    travelLimitNegative: number;
+    travelLimitPositive: number;
+}
+export interface SysCfg {
+    placeholder: boolean;
+}
+export interface SysSts {
+    placeholder: boolean;
 }
 export interface TaskData {
     description: string;
@@ -1590,20 +1601,20 @@ export interface TaskQueue {
     topPriority: number;
 }
 export interface UdpInterfaceCfg {
-    Last3DigitsOfIpcIpAddr: number;
-    ListenPort: number;
-    TargetIpAddress: string;
-    TargetPort: number;
+    last3DigitsOfIpcIpAddr: number;
+    listenPort: number;
+    targetIpAddress: string;
+    targetPort: number;
 }
 export interface UdpCfg {
-    DeviceIdArray: Array<number>;
-    HeartbeatTimeoutSec: number;
+    deviceIdArray: Array<number>;
+    heartbeatTimeoutSec: number;
     udpStatusDataSchemaVersion: number;
-    UpdInterfaceCfg: UdpInterfaceCfg;
+    updInterfaceCfg: UdpInterfaceCfg;
 }
 export interface UdpSts {
-    IncomingDataIsRecent: boolean;
-    UdpPeerIsRunning: boolean;
+    incomingDataIsRecent: boolean;
+    udpPeerIsRunning: boolean;
 }
 export interface ExtServiceCfg {
     triggerErrorIfLostHeartbeat: boolean;
@@ -1627,25 +1638,25 @@ export interface VisCfg {
     numCameras: number;
 }
 export interface IExtServiceInputs {
-    ActiveTaskId: number;
-    ErrorId: number;
+    activeTaskId: number;
+    errorId: number;
     flipBit: boolean;
     heartbeatVal: number;
     lastTaskId: number;
-    StepNum: number;
-    TaskStepNum: number;
-    UniqueTaskActiveId: number;
+    stepNum: number;
+    taskStepNum: number;
+    uniqueTaskActiveId: number;
 }
 export interface IExtServiceOutputs {
     deviceCmdReqId: number;
-    ExecMethodReqId: number;
+    execMethodReqId: number;
     heartbeatVal: number;
-    TaskParam0: number;
-    TaskParam1: number;
-    TaskParam2: number;
-    TaskParam3: number;
-    TaskReqId: number;
-    UniqueTaskReqId: number;
+    taskParam0: number;
+    taskParam1: number;
+    taskParam2: number;
+    taskParam3: number;
+    taskReqId: number;
+    uniqueTaskReqId: number;
 }
 export interface IExtService {
     i: IExtServiceInputs;
@@ -1653,100 +1664,104 @@ export interface IExtService {
 }
 export interface VisSts {
     allDisconnected: boolean;
-    CameraStates: Array<CameraStatus>;
-    Cfg: VisCfg;
-    ExtServiceCfg: ExtServiceCfg;
-    IExtService: IExtService;
+    cameraStates: Array<CameraStatus>;
+    cfg: VisCfg;
+    extServiceCfg: ExtServiceCfg;
+    iExtService: IExtService;
     isConnected: boolean;
     isRecording: boolean;
-    PluggedInSerialNumbers: Array<string>;
+    pluggedInSerialNumbers: Array<string>;
 }
 
 export type Machine_00251 = {
-    AbbCfg: RctrlCfg;
-    AbbHmiManual: RctrlHmiManual;
-    AbbSts: RctrlSts;
-    ActiveRecipe: RecipeData;
-    Clamp_sCfg: TwoPosCfg;
+    abbCfg: RctrlCfg;
+    abbHmiManual: RctrlHmiManual;
+    abbSts: RctrlSts;
+    activeRecipe: RecipeData;
+    clamp_sCfg: TwoPosCfg;
     clamp_sSts: TwoPosSts;
-    Clamp_tCfg: TwoPosCfg;
+    clamp_tCfg: TwoPosCfg;
     clamp_tSts: TwoPosSts;
-    EoatCfg: TwoPosCfg;
-    EoatSts: TwoPosSts;
-    Fix_sCfg: TwoPosGantryCfg;
-    Fix_sSts: TwoPosGantrySts;
-    Fix_tCfg: TwoPosGantryCfg;
-    Fix_tSts: TwoPosGantrySts;
-    Flsb_sCfg: TwoPosCfg;
-    Flsb_sSts: TwoPosSts;
-    Flsb_tCfg: TwoPosCfg;
-    Flsb_tSts: TwoPosSts;
-    GripCfg: TwoPosCfg;
-    GripSts: TwoPosSts;
-    HmiCfg: HmiCfg;
-    HmiSts: HmiData;
+    eoatCfg: TwoPosCfg;
+    eoatSts: TwoPosSts;
+    fix_sCfg: TwoPosGantryCfg;
+    fix_sSts: TwoPosGantrySts;
+    fix_tCfg: TwoPosGantryCfg;
+    fix_tSts: TwoPosGantrySts;
+    flsb_sCfg: TwoPosCfg;
+    flsb_sSts: TwoPosSts;
+    flsb_tCfg: TwoPosCfg;
+    flsb_tSts: TwoPosSts;
+    gripCfg: TwoPosCfg;
+    gripSts: TwoPosSts;
+    hmiCfg: HmiCfg;
+    hmiSts: HmiData;
     inputs: inputs_00251;
-    Job: JobData;
+    job: JobData;
     outputs: outputs_00251;
-    PdmSts: PartDataStatus;
-    PotCfg: PotCfg;
-    PotSts: PotSts;
-    RecipeStore: RecipeStore;
-    RobCfg: RobCfg;
-    RobSts: RobSts;
-    SftyCfg: SftyCfg;
-    SftySts: SftySts;
-    SqueeCfg: AxisCfg;
-    SqueeSts: AxisSimpleSts;
-    TaskQueue: TaskQueue;
-    UdpCfg: UdpCfg;
-    UdpSts: UdpSts;
-    VisCfg: ExtServiceCfg;
-    VisSts: VisSts;
-    VisStsExtService: VisSts;
+    pdmSts: PartDataStatus;
+    potCfg: PotCfg;
+    potSts: PotSts;
+    recipeStore: RecipeStore;
+    robCfg: RobCfg;
+    robSts: RobSts;
+    sftyCfg: SftyCfg;
+    sftySts: SftySts;
+    squeeCfg: AxisCfg;
+    squeeSts: AxisSimpleSts;
+    sysCfg: SysCfg;
+    sysSts: SysSts;
+    taskQueue: TaskQueue;
+    udpCfg: UdpCfg;
+    udpSts: UdpSts;
+    visCfg: ExtServiceCfg;
+    visSts: VisSts;
+    visStsExtService: VisSts;
 };
 export type MachineTypeRoot = {
-    AbbCfg: RctrlCfg;
-    AbbHmiManual: RctrlHmiManual;
-    AbbSts: RctrlSts;
-    ActiveRecipe: RecipeData;
-    Clamp_sCfg: TwoPosCfg;
+    abbCfg: RctrlCfg;
+    abbHmiManual: RctrlHmiManual;
+    abbSts: RctrlSts;
+    activeRecipe: RecipeData;
+    clamp_sCfg: TwoPosCfg;
     clamp_sSts: TwoPosSts;
-    Clamp_tCfg: TwoPosCfg;
+    clamp_tCfg: TwoPosCfg;
     clamp_tSts: TwoPosSts;
-    EoatCfg: TwoPosCfg;
-    EoatSts: TwoPosSts;
-    Fix_sCfg: TwoPosGantryCfg;
-    Fix_sSts: TwoPosGantrySts;
-    Fix_tCfg: TwoPosGantryCfg;
-    Fix_tSts: TwoPosGantrySts;
-    Flsb_sCfg: TwoPosCfg;
-    Flsb_sSts: TwoPosSts;
-    Flsb_tCfg: TwoPosCfg;
-    Flsb_tSts: TwoPosSts;
-    GripCfg: TwoPosCfg;
-    GripSts: TwoPosSts;
-    HmiCfg: HmiCfg;
-    HmiSts: HmiData;
+    eoatCfg: TwoPosCfg;
+    eoatSts: TwoPosSts;
+    fix_sCfg: TwoPosGantryCfg;
+    fix_sSts: TwoPosGantrySts;
+    fix_tCfg: TwoPosGantryCfg;
+    fix_tSts: TwoPosGantrySts;
+    flsb_sCfg: TwoPosCfg;
+    flsb_sSts: TwoPosSts;
+    flsb_tCfg: TwoPosCfg;
+    flsb_tSts: TwoPosSts;
+    gripCfg: TwoPosCfg;
+    gripSts: TwoPosSts;
+    hmiCfg: HmiCfg;
+    hmiSts: HmiData;
     inputs: inputs_00251;
-    Job: JobData;
+    job: JobData;
     outputs: outputs_00251;
-    PdmSts: PartDataStatus;
-    PotCfg: PotCfg;
-    PotSts: PotSts;
-    RecipeStore: RecipeStore;
-    RobCfg: RobCfg;
-    RobSts: RobSts;
-    SftyCfg: SftyCfg;
-    SftySts: SftySts;
-    SqueeCfg: AxisCfg;
-    SqueeSts: AxisSimpleSts;
-    TaskQueue: TaskQueue;
-    UdpCfg: UdpCfg;
-    UdpSts: UdpSts;
-    VisCfg: ExtServiceCfg;
-    VisSts: VisSts;
-    VisStsExtService: VisSts;
+    pdmSts: PartDataStatus;
+    potCfg: PotCfg;
+    potSts: PotSts;
+    recipeStore: RecipeStore;
+    robCfg: RobCfg;
+    robSts: RobSts;
+    sftyCfg: SftyCfg;
+    sftySts: SftySts;
+    squeeCfg: AxisCfg;
+    squeeSts: AxisSimpleSts;
+    sysCfg: SysCfg;
+    sysSts: SysSts;
+    taskQueue: TaskQueue;
+    udpCfg: UdpCfg;
+    udpSts: UdpSts;
+    visCfg: ExtServiceCfg;
+    visSts: VisSts;
+    visStsExtService: VisSts;
 };
 export type Machine_00251RuntimeExcludedKeys = 'SyncClockReq' | 'ResetEthercat_REQ' | 'DeviceLogs' | 'RegisteredInputs' | 'Utilities' | 'RegisteredDevices' | 'Devices' | 'DeviceRegisteredActions' | 'SysFb';
 export type Machine_00251Runtime = Omit<Machine_00251, Machine_00251RuntimeExcludedKeys>;

@@ -21,6 +21,9 @@ COPY machine-bridge/package*.json ./machine-bridge/
 WORKDIR /workspaces/machine-bridge
 RUN npm install
 
+# Match the compose runtime user so mounted volumes are initialized writable.
+RUN chown -R 1000:1000 /workspaces/machine-bridge /workspaces/machine-sdk
+
 # Copy source code and config
 COPY machine-bridge/src ./src
 COPY machine-bridge/nodemon.json ./

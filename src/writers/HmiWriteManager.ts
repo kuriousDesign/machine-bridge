@@ -1,4 +1,4 @@
-import { DeviceActionRequestData, DeviceId, DeviceRegistration, getProjectMachineTag, MqttTopics, PlcNamespaces, TopicData } from '@kuriousdesign/machine-sdk';
+import { DeviceActionRequestData as SdkDeviceActionRequestData, DeviceId, DeviceRegistration, actionTypeToString, deviceIdToString, getProjectMachineTag, MqttTopics, PlcNamespaces, TopicData } from '@kuriousdesign/machine-sdk';
 
 import Config from '../shared/config';
 import MqttClientManager from '../shared/MqttClientManager';
@@ -48,16 +48,50 @@ function unwrapTopicPayload<T>(message: Buffer): T {
     return (envelope?.payload ?? envelope) as T;
 }
 
-function isValidActionRequest(request: Partial<DeviceActionRequestData> | null | undefined): request is DeviceActionRequestData {
+type LowerCamelActionRequest = {
+    actionId?: number;
+    actionType?: number;
+    paramArray?: number[];
+    senderId?: number;
+    uniqueActionRequestId?: number;
+};
+
+function normalizeActionRequest(
+    request: Partial<SdkDeviceActionRequestData> | LowerCamelActionRequest | null | undefined,
+): SdkDeviceActionRequestData | null {
     if (!request) {
-        return false;
+        return null;
     }
 
-    if (!Number.isFinite(request.ActionType) || !Number.isFinite(request.ActionId)) {
-        return false;
+    const pascalRequest = request as Partial<SdkDeviceActionRequestData>;
+    const lowerCamelRequest = request as LowerCamelActionRequest;
+
+    const actionType = pascalRequest.ActionType ?? lowerCamelRequest.actionType;
+    const actionId = pascalRequest.ActionId ?? lowerCamelRequest.actionId;
+    const paramArray = pascalRequest.ParamArray ?? lowerCamelRequest.paramArray;
+    const senderId = pascalRequest.SenderId ?? lowerCamelRequest.senderId ?? DeviceId.HMI;
+    const uniqueActionRequestId = pascalRequest.UniqueActionRequestId ?? lowerCamelRequest.uniqueActionRequestId ?? 0;
+
+    if (!Number.isFinite(actionType) || !Number.isFinite(actionId) || !Array.isArray(paramArray)) {
+        return null;
     }
 
-    return Array.isArray(request.ParamArray);
+    const normalizedActionType = actionType as SdkDeviceActionRequestData['ActionType'];
+    const normalizedActionId = actionId as number;
+
+    return {
+        UniqueActionRequestId: uniqueActionRequestId,
+        SenderId: senderId,
+        ActionType: normalizedActionType,
+        ActionId: normalizedActionId,
+        ParamArray: paramArray,
+    };
+}
+
+function formatDeviceLabel(deviceMap: Map<number, DeviceRegistration>, deviceId: number): string {
+    const device = deviceMap.get(deviceId);
+    const mnemonic = device?.mnemonic?.trim() || deviceIdToString(deviceId);
+    return `${mnemonic}(${deviceId})`;
 }
 
 const HMI_WRITE_RECIPE_TOPIC = MqttTopics.HMI_WRITE_RECIPE;
@@ -158,9 +192,10 @@ export default class HmiWriteManager {
         this.actionQueue = this.actionQueue
             .then(async () => {
                 const envelope = JSON.parse(message.toString()) as Partial<TopicData>;
-                const request = (envelope?.payload ?? envelope) as Partial<DeviceActionRequestData>;
+                const rawRequest = (envelope?.payload ?? envelope) as Partial<SdkDeviceActionRequestData> | LowerCamelActionRequest;
+                const request = normalizeActionRequest(rawRequest);
 
-                if (!isValidActionRequest(request)) {
+                if (!request) {
                     console.warn('[HMI_MANAGER] Ignoring invalid HMI action request payload:', envelope);
                     return;
                 }
@@ -313,7 +348,7 @@ export default class HmiWriteManager {
         await this.actionQueue;
     }
 
-    private async handleActionRequest(topic: string, request: DeviceActionRequestData): Promise<void> {
+    private async handleActionRequest(topic: string, request: SdkDeviceActionRequestData): Promise<void> {
         if (!this.dependencies) {
             throw new Error('HMI manager dependencies are not configured');
         }
@@ -324,13 +359,20 @@ export default class HmiWriteManager {
             return;
         }
 
-        const device = this.dependencies.getDeviceMap().get(deviceId);
+        const deviceMap = this.dependencies.getDeviceMap();
+        const device = deviceMap.get(deviceId);
         if (!device) {
             console.error('[HMI_MANAGER] No device found for deviceId:', deviceId);
             return;
         }
 
-        console.log('[HMI_MANAGER] Handling HMI Action Request for device:', device.mnemonic);
+        const senderLabel = formatDeviceLabel(deviceMap, request.SenderId);
+        const targetLabel = formatDeviceLabel(deviceMap, deviceId);
+        const actionTypeLabel = actionTypeToString(request.ActionType);
+
+        console.log(
+            `[HMI_MANAGER] Handling HMI Action Request ${senderLabel} -> ${targetLabel} type=${actionTypeLabel}(${request.ActionType}) actionId=${request.ActionId}`,
+        );
         try {
             await this.opcuaWriteSession.ensureConnected();
             const driver = this.opcuaWriteSession.getDriver();
@@ -339,7 +381,11 @@ export default class HmiWriteManager {
                 return;
             }
 
-            await driver.requestAction(deviceId, request.ActionType, request.ActionId, request.ParamArray);
+            await driver.requestAction(deviceId, request.ActionType, request.ActionId, request.ParamArray, {
+                senderId: request.SenderId,
+                senderLabel,
+                targetLabel,
+            });
         } catch (error) {
             await this.handleSessionFailure(`HMI action request failed for topic ${topic}`, error);
             throw error;

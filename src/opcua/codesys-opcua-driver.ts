@@ -1,5 +1,5 @@
 import { ClientSession, Variant, AttributeIds, DataType, VariantArrayType, ReadValueIdOptions, StatusCodes, DataValue } from "node-opcua";
-import { ActionTypes, BaseMachineBootstrapTags, BaseMachinePollingTags, initialApiOpcuaReqData, DeviceCmds, States, ApiOpcuaReqData, DeviceActionRequestData, ApiReqRespStates, AxisProcesses, DeviceConstants, PlcNamespaces, apiReqRespStateToString, Device, getProjectMachineTag, initialDevice, initialDeviceActionRequestData } from "@kuriousdesign/machine-sdk";
+import { ActionTypes, BaseMachineBootstrapTags, BaseMachinePollingTags, initialApiOpcuaReqData, DeviceCmds, States, ApiOpcuaReqData, DeviceActionRequestData, ApiReqRespStates, AxisProcesses, DeviceConstants, PlcNamespaces, actionTypeToString, apiReqRespStateToString, deviceIdToString, Device, getProjectMachineTag, initialDevice, initialDeviceActionRequestData } from "@kuriousdesign/machine-sdk";
 import { read, write } from "fs";
 import { writeExtensionObject } from "./opcua-helpers";
 
@@ -15,6 +15,16 @@ type RuntimeWritePlanItem = {
     tag: string;
     dataType: DataType;
     value: any;
+};
+
+type EnumDefinitionLike = {
+    fields?: Array<{ value?: unknown }>;
+};
+
+type ActionRequestLogContext = {
+    senderId?: number;
+    senderLabel?: string;
+    targetLabel?: string;
 };
 
 
@@ -278,14 +288,64 @@ export default class CodesysOpcuaDriver {
                 attributeId: AttributeIds.DataType
             };
             const dataValue: DataValue = await this.session.read(readValueOptions);
-            const browseResult = await this.session.browse(nodeId);
 
             if (dataValue.statusCode === StatusCodes.Good) {
-                const dataType = dataValue.value.value.value;
-                if (dataType === 3013) {
-                    return DataType.String;
+                const rawDataType = dataValue.value.value;
+
+                if (typeof rawDataType === 'number') {
+                    if (rawDataType === 3013) {
+                        return DataType.String;
+                    }
+
+                    return rawDataType as DataType;
                 }
-                return dataValue.value.value.value as DataType;
+
+                const nodeIdValue = rawDataType as { namespace?: number; value?: unknown; toString?: () => string } | null;
+                const rawNodeValue = nodeIdValue?.value;
+
+                if (typeof rawNodeValue === 'number') {
+                    if (nodeIdValue?.namespace === 0) {
+                        return rawNodeValue as DataType;
+                    }
+
+                    if (rawNodeValue === 3013) {
+                        return DataType.String;
+                    }
+                }
+
+                const dataTypeNodeId = rawDataType && typeof (rawDataType as { toString?: () => string }).toString === 'function'
+                    ? (rawDataType as { toString: () => string }).toString()
+                    : null;
+
+                if (dataTypeNodeId) {
+                    const definitionValue = await this.session.read({
+                        nodeId: dataTypeNodeId,
+                        attributeId: AttributeIds.DataTypeDefinition,
+                    });
+
+                    if (definitionValue.statusCode === StatusCodes.Good) {
+                        const definition = definitionValue.value.value as EnumDefinitionLike | null;
+                        if (definition && Array.isArray(definition.fields) && definition.fields.every((field) => field && typeof field === 'object' && 'value' in field)) {
+                            return DataType.Int32;
+                        }
+                    }
+                }
+
+                const valueTypeValue = await this.session.read({
+                    nodeId,
+                    attributeId: AttributeIds.Value,
+                });
+
+                if (valueTypeValue.statusCode === StatusCodes.Good && valueTypeValue.value) {
+                    const variantDataType = valueTypeValue.value.dataType;
+                    if (variantDataType !== DataType.Null) {
+                        console.debug(`[OPCUA] Resolved writable data type for ${tag} via live Value variant: ${DataType[variantDataType]} (${variantDataType})`);
+                        return variantDataType;
+                    }
+                }
+
+                console.warn(`Unsupported OPC UA data type for ${tag}: ${dataTypeNodeId ?? String(rawDataType)}`);
+                return null;
             } else {
                 console.warn(`Failed to read OPC UA data type from ${tag}: ${dataValue.statusCode}`);
                 return null;
@@ -396,6 +456,7 @@ export default class CodesysOpcuaDriver {
         const dataType = await this.readTagDataType(normalizedTag);
         if (dataType !== null) {
             this.cachedTagDataTypes.set(normalizedTag, dataType);
+            console.debug(`[OPCUA] Cached writable data type for ${normalizedTag}: ${DataType[dataType]} (${dataType})`);
         }
 
         return dataType;
@@ -577,8 +638,14 @@ export default class CodesysOpcuaDriver {
         actionType: ActionTypes,
         actionId: number,
         paramArray: number[] = Array(DeviceConstants.MAX_NUM_PARAMS).fill(0.0),
+        logContext: ActionRequestLogContext = {},
     ): Promise<{ success: boolean; message: string }> {
-        console.log(`Requesting action ${actionType} ${actionId} on device ${targetDeviceId}`);
+        const senderId = logContext.senderId ?? this.id;
+        const senderLabel = logContext.senderLabel ?? `${deviceIdToString(senderId)}(${senderId})`;
+        const targetLabel = logContext.targetLabel ?? `${deviceIdToString(targetDeviceId)}(${targetDeviceId})`;
+        const actionTypeLabel = actionTypeToString(actionType);
+
+        console.log(`Requesting ${actionTypeLabel}(${actionType}) actionId=${actionId} ${senderLabel} -> ${targetLabel}`);
 
         // Check if we have control of target device
         const commanderTag = `${this.getDeviceNodeId(targetDeviceId)}.Is.CommanderId`;
@@ -586,7 +653,7 @@ export default class CodesysOpcuaDriver {
 
         if (commanderId !== this.id) {
             if (!process.env.IGNORE_TAKE_CONTROL && !(actionType === ActionTypes.CMD && actionId === DeviceCmds.TAKE_CONTROL)) {
-                console.warn(`Requesting action ${actionType} ${actionId} on device ${targetDeviceId} but we don't have control`);
+                console.warn(`Requesting ${actionTypeLabel}(${actionType}) actionId=${actionId} ${senderLabel} -> ${targetLabel} but commander is ${commanderId}`);
                 return {
                     success: false,
                     message: `We don't have control of target device ${targetDeviceId}, current commander is ${commanderId}`
@@ -597,9 +664,16 @@ export default class CodesysOpcuaDriver {
         //console.log(`We have control of device ${targetDeviceId}, proceeding with action request`);
 
         //console.log(`Writing sts to WRITING`);
-        const stsTag = `${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.Sts`;
+        const apiReqBaseTag = `${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}`;
 
-        await this.writeTag(stsTag, ApiReqRespStates.WRITING, DataType.Int16);
+        await this.writeTagList([
+            {
+                tag: apiReqBaseTag,
+                value: {
+                    Sts: ApiReqRespStates.WRITING,
+                },
+            },
+        ]);
         //console.log(`Set ${stsTag} to WRITING`);
 
         //await this.writeTagV2(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData`, initialDeviceActionRequestData);
@@ -613,7 +687,7 @@ export default class CodesysOpcuaDriver {
         this.uniqueActionRequestCtr += 1;
         this.uniqueActionRequestCtr %= 255;
         const uniqueActionRequestId = this.id * 1000 + this.uniqueActionRequestCtr;
-        const DeviceActionRequestData: DeviceActionRequestData = {
+        const deviceActionRequestData: DeviceActionRequestData = {
             UniqueActionRequestId: uniqueActionRequestId,
             SenderId: this.id,
             ActionType: actionType,
@@ -621,30 +695,43 @@ export default class CodesysOpcuaDriver {
             ParamArray: paddedParamArray
         };
 
+        const plcActionRequestData = {
+            UniqueActionRequestId: deviceActionRequestData.UniqueActionRequestId,
+            SenderId: deviceActionRequestData.SenderId,
+            ActionType: deviceActionRequestData.ActionType,
+            ActionId: deviceActionRequestData.ActionId,
+            ParamArray: deviceActionRequestData.ParamArray,
+        };
 
-        // 4. Write action request data
-        this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.UniqueActionRequestId`, DeviceActionRequestData.UniqueActionRequestId, DataType.Int32);
-        this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.SenderId`, DeviceActionRequestData.SenderId);
-        this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.ActionType`, DeviceActionRequestData.ActionType);
-        this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.ActionId`, DeviceActionRequestData.ActionId);
-
-        // Write all parameters using the constant
-        for (let i = 0; i < DeviceConstants.MAX_NUM_PARAMS; i++) {
-            this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.ActionRequestData.ParamArray[${i}]`, DeviceActionRequestData.ParamArray[i], DataType.Double);
-        }
+        // 4. Write action request data using runtime data type resolution
+        await this.writeTagList([
+            {
+                tag: `${apiReqBaseTag}.ActionRequestData`,
+                value: plcActionRequestData,
+            },
+        ]);
 
         // 5. Fill API data
         this.request = {
             id: uniqueActionRequestId,
             checkSum: 0, // Simplified checksum
-            actionRequestData: DeviceActionRequestData,
+            actionRequestData: deviceActionRequestData,
             sts: ApiReqRespStates.REQUEST_READY
         };
 
-        // 6. Write API data
-        this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.id`, this.request.id, DataType.Int32);
-        this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.checkSum`, this.request.checkSum);
-        this.writeTag(`${this.getDeviceNodeId(targetDeviceId)}.${this.apiReqTag}.Sts`, this.request.sts);
+        const plcApiRequestState = {
+            id: this.request.id,
+            checkSum: this.request.checkSum,
+            Sts: this.request.sts,
+        };
+
+        // 6. Write API data using runtime data type resolution
+        await this.writeTagList([
+            {
+                tag: apiReqBaseTag,
+                value: plcApiRequestState,
+            },
+        ]);
 
         // 7. Wait for response
         return await this.awaitApiResponse(targetDeviceId, this.request.id);

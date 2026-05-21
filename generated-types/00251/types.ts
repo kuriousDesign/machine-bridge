@@ -5,7 +5,7 @@
 export const machineTypeSource = {
     "controllerName": "CODESYS Control for Linux SL",
     "endpoint": "opc.tcp://127.0.0.1:4840",
-    "generatedAt": "2026-05-20T18:49:15.269Z",
+    "generatedAt": "2026-05-20T21:56:57.799Z",
     "rootNodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00251",
     "rootTag": "Machine_00251"
 } as const;
@@ -490,9 +490,18 @@ export interface AxisSts {
     travelLimitNegative: number;
     travelLimitPositive: number;
 }
+export enum ActionTypes {
+    MISSION = 0,
+    CMD = 1,
+    TASK = 2,
+    PROCESS = 3,
+    EXEC_METHOD = 4,
+    SCRIPT = 5,
+    COUNT = 6,
+}
 export interface DeviceActionRequestData {
     actionId: number;
-    actionType: number;
+    actionType: ActionTypes;
     paramArray: Array<number>;
     senderId: number;
     uniqueActionRequestId: number;
@@ -561,13 +570,90 @@ export interface DeviceInstants {
     instantReset_ON: boolean;
     instantStop_ON: boolean;
 }
+export enum Colors {
+    BLACK = 0,
+    RED = 1,
+    ORANGE = 2,
+    YELLOW = 3,
+    GREEN = 4,
+    BLUE = 5,
+    INDIGO = 6,
+    VIOLET = 7,
+    GRAY = 8,
+    WHITE = 9,
+    LIGHTBLACK = 10,
+    LIGHTRED = 11,
+    LIGHTORANGE = 12,
+    LIGHTYELLOW = 13,
+    LIGHTGREEN = 14,
+    LIGHTBLUE = 15,
+    LIGHTINDIGO = 16,
+    LIGHTVIOLET = 17,
+    LIGHTGRAY = 18,
+    LIGHTWHITE = 19,
+    DARKRED = 201,
+    DARKYELLOW = 203,
+    DARKGRAY = 208,
+    OPAQUEWHITE = 309,
+    LIGHT = 1001,
+    DARK = 1002,
+    ACTIONBTN1 = 21,
+    ACTIONBTN2 = 22,
+    ACTIONBTN3 = 23,
+    ACTIONBTN4 = 24,
+    ACTIONBTN5 = 25,
+    ACTIONBTN6 = 26,
+    GOOD = 31,
+    WARN = 32,
+    ERROR = 33,
+    KILLED = 40,
+    INACTIVE = 41,
+    RESETTING = 42,
+    IDLE = 43,
+    RUNNING = 44,
+    DONE = 45,
+    ABORTING = 46,
+    MANUAL = 47,
+    PAUSED = 48,
+    FAULTED = 49,
+    STOPPING = 440,
+    TASKDONE = 50,
+    TASKACTIVE = 51,
+    TASKFUTURE = 52,
+    FANUCYELLOW = 60,
+    EMPTY = 100,
+    PROCESSING = 101,
+    RAW = 102,
+    DEBURRED = 103,
+    MACHINED = 104,
+    WASHED = 105,
+    DRYED = 106,
+    SCRAPPED = 109,
+    FINISHED = 110,
+    DEBURRBOTTOMFINSHED = 111,
+    NEXTPART = 115,
+    DELETE = 116,
+}
+export enum States {
+    ABORTING = 4294967293,
+    ERROR = 4294967294,
+    KILLED = 4294967295,
+    INACTIVE = 0,
+    RESETTING = 50,
+    IDLE = 100,
+    RUNNING = 500,
+    STOPPING = 900,
+    PAUSED = 999,
+    DONE = 1000,
+    MANUAL = 1100,
+}
 export interface DeviceSts {
     aborting: boolean;
     allChildrenIdle: boolean;
     allChildrenIdleOrError: boolean;
     allChildrenInactive: boolean;
     allChildrenKilled: boolean;
-    colorCode: number;
+    colorCode: Colors;
     commanderId: number;
     done: boolean;
     error: boolean;
@@ -586,7 +672,7 @@ export interface DeviceSts {
     RRI: boolean;
     running: boolean;
     runningOrStopping: boolean;
-    state: number;
+    state: States;
     statusMsg: string;
     stepDescription: string;
     stepNum: number;

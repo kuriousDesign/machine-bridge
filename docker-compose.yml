@@ -1,6 +1,5 @@
 services:
   machine-bridge:
-    user: "${UID}:${GID}"
     # Rename service from 'app' to 'nextjs-app' for clarity, if needed (or keep 'app' if you prefer, but be consistent)
     build:
       context: ..
@@ -21,7 +20,7 @@ services:
 
     # Reinstall deps and rebuild local SDK on start so latest SDK changes are used
     command: >-
-      sh -lc "npm install && npm --prefix /workspaces/machine-sdk run build && npm run build && npm start"
+      sh -lc "./scripts/docker-start-bridge.sh"
 
     logging:
       driver: "json-file"

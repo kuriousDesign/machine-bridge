@@ -45,3 +45,6 @@ coverage/
 # Build output (if any)
 dist/
 build/
+
+# Machine-specific generated OPC UA item map
+TagTopics/bridge-opcua-items.json

@@ -2965,17 +2965,17 @@ export const machineTags: MachineTagNode = {
         Clamp_sCfg: {
             tag: "Machine_00251.Clamp_sCfg",
             children: {
-                LabelA: {
-                    tag: "Machine_00251.Clamp_sCfg.LabelA",
+                labelA: {
+                    tag: "Machine_00251.Clamp_sCfg.labelA",
                 },
-                LabelB: {
-                    tag: "Machine_00251.Clamp_sCfg.LabelB",
+                labelB: {
+                    tag: "Machine_00251.Clamp_sCfg.labelB",
                 },
-                MissingSensA: {
-                    tag: "Machine_00251.Clamp_sCfg.MissingSensA",
+                missingSensA: {
+                    tag: "Machine_00251.Clamp_sCfg.missingSensA",
                 },
-                MissingSensB: {
-                    tag: "Machine_00251.Clamp_sCfg.MissingSensB",
+                missingSensB: {
+                    tag: "Machine_00251.Clamp_sCfg.missingSensB",
                 },
                 moveTimeAtoB: {
                     tag: "Machine_00251.Clamp_sCfg.moveTimeAtoB",
@@ -3012,17 +3012,17 @@ export const machineTags: MachineTagNode = {
                 Cfg: {
                     tag: "Machine_00251.clamp_sSts.Cfg",
                     children: {
-                        LabelA: {
-                            tag: "Machine_00251.clamp_sSts.Cfg.LabelA",
+                        labelA: {
+                            tag: "Machine_00251.clamp_sSts.Cfg.labelA",
                         },
-                        LabelB: {
-                            tag: "Machine_00251.clamp_sSts.Cfg.LabelB",
+                        labelB: {
+                            tag: "Machine_00251.clamp_sSts.Cfg.labelB",
                         },
-                        MissingSensA: {
-                            tag: "Machine_00251.clamp_sSts.Cfg.MissingSensA",
+                        missingSensA: {
+                            tag: "Machine_00251.clamp_sSts.Cfg.missingSensA",
                         },
-                        MissingSensB: {
-                            tag: "Machine_00251.clamp_sSts.Cfg.MissingSensB",
+                        missingSensB: {
+                            tag: "Machine_00251.clamp_sSts.Cfg.missingSensB",
                         },
                         moveTimeAtoB: {
                             tag: "Machine_00251.clamp_sSts.Cfg.moveTimeAtoB",
@@ -3067,17 +3067,17 @@ export const machineTags: MachineTagNode = {
         Clamp_tCfg: {
             tag: "Machine_00251.Clamp_tCfg",
             children: {
-                LabelA: {
-                    tag: "Machine_00251.Clamp_tCfg.LabelA",
+                labelA: {
+                    tag: "Machine_00251.Clamp_tCfg.labelA",
                 },
-                LabelB: {
-                    tag: "Machine_00251.Clamp_tCfg.LabelB",
+                labelB: {
+                    tag: "Machine_00251.Clamp_tCfg.labelB",
                 },
-                MissingSensA: {
-                    tag: "Machine_00251.Clamp_tCfg.MissingSensA",
+                missingSensA: {
+                    tag: "Machine_00251.Clamp_tCfg.missingSensA",
                 },
-                MissingSensB: {
-                    tag: "Machine_00251.Clamp_tCfg.MissingSensB",
+                missingSensB: {
+                    tag: "Machine_00251.Clamp_tCfg.missingSensB",
                 },
                 moveTimeAtoB: {
                     tag: "Machine_00251.Clamp_tCfg.moveTimeAtoB",
@@ -3114,17 +3114,17 @@ export const machineTags: MachineTagNode = {
                 Cfg: {
                     tag: "Machine_00251.clamp_tSts.Cfg",
                     children: {
-                        LabelA: {
-                            tag: "Machine_00251.clamp_tSts.Cfg.LabelA",
+                        labelA: {
+                            tag: "Machine_00251.clamp_tSts.Cfg.labelA",
                         },
-                        LabelB: {
-                            tag: "Machine_00251.clamp_tSts.Cfg.LabelB",
+                        labelB: {
+                            tag: "Machine_00251.clamp_tSts.Cfg.labelB",
                         },
-                        MissingSensA: {
-                            tag: "Machine_00251.clamp_tSts.Cfg.MissingSensA",
+                        missingSensA: {
+                            tag: "Machine_00251.clamp_tSts.Cfg.missingSensA",
                         },
-                        MissingSensB: {
-                            tag: "Machine_00251.clamp_tSts.Cfg.MissingSensB",
+                        missingSensB: {
+                            tag: "Machine_00251.clamp_tSts.Cfg.missingSensB",
                         },
                         moveTimeAtoB: {
                             tag: "Machine_00251.clamp_tSts.Cfg.moveTimeAtoB",
@@ -3169,17 +3169,17 @@ export const machineTags: MachineTagNode = {
         EoatCfg: {
             tag: "Machine_00251.EoatCfg",
             children: {
-                LabelA: {
-                    tag: "Machine_00251.EoatCfg.LabelA",
+                labelA: {
+                    tag: "Machine_00251.EoatCfg.labelA",
                 },
-                LabelB: {
-                    tag: "Machine_00251.EoatCfg.LabelB",
+                labelB: {
+                    tag: "Machine_00251.EoatCfg.labelB",
                 },
-                MissingSensA: {
-                    tag: "Machine_00251.EoatCfg.MissingSensA",
+                missingSensA: {
+                    tag: "Machine_00251.EoatCfg.missingSensA",
                 },
-                MissingSensB: {
-                    tag: "Machine_00251.EoatCfg.MissingSensB",
+                missingSensB: {
+                    tag: "Machine_00251.EoatCfg.missingSensB",
                 },
                 moveTimeAtoB: {
                     tag: "Machine_00251.EoatCfg.moveTimeAtoB",
@@ -3216,17 +3216,17 @@ export const machineTags: MachineTagNode = {
                 Cfg: {
                     tag: "Machine_00251.EoatSts.Cfg",
                     children: {
-                        LabelA: {
-                            tag: "Machine_00251.EoatSts.Cfg.LabelA",
+                        labelA: {
+                            tag: "Machine_00251.EoatSts.Cfg.labelA",
                         },
-                        LabelB: {
-                            tag: "Machine_00251.EoatSts.Cfg.LabelB",
+                        labelB: {
+                            tag: "Machine_00251.EoatSts.Cfg.labelB",
                         },
-                        MissingSensA: {
-                            tag: "Machine_00251.EoatSts.Cfg.MissingSensA",
+                        missingSensA: {
+                            tag: "Machine_00251.EoatSts.Cfg.missingSensA",
                         },
-                        MissingSensB: {
-                            tag: "Machine_00251.EoatSts.Cfg.MissingSensB",
+                        missingSensB: {
+                            tag: "Machine_00251.EoatSts.Cfg.missingSensB",
                         },
                         moveTimeAtoB: {
                             tag: "Machine_00251.EoatSts.Cfg.moveTimeAtoB",
@@ -5071,17 +5071,17 @@ export const machineTags: MachineTagNode = {
         Flsb_sCfg: {
             tag: "Machine_00251.Flsb_sCfg",
             children: {
-                LabelA: {
-                    tag: "Machine_00251.Flsb_sCfg.LabelA",
+                labelA: {
+                    tag: "Machine_00251.Flsb_sCfg.labelA",
                 },
-                LabelB: {
-                    tag: "Machine_00251.Flsb_sCfg.LabelB",
+                labelB: {
+                    tag: "Machine_00251.Flsb_sCfg.labelB",
                 },
-                MissingSensA: {
-                    tag: "Machine_00251.Flsb_sCfg.MissingSensA",
+                missingSensA: {
+                    tag: "Machine_00251.Flsb_sCfg.missingSensA",
                 },
-                MissingSensB: {
-                    tag: "Machine_00251.Flsb_sCfg.MissingSensB",
+                missingSensB: {
+                    tag: "Machine_00251.Flsb_sCfg.missingSensB",
                 },
                 moveTimeAtoB: {
                     tag: "Machine_00251.Flsb_sCfg.moveTimeAtoB",
@@ -5118,17 +5118,17 @@ export const machineTags: MachineTagNode = {
                 Cfg: {
                     tag: "Machine_00251.Flsb_sSts.Cfg",
                     children: {
-                        LabelA: {
-                            tag: "Machine_00251.Flsb_sSts.Cfg.LabelA",
+                        labelA: {
+                            tag: "Machine_00251.Flsb_sSts.Cfg.labelA",
                         },
-                        LabelB: {
-                            tag: "Machine_00251.Flsb_sSts.Cfg.LabelB",
+                        labelB: {
+                            tag: "Machine_00251.Flsb_sSts.Cfg.labelB",
                         },
-                        MissingSensA: {
-                            tag: "Machine_00251.Flsb_sSts.Cfg.MissingSensA",
+                        missingSensA: {
+                            tag: "Machine_00251.Flsb_sSts.Cfg.missingSensA",
                         },
-                        MissingSensB: {
-                            tag: "Machine_00251.Flsb_sSts.Cfg.MissingSensB",
+                        missingSensB: {
+                            tag: "Machine_00251.Flsb_sSts.Cfg.missingSensB",
                         },
                         moveTimeAtoB: {
                             tag: "Machine_00251.Flsb_sSts.Cfg.moveTimeAtoB",
@@ -5173,17 +5173,17 @@ export const machineTags: MachineTagNode = {
         Flsb_tCfg: {
             tag: "Machine_00251.Flsb_tCfg",
             children: {
-                LabelA: {
-                    tag: "Machine_00251.Flsb_tCfg.LabelA",
+                labelA: {
+                    tag: "Machine_00251.Flsb_tCfg.labelA",
                 },
-                LabelB: {
-                    tag: "Machine_00251.Flsb_tCfg.LabelB",
+                labelB: {
+                    tag: "Machine_00251.Flsb_tCfg.labelB",
                 },
-                MissingSensA: {
-                    tag: "Machine_00251.Flsb_tCfg.MissingSensA",
+                missingSensA: {
+                    tag: "Machine_00251.Flsb_tCfg.missingSensA",
                 },
-                MissingSensB: {
-                    tag: "Machine_00251.Flsb_tCfg.MissingSensB",
+                missingSensB: {
+                    tag: "Machine_00251.Flsb_tCfg.missingSensB",
                 },
                 moveTimeAtoB: {
                     tag: "Machine_00251.Flsb_tCfg.moveTimeAtoB",
@@ -5220,17 +5220,17 @@ export const machineTags: MachineTagNode = {
                 Cfg: {
                     tag: "Machine_00251.Flsb_tSts.Cfg",
                     children: {
-                        LabelA: {
-                            tag: "Machine_00251.Flsb_tSts.Cfg.LabelA",
+                        labelA: {
+                            tag: "Machine_00251.Flsb_tSts.Cfg.labelA",
                         },
-                        LabelB: {
-                            tag: "Machine_00251.Flsb_tSts.Cfg.LabelB",
+                        labelB: {
+                            tag: "Machine_00251.Flsb_tSts.Cfg.labelB",
                         },
-                        MissingSensA: {
-                            tag: "Machine_00251.Flsb_tSts.Cfg.MissingSensA",
+                        missingSensA: {
+                            tag: "Machine_00251.Flsb_tSts.Cfg.missingSensA",
                         },
-                        MissingSensB: {
-                            tag: "Machine_00251.Flsb_tSts.Cfg.MissingSensB",
+                        missingSensB: {
+                            tag: "Machine_00251.Flsb_tSts.Cfg.missingSensB",
                         },
                         moveTimeAtoB: {
                             tag: "Machine_00251.Flsb_tSts.Cfg.moveTimeAtoB",
@@ -5275,17 +5275,17 @@ export const machineTags: MachineTagNode = {
         GripCfg: {
             tag: "Machine_00251.GripCfg",
             children: {
-                LabelA: {
-                    tag: "Machine_00251.GripCfg.LabelA",
+                labelA: {
+                    tag: "Machine_00251.GripCfg.labelA",
                 },
-                LabelB: {
-                    tag: "Machine_00251.GripCfg.LabelB",
+                labelB: {
+                    tag: "Machine_00251.GripCfg.labelB",
                 },
-                MissingSensA: {
-                    tag: "Machine_00251.GripCfg.MissingSensA",
+                missingSensA: {
+                    tag: "Machine_00251.GripCfg.missingSensA",
                 },
-                MissingSensB: {
-                    tag: "Machine_00251.GripCfg.MissingSensB",
+                missingSensB: {
+                    tag: "Machine_00251.GripCfg.missingSensB",
                 },
                 moveTimeAtoB: {
                     tag: "Machine_00251.GripCfg.moveTimeAtoB",
@@ -5322,17 +5322,17 @@ export const machineTags: MachineTagNode = {
                 Cfg: {
                     tag: "Machine_00251.GripSts.Cfg",
                     children: {
-                        LabelA: {
-                            tag: "Machine_00251.GripSts.Cfg.LabelA",
+                        labelA: {
+                            tag: "Machine_00251.GripSts.Cfg.labelA",
                         },
-                        LabelB: {
-                            tag: "Machine_00251.GripSts.Cfg.LabelB",
+                        labelB: {
+                            tag: "Machine_00251.GripSts.Cfg.labelB",
                         },
-                        MissingSensA: {
-                            tag: "Machine_00251.GripSts.Cfg.MissingSensA",
+                        missingSensA: {
+                            tag: "Machine_00251.GripSts.Cfg.missingSensA",
                         },
-                        MissingSensB: {
-                            tag: "Machine_00251.GripSts.Cfg.MissingSensB",
+                        missingSensB: {
+                            tag: "Machine_00251.GripSts.Cfg.missingSensB",
                         },
                         moveTimeAtoB: {
                             tag: "Machine_00251.GripSts.Cfg.moveTimeAtoB",

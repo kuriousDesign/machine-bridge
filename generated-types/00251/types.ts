@@ -5,7 +5,7 @@
 export const machineTypeSource = {
     "controllerName": "CODESYS Control for Linux SL",
     "endpoint": "opc.tcp://127.0.0.1:4840",
-    "generatedAt": "2026-05-22T14:21:58.237Z",
+    "generatedAt": "2026-05-27T18:59:20.016Z",
     "rootNodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00251",
     "rootTag": "Machine_00251"
 } as const;
@@ -991,6 +991,36 @@ export interface outputs_00251 {
     SQUEE: WeidmullerIoPwmOutput;
     SYS: SysOutputs;
 }
+export enum PartStates {
+    EMPTY = 0,
+    UNVALIDATEDRAW = 10,
+    RAW = 20,
+    STARTEDPREWEIGHING = 29,
+    PREWEIGHED = 30,
+    STARTEDAPPLYING = 31,
+    LINERAPPLIED = 40,
+    STARTEDLINERBRUSHING = 41,
+    LINERBRUSHED = 50,
+    STARTEDPHOTOGRAPHING = 61,
+    PHOTOGRAPHED = 70,
+    STARTEDPOSTWEIGHING = 71,
+    POSTWEIGHED = 80,
+    SCRAPPED = 900,
+    FAILED = 911,
+    PASSED = 1000,
+}
+export enum PartValidationStates {
+    NONE = 0,
+    SCRAPPED_GENERIC = 1,
+    SCRAPPED_LINER_APPLICATION_STARTED_BUT_NOT_FINISHED = 101,
+    SCRAPPED_LINER_BRUSHING_STARTED_BUT_NOT_FINISHED = 102,
+    SCRAPPED_FAILED_WEIGHT_TOO_LIGHT = 701,
+    SCRAPPED_FAILED_WEIGHT_TOO_HEAVY = 702,
+    SCRAPPED_FAILED_IMAGE_REVIEW_GENERAL = 800,
+    SCRAPPED_FAILED_IMAGE_REVIEW_GAPS_IN_SMEAR = 801,
+    SCRAPPED_FAILED_IMAGE_REVIEW_BUBBLES = 802,
+    PASSED = 1000,
+}
 export interface PartValidationData {
     linerWeight_g: number;
     postWeight_g: number;
@@ -998,14 +1028,14 @@ export interface PartValidationData {
     serialNumber: string;
     statusMsg: string;
     timestampVision_sec: number;
-    visionSts: number;
-    weightSts: number;
+    visionSts: PartValidationStates;
+    weightSts: PartValidationStates;
 }
 export interface PartData {
     fixtureLocationWhenLoaded: number;
     inFixture: boolean;
     loadedBadSensor: boolean;
-    processSts: number;
+    processSts: PartStates;
     validation: PartValidationData;
 }
 export interface PartDataStatus {

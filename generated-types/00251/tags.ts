@@ -10508,6 +10508,9 @@ export const machineTags: MachineTagNode = {
                 BatchId: {
                     tag: "Machine_00251.Job.BatchId",
                 },
+                BatchSts: {
+                    tag: "Machine_00251.Job.BatchSts",
+                },
                 GoodCnt: {
                     tag: "Machine_00251.Job.GoodCnt",
                 },

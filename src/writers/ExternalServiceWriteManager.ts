@@ -1,4 +1,5 @@
-import { DeviceId, DeviceRegistration, DeviceTypes, OptionalDevicePollingTags, TopicData } from '@kuriousdesign/machine-sdk';
+import { DeviceId, DeviceRegistration, DeviceTypes, TopicData } from '@kuriousdesign/machine-sdk';
+import { OptionalDevicePollingTags } from '../opcua/plc-tags';
 
 function isExternalServiceDevice(device: DeviceRegistration): boolean {
     return device.isExternalService || device.deviceType === DeviceTypes.ExtService;

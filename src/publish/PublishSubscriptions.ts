@@ -7,7 +7,7 @@ import {
     TimestampsToReturn,
 } from 'node-opcua';
 
-import { BaseMachinePollingTags, PlcNamespaces } from '@kuriousdesign/machine-sdk';
+import { BaseMachinePollingTags, PlcNamespaces } from '../opcua/plc-tags';
 
 import { ReadItemInfo, ReadItemValidationResult, validateReadItemsDetailed } from '../opcua/polling-items';
 import MqttClientManager from '../shared/MqttClientManager';

@@ -1,15 +1,17 @@
 import {
-    BaseDevicePollingTags,
-    BaseMachinePollingTags,
     buildFullTopicPath,
     DeviceRegistration,
+} from "@kuriousdesign/machine-sdk";
+import { ClientSession, ReadValueIdOptions, AttributeIds, StatusCodes } from "node-opcua-client";
+import Config from "../shared/config";
+import {
+    BaseDevicePollingTags,
+    BaseMachinePollingTags,
     OptionalDeviceBootstrapTags,
     OptionalDevicePollingTags,
     PlcNamespaces,
     ProjectMachinePollingTags,
-} from "@kuriousdesign/machine-sdk";
-import { ClientSession, ReadValueIdOptions, AttributeIds, StatusCodes } from "node-opcua-client";
-import Config from "../shared/config";
+} from "./plc-tags";
 
 export interface ReadItemInfo {
     tagId: string;

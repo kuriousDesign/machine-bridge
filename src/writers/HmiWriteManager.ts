@@ -1,7 +1,8 @@
-import { DeviceActionRequestData as SdkDeviceActionRequestData, DeviceId, DeviceRegistration, actionTypeToString, deviceIdToString, getProjectMachineTag, MqttTopics, PlcNamespaces, TopicData } from '@kuriousdesign/machine-sdk';
+import { DeviceActionRequestData as SdkDeviceActionRequestData, DeviceId, DeviceRegistration, actionTypeToString, deviceIdToString, MqttTopics, TopicData } from '@kuriousdesign/machine-sdk';
 
 import Config from '../shared/config';
 import MqttClientManager from '../shared/MqttClientManager';
+import { getProjectMachineTag, PlcNamespaces } from '../opcua/plc-tags';
 import OpcuaWriteSession from './OpcuaWriteSession';
 
 export enum HmiWriteManagerState {

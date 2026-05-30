@@ -22,8 +22,9 @@ import path from 'node:path';
 
 import Config from '../shared/config'; // <--- Use the central config
 
-import { BaseMachinePollingTags, DeviceId, DeviceRegistration, OptionalDevicePollingTags, initialKioskControlData, KioskControlData, MachineCfg, PlcNamespaces, TopicData } from '@kuriousdesign/machine-sdk';
+import { DeviceId, DeviceRegistration, initialKioskControlData, KioskControlData, MachineCfg, TopicData } from '@kuriousdesign/machine-sdk';
 import CodesysOpcuaDriver from '../opcua/codesys-opcua-driver';
+import { BaseMachinePollingTags, OptionalDevicePollingTags, PlcNamespaces } from '../opcua/plc-tags';
 import { ReadItemInfo, ReadItemValidationResult } from '../opcua/polling-items';
 import MqttClientManager from '../shared/MqttClientManager';
 import ExternalServiceWriteManager from '../writers/ExternalServiceWriteManager';
@@ -399,8 +400,8 @@ export default class PublishManagerCore {
         this.bootstrapReplayTopicMap.set(item.mqttTopic, payload);
     }
 
-    private isBootstrapReplayReadable(item: Pick<ReadItemInfo, 'mqttTopic'>): boolean {
-        return !item.mqttTopic.endsWith('/cfg');
+    private isBootstrapReplayReadable(_item: Pick<ReadItemInfo, 'mqttTopic'>): boolean {
+        return true;
     }
 
     private async primeBootstrapReplayTopics(items: ReadItemInfo[]): Promise<void> {

@@ -1,6 +1,7 @@
 import { ClientSession, Variant, AttributeIds, DataType, VariantArrayType, ReadValueIdOptions, StatusCodes, DataValue } from "node-opcua";
-import { ActionTypes, BaseMachineBootstrapTags, BaseMachinePollingTags, initialApiOpcuaReqData, DeviceCmds, States, ApiOpcuaReqData, DeviceActionRequestData, ApiReqRespStates, AxisProcesses, DeviceConstants, PlcNamespaces, actionTypeToString, apiReqRespStateToString, deviceIdToString, Device, getProjectMachineTag, initialDevice, initialDeviceActionRequestData } from "@kuriousdesign/machine-sdk";
+import { ActionTypes, initialApiOpcuaReqData, DeviceCmds, States, ApiOpcuaReqData, DeviceActionRequestData, ApiReqRespStates, AxisProcesses, DeviceConstants, actionTypeToString, apiReqRespStateToString, deviceIdToString, Device, initialDevice, initialDeviceActionRequestData } from "@kuriousdesign/machine-sdk";
 import { read, write } from "fs";
+import { BaseMachineBootstrapTags, BaseMachinePollingTags, getProjectMachineTag, PlcNamespaces } from "./plc-tags";
 import { writeExtensionObject } from "./opcua-helpers";
 
 // Debug: Log the imported ApiReqRespStates to verify its structure

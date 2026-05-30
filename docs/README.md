@@ -11,4 +11,4 @@ This folder documents the MQTT-facing hooks exposed by the bridge.
 
 - The bridge uses MQTT topics as its public API surface.
 - Most HMI-facing flows are request-by-topic and response-by-publish rather than HTTP-style request/response.
-- Topic names and payload shapes in this folder are derived from the current code in `src/` and `@kuriousdesign/machine-sdk`.
+- Topic names and payload shapes in this folder are derived from the current code in `src/`, including bridge-local PLC tag mapping in `src/opcua/plc-tags.ts`, plus shared contracts from `@kuriousdesign/machine-sdk`.

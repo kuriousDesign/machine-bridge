@@ -31,6 +31,8 @@ npm run sdk:use-npm && npm install
 
 When using `MACHINE_SDK_SOURCE=local`, the bridge resolves `@kuriousdesign/machine-sdk` from the local workspace folder.
 
+Bridge-specific PLC/OPC UA tag mapping is now owned by this repo in `src/opcua/plc-tags.ts`. The SDK still provides shared machine types, enums, MQTT topics, and other cross-repo contracts, but bridge polling/bootstrap tag names are no longer defined there.
+
 ### First-time setup
 
 1. Build the SDK:
@@ -60,6 +62,14 @@ Rebuild SDK, then restart bridge:
 
 ```bash
 cd ../machine-sdk && npm run build
+cd ../machine-bridge && npm run dev
+```
+
+### When you change bridge-local OPC UA tag mappings
+
+If you change `src/opcua/plc-tags.ts` or related bridge polling/bootstrap code, you only need to restart or rebuild the bridge. No SDK rebuild is required.
+
+```bash
 cd ../machine-bridge && npm run dev
 ```
 
@@ -112,6 +122,8 @@ This websocket server provides a cloud-based server to facilitate communication 
 # DOCUMENTATION
 - See [docs/README.md](docs/README.md) for bridge-specific documentation.
 - MQTT/API hook reference: [docs/mqtt-api-hooks.md](docs/mqtt-api-hooks.md)
+
+For PLC polling/bootstrap tag definitions used by the bridge, see `src/opcua/plc-tags.ts`.
 
 # CONNECTION
 the websocket server acts as a middleman between the machine data/control and hmi/dashboards

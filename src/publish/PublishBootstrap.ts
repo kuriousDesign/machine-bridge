@@ -1,7 +1,8 @@
 import { AttributeIds, ClientSession, StatusCodes } from 'node-opcua';
-import { BaseMachineBootstrapTags, DeviceRegistration, DeviceTypes, MachineCfg, PlcNamespaces, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
+import { DeviceRegistration, DeviceTypes, MachineCfg, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
 
 import { getDeviceReadItems, getMachineReadItems, getOptionalDeviceBootstrapReadItems, ReadItemInfo, ReadItemValidationResult, validateReadItemsDetailed } from '../opcua/polling-items';
+import { BaseMachineBootstrapTags, PlcNamespaces } from '../opcua/plc-tags';
 import Config from '../shared/config';
 import { logBootstrapReadItemBatch, logBootstrapStep, logPollingReadItemBatch, logValidatedPollingItemBatch } from './BootstrapLogHelpers';
 

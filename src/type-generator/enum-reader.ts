@@ -23,6 +23,10 @@ export interface OpcuaEnumMetadata {
     source: 'EnumStrings' | 'EnumValues';
 }
 
+const enumDataTypeNodeCache = new Map<string, ReferenceDescription | null>();
+const enumMetadataByNodeIdCache = new Map<string, OpcuaEnumMetadata | null>();
+const enumMetadataByLabelCache = new Map<string, OpcuaEnumMetadata | null>();
+
 function toQualifiedNameText(value: QualifiedNameLike | undefined): string {
     if (typeof value === 'string') {
         return value;
@@ -110,6 +114,11 @@ function parseEnumStrings(enumStringsValue: unknown): OpcuaEnumEntry[] {
 }
 
 export async function findEnumDataTypeNode(session: ClientSession, label: string): Promise<ReferenceDescription | null> {
+    const cachedReference = enumDataTypeNodeCache.get(label);
+    if (cachedReference !== undefined) {
+        return cachedReference;
+    }
+
     const visited = new Set<string>();
     const queue: string[] = [`ns=0;i=${ObjectIds.DataTypesFolder}`];
 
@@ -127,6 +136,7 @@ export async function findEnumDataTypeNode(session: ClientSession, label: string
             const referenceNodeId = reference.nodeId.toString();
 
             if (reference.nodeClass === NodeClass.DataType && browseNameText === label) {
+                enumDataTypeNodeCache.set(label, reference);
                 return reference;
             }
 
@@ -136,16 +146,19 @@ export async function findEnumDataTypeNode(session: ClientSession, label: string
         }
     }
 
+    enumDataTypeNodeCache.set(label, null);
     return null;
 }
 
-export async function readEnumMetadata(session: ClientSession, enumLabel: string): Promise<OpcuaEnumMetadata | null> {
-    const enumReference = await findEnumDataTypeNode(session, enumLabel);
-    if (!enumReference) {
-        return null;
+export async function readEnumMetadataByNodeId(
+    session: ClientSession,
+    enumNodeId: string,
+): Promise<OpcuaEnumMetadata | null> {
+    const cachedMetadata = enumMetadataByNodeIdCache.get(enumNodeId);
+    if (cachedMetadata !== undefined) {
+        return cachedMetadata;
     }
 
-    const enumNodeId = enumReference.nodeId.toString();
     const children = await browseChildren(session, enumNodeId);
     const enumValuesNode = children.find((child) => toQualifiedNameText(child.browseName) === 'EnumValues');
     const enumStringsNode = children.find((child) => toQualifiedNameText(child.browseName) === 'EnumStrings');
@@ -155,11 +168,13 @@ export async function readEnumMetadata(session: ClientSession, enumLabel: string
         if (dataValue.statusCode === StatusCodes.Good) {
             const entries = parseEnumValues(dataValue.value.value);
             if (entries.length > 0) {
-                return {
+                const metadata = {
                     entries,
                     nodeId: enumNodeId,
-                    source: 'EnumValues',
+                    source: 'EnumValues' as const,
                 };
+                enumMetadataByNodeIdCache.set(enumNodeId, metadata);
+                return metadata;
             }
         }
     }
@@ -169,18 +184,42 @@ export async function readEnumMetadata(session: ClientSession, enumLabel: string
         if (dataValue.statusCode === StatusCodes.Good) {
             const entries = parseEnumStrings(dataValue.value.value);
             if (entries.length > 0) {
-                return {
+                const metadata = {
                     entries,
                     nodeId: enumNodeId,
-                    source: 'EnumStrings',
+                    source: 'EnumStrings' as const,
                 };
+                enumMetadataByNodeIdCache.set(enumNodeId, metadata);
+                return metadata;
             }
         }
     }
 
-    return {
-        entries: [],
-        nodeId: enumNodeId,
-        source: enumValuesNode ? 'EnumValues' : 'EnumStrings',
-    };
+    const metadata = enumValuesNode || enumStringsNode
+        ? {
+            entries: [],
+            nodeId: enumNodeId,
+            source: enumValuesNode ? 'EnumValues' as const : 'EnumStrings' as const,
+        }
+        : null;
+
+    enumMetadataByNodeIdCache.set(enumNodeId, metadata);
+    return metadata;
+}
+
+export async function readEnumMetadata(session: ClientSession, enumLabel: string): Promise<OpcuaEnumMetadata | null> {
+    const cachedMetadata = enumMetadataByLabelCache.get(enumLabel);
+    if (cachedMetadata !== undefined) {
+        return cachedMetadata;
+    }
+
+    const enumReference = await findEnumDataTypeNode(session, enumLabel);
+    if (!enumReference) {
+        enumMetadataByLabelCache.set(enumLabel, null);
+        return null;
+    }
+
+    const metadata = await readEnumMetadataByNodeId(session, enumReference.nodeId.toString());
+    enumMetadataByLabelCache.set(enumLabel, metadata);
+    return metadata;
 }

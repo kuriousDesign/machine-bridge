@@ -184,36 +184,6 @@ export async function getDeviceReadItems(
 }
 
 
-export const MachineHwTagsApolloTubeLiner00251 = {
-    WeidmullerPlcIoRack: 'weidmullerPlcIoRack',
-};
-
-export function getMachineHwReadItems(tags: object): ReadItemInfo[] {
-    const itemsToRead: ReadItemInfo[] = [];
-    const baseTag = 'MachineHw';
-    const baseTopic = 'MachineHw'.toLowerCase() + '/';
-    Object.entries(tags).forEach(([key, subTag]) => {
-        const tag = baseTag + '.' + subTag;
-        const topic = baseTopic + subTag.toLowerCase();
-        itemsToRead.push({
-            tagId: tag,
-            nodeId: Config.NODE_LIST_PREFIX + tag,
-            mqttTopic: topic,
-            last_publish_time: 0,
-            update_period: 1,
-            value: null,
-            attributeId: AttributeIds.Value,
-        });
-    });
-    if (Config.SHOW_SUCCESSFUL_TAG_SUBSCRIPTION_LOGS) {
-        itemsToRead.map((item) => {
-            console.log(`[OPCUA] Added MachineHw Polling Item - TagId: ${item.tagId}, MqttTopic: ${item.mqttTopic}, UpdatePeriod: ${item.update_period}`);
-        });
-    }
-    return itemsToRead;
-}
-
-
 export function getMachineReadItems(machineId: string): ReadItemInfo[] {
     const itemsToRead: ReadItemInfo[] = [];
     Object.entries(BaseMachinePollingTags).forEach(([key, subTag]) => {
@@ -231,8 +201,6 @@ export function getMachineReadItems(machineId: string): ReadItemInfo[] {
             console.log(`[OPCUA] Added Machine Polling Item - TagId: ${item.tagId}, MqttTopic: ${item.mqttTopic}, UpdatePeriod: ${item.update_period}`);
         });
     }
-    const hwItems = getMachineHwReadItems(MachineHwTagsApolloTubeLiner00251);
-    hwItems.forEach((item) => itemsToRead.push(item));
-    
+
     return itemsToRead;
 }

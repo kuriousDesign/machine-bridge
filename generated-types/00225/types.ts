@@ -5,7 +5,7 @@
 export const machineTypeSource = {
     "controllerName": "CODESYS Control for Linux SL",
     "endpoint": "opc.tcp://127.0.0.1:4840",
-    "generatedAt": "2026-06-10T03:57:32.394Z",
+    "generatedAt": "2026-06-10T21:16:06.883Z",
     "rootNodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00225",
     "rootTag": "Machine_00225"
 } as const;
@@ -52,15 +52,21 @@ export interface AxisTeknicDiscreteIoSts {
     isStill: boolean;
     permA: boolean;
     targetSpeedDisplay: number;
-    targetSpeedId: MotionProfiles;
+    targetSpeedId: number;
 }
 export interface ConCfg {
     placeholder: boolean;
 }
 export interface ConSts {
+    currentClampPosition: number;
+    cutEndingClamp: number;
+    cutEndingPosition: number;
+    cutStartingClamp: number;
+    cutStartingPosition: number;
     cuttingActive: boolean;
     dustIsSettling: boolean;
     dustSettlingTimeRemainingSec: number;
+    targetCuttingFeedRateDisplay: string;
 }
 export interface AxisMotionProfileData {
     acceleration: number;
@@ -1314,7 +1320,7 @@ export enum PartStates {
     EMPTY = 0,
     UNVALIDATEDRAW = 10,
     RAW = 20,
-    STARTEDCUTTING = 31,
+    CUTTING = 31,
     CUT = 40,
     SCRAPPED = 900,
     FAILED = 911,

@@ -150,6 +150,21 @@ export const machineTags: MachineTagNode = {
         ConSts: {
             tag: "Machine_00225.ConSts",
             children: {
+                CurrentClampPosition: {
+                    tag: "Machine_00225.ConSts.CurrentClampPosition",
+                },
+                CutEndingClamp: {
+                    tag: "Machine_00225.ConSts.CutEndingClamp",
+                },
+                CutEndingPosition: {
+                    tag: "Machine_00225.ConSts.CutEndingPosition",
+                },
+                CutStartingClamp: {
+                    tag: "Machine_00225.ConSts.CutStartingClamp",
+                },
+                CutStartingPosition: {
+                    tag: "Machine_00225.ConSts.CutStartingPosition",
+                },
                 CuttingActive: {
                     tag: "Machine_00225.ConSts.CuttingActive",
                 },
@@ -158,6 +173,9 @@ export const machineTags: MachineTagNode = {
                 },
                 DustSettlingTimeRemainingSec: {
                     tag: "Machine_00225.ConSts.DustSettlingTimeRemainingSec",
+                },
+                TargetCuttingFeedRateDisplay: {
+                    tag: "Machine_00225.ConSts.TargetCuttingFeedRateDisplay",
                 },
             } as const,
         },

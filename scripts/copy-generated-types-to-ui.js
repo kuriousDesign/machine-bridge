@@ -43,7 +43,7 @@ function main() {
 
   if (!machineId) {
     throw new Error(
-      "Usage: node scripts/copy-generated-types-to-ui.js --machine-id=<machineId> [--ui-root=/path/to/machine-ui-heroui-shadcn]",
+      "Usage: node scripts/copy-generated-types-to-ui.js [machineId] [--machine-id=<machineId>] [--ui-root=/path/to/machine-ui-heroui-shadcn]",
     );
   }
 

@@ -23,4 +23,10 @@ exec env HOME=/home/node setpriv \
     --reuid="$target_uid" \
     --regid="$target_gid" \
     --init-groups \
-    sh -lc "cd '$worktree_dir' && npm install && npm --prefix '$sdk_dir' run build && npm run build && npm start"
+    sh -lc "cd '$worktree_dir' && npm run build && npm start"
+
+# exec env HOME=/home/node setpriv \
+#     --reuid="$target_uid" \
+#     --regid="$target_gid" \
+#     --init-groups \
+#     sh -lc "cd '$worktree_dir' && npm install && npm --prefix '$sdk_dir' run build && npm run build && npm start"

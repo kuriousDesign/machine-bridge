@@ -5,7 +5,7 @@
 export const machineTypeSource = {
     "controllerName": "CODESYS Control for Linux SL",
     "endpoint": "opc.tcp://127.0.0.1:4840",
-    "generatedAt": "2026-06-10T21:16:06.883Z",
+    "generatedAt": "2026-06-12T16:35:37.836Z",
     "rootNodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00225",
     "rootTag": "Machine_00225"
 } as const;
@@ -67,6 +67,11 @@ export interface ConSts {
     dustIsSettling: boolean;
     dustSettlingTimeRemainingSec: number;
     targetCuttingFeedRateDisplay: string;
+}
+export enum DeviceIds {
+    FEED = 14,
+    LIFT = 15,
+    BLADE = 16,
 }
 export interface AxisMotionProfileData {
     acceleration: number;
@@ -758,83 +763,8 @@ export interface AxisNonSoftMotionSts {
     travelLimitPositive: number;
 }
 export interface HmiCfg {
+    hasMultipleKiosks: boolean;
     startingScreen: string;
-}
-export enum SM3BasicSMCCONTROLLERMODE {
-    SMC_NOCONTROL = 0,
-    SMC_TORQUE = 1,
-    SMC_VELOCITY = 2,
-    SMC_POSITION = 3,
-    SMC_CURRENT = 4,
-}
-export interface AxisSts {
-    activeStreamType: number;
-    actualAcceleration: number;
-    actualControllerMode: number;
-    actualCurrent: number;
-    actualMasterAxisDevId: number;
-    actualPosition: number;
-    actualTorque: number;
-    actualVelocity: number;
-    axesPositionDifference_CORRECTABLE: boolean;
-    axesPositionDifference_OK: boolean;
-    axisRefState: number;
-    calculatedStoppingPosition: number;
-    cfg: AxisCfg;
-    configuredSoftLimitTravelRange: number;
-    driveHasError: boolean;
-    driveHwLimitsEnforcement: AxisLimitEnforcements;
-    driveIsStoppingMotor: boolean;
-    driveState: number;
-    driveStatusMsg: string;
-    driveStoppedMotor: boolean;
-    driveSwLimitsEnforcement: AxisLimitEnforcements;
-    dualAxisStopType: DualAxisStopTypes;
-    etherCatComms_OK: boolean;
-    homeOffsetFromZero: number;
-    ignoringRailBrakes: boolean;
-    interlocks: AxisInterlocks;
-    isAtPosAndStandstill: boolean;
-    isEnabled: boolean;
-    isGeared: boolean;
-    isHomed: boolean;
-    isHoming: boolean;
-    isJogging: boolean;
-    isMastered: boolean;
-    isMoving: boolean;
-    isStandstill: boolean;
-    isStreaming: boolean;
-    isTorquing: boolean;
-    mutingSwAndHwLimitsWhileHoming: boolean;
-    permissives: Array<AxisPermissiveStsData>;
-    positionDifference: number;
-    railBrakes: RailBrakeInputs;
-    rcControlMode: enumRcAxisMode;
-    rcHomingState: enumRcAxisHomingState;
-    recordedPosition: number;
-    restrictedToSlow: boolean;
-    sensors: Array<boolean>;
-    setAccel: number;
-    setJerk: number;
-    setPosition: number;
-    setTorque: number;
-    setVelocity: number;
-    skippingPositionCorrectionBeforeGearing: boolean;
-    softMotionErrorId: number;
-    softMotionHasError: boolean;
-    targetControllerMode: SM3BasicSMCCONTROLLERMODE;
-    targetDir: number;
-    targetEncoderSetpoint: number;
-    targetMasterAxisDevId: number;
-    targetMaxCurrent: number;
-    targetMotionProfileData: AxisMotionProfileData;
-    targetMotionProfileId: number;
-    targetPosition: number;
-    targetSetpoint: number;
-    targetTorque: number;
-    targetVelocity: number;
-    travelLimitNegative: number;
-    travelLimitPositive: number;
 }
 export enum ActionTypes {
     MISSION = 0,
@@ -1090,26 +1020,6 @@ export interface HmiDevCtrlData {
     pbStop: ComponentAnimation;
     pbTake: ComponentAnimation;
 }
-export interface HmiAxisCtrlData {
-    pbBackAndForth: ComponentAnimation;
-    pbHomeToTorque: ComponentAnimation;
-    pbJogNeg: ComponentAnimation;
-    pbJogPos: ComponentAnimation;
-    pbMaster: ComponentAnimation;
-    pbMoveToMax: ComponentAnimation;
-    pbMoveToMin: ComponentAnimation;
-    pbSetHardwareLimits: ComponentAnimation;
-    pbSetRailBrakeEnforcement: ComponentAnimation;
-    pbSetSoftwareLimits: ComponentAnimation;
-    pbSetTorqueMode: ComponentAnimation;
-    pbStop: ComponentAnimation;
-    pbTorqueNeg: ComponentAnimation;
-    pbTorquePos: ComponentAnimation;
-    pbUnitTest: ComponentAnimation;
-    pbVerifyNegSw: ComponentAnimation;
-    pbVerifyPosSw: ComponentAnimation;
-    radioBtnMotionProfile: number;
-}
 export interface ButtonBar {
     clearFaultsBtn: ComponentAnimation;
     energizeBtn: ComponentAnimation;
@@ -1124,16 +1034,6 @@ export interface ButtonBar {
     unlockBtn: ComponentAnimation;
 }
 export type BYTE = number | string | unknown;
-export interface HmiIbData {
-    inductBtn: ComponentAnimation;
-    requestControlBtn: ComponentAnimation;
-    retrieveAndStowBtn: ComponentAnimation;
-    retrieveBtn: ComponentAnimation;
-    selectedCubbyId: number;
-    selectedMissionId: number;
-    stowBtn: ComponentAnimation;
-    vendBtn: ComponentAnimation;
-}
 export interface StatusBar {
     bannerMode: number;
     batchQty: number;
@@ -1146,31 +1046,18 @@ export interface StatusBar {
     status: number;
     statusMsg: number;
 }
-export interface HmiStwgData {
-    dryCycleTestBtn: ComponentAnimation;
-    inductBtn: ComponentAnimation;
-    requestControlBtn: ComponentAnimation;
-    retrieveBtn: ComponentAnimation;
-    stopBtn: ComponentAnimation;
-    stowBtn: ComponentAnimation;
-}
-export interface HmiData {
-    activeAxisSts: AxisSts;
+export interface HmiSts {
     activeCodesysHmiScreenName: string;
     activeDev: Device;
     activeDevCtrl: HmiDevCtrlData;
     activeDeviceId: number;
-    activePage: number;
-    axisCtrl: HmiAxisCtrlData;
+    activeKioskId: number;
     buttonBar: ButtonBar;
     heartbeatHMI: BYTE;
     heartbeatPLC: BYTE;
-    IB: HmiIbData;
     isConnected: boolean;
     remoteControlPage: number;
-    screenChangeBtn: ComponentAnimation;
     statusBar: StatusBar;
-    STWG: HmiStwgData;
 }
 export interface AxisTeknicDiscreteIoInputs {
     atSpeed: boolean;
@@ -1183,36 +1070,33 @@ export interface TwoPosInputs {
     sensA_ON: boolean;
     sensB_ON: boolean;
 }
-export interface GuardLockInputs {
-    LOCKED: boolean;
-    requestToEnterPb_ON: boolean;
-    safeInputs_OK: boolean;
-    solenoid_UNLOCKED: boolean;
-    TONGUE_IN: boolean;
-}
 export interface SftyInputs {
+    clampAirSw_OK_1A: boolean;
+    clampAirSw_OK_1B: boolean;
+    clampAirSw_OK_2A: boolean;
+    clampAirSw_OK_2B: boolean;
+    clampAirSw_OK_3A: boolean;
+    clampAirSw_OK_3B: boolean;
+    clampAirSw_OK_4A: boolean;
+    clampAirSw_OK_4B: boolean;
+    daisyChainOCC1: boolean;
+    daisyChainOCC2: boolean;
     doorSwitches_ALL_OK: boolean;
     estopCircuit_OK: boolean;
     estopCircuitDelayed_OK: boolean;
     estopCircuitInputs_ALL_ON: boolean;
     estopCircuitReset_READY: boolean;
-    estopInputs: Array<boolean>;
     estopPbs_ALL_OK: boolean;
-    fenceCircuit_OK: boolean;
-    fenceCircuitInputs_ALL_ON: boolean;
-    fenceCircuitReset_READY: boolean;
-    fenceConditionForEstop_OK: boolean;
-    guardLocks: Array<GuardLockInputs>;
-    psc1AlarmCode: number;
-    psc1AlarmMsg: string;
-    psc1FatalErrorCode: number;
-    psc1FatalErrorMsg: string;
-    psc1StatusCode: number;
-    psc1StatusMsg: string;
+    mainAirPresureSw_OK: boolean;
+    roomDaisyChain_OUT: boolean;
+    roomDoorSw: boolean;
+    roomEstop_OK: boolean;
+    roomVaccumSw: boolean;
     safeContactorsNC_OK: boolean;
     safeNC_ALL_OK: boolean;
-    safeValveNC_OK: boolean;
-    unlockGuardDoors_OUT: boolean;
+    safetyControllerStatusCode: number;
+    safetyControllerStatusMsg: string;
+    sawEstopPb: boolean;
 }
 export interface inputs {
     BLADE: AxisTeknicDiscreteIoInputs;
@@ -1294,21 +1178,9 @@ export interface TwoPosOutputs {
     outA: boolean;
     outB: boolean;
 }
-export interface GuardLockOutputs {
-    requestToEnterPb_FLASH: boolean;
-    requestToEnterPb_ILLUM: boolean;
-    unlock_REQ: boolean;
-}
 export interface SftyOutputs {
     clearControllerAlarm_REQ: boolean;
-    controllerAlarm_CLEAR: boolean;
     estopCircuit_RESET: boolean;
-    estopPbIllumns: Array<boolean>;
-    guardLocks: Array<GuardLockOutputs>;
-    requestToEnterPb_ON: boolean;
-    resetPb_FLASH: boolean;
-    resetPb_ILLUM: boolean;
-    robotTeachMode_ON: boolean;
 }
 export interface outputs {
     BLADE: AxisTeknicDiscreteIoOutputs;
@@ -1357,7 +1229,8 @@ export interface PartData {
 }
 export interface PartDataStatus {
     allClampsAreEmpty: boolean;
-    allPartsAreRaw: boolean;
+    allLoadedPartsAreRaw: boolean;
+    allLoadedPartsAreRawOrCut: boolean;
     firstClampId: number;
     lastClampId: number;
     lowestPartStatus: PartStates;
@@ -1371,7 +1244,8 @@ export interface SftyCfg {
     numOfDoors: number;
 }
 export interface SftySts {
-    placeholder: boolean;
+    controllerHasError: boolean;
+    controllerIsRunning: boolean;
 }
 export interface SysCfg {
     placeholder: boolean;
@@ -1483,10 +1357,11 @@ export type Machine = {
     bladeSts: AxisTeknicDiscreteIoSts;
     conCfg: ConCfg;
     conSts: ConSts;
+    devicesIds_00225: DeviceIds;
     feedCfg: AxisCfg;
     feedSts: AxisNonSoftMotionSts;
     hmiCfg: HmiCfg;
-    hmiSts: HmiData;
+    hmiSts: HmiSts;
     inputs: inputs;
     job: JobData;
     liftCfg: TwoPosCfg;
@@ -1511,10 +1386,11 @@ export type MachineTypeRoot = {
     bladeSts: AxisTeknicDiscreteIoSts;
     conCfg: ConCfg;
     conSts: ConSts;
+    devicesIds_00225: DeviceIds;
     feedCfg: AxisCfg;
     feedSts: AxisNonSoftMotionSts;
     hmiCfg: HmiCfg;
-    hmiSts: HmiData;
+    hmiSts: HmiSts;
     inputs: inputs;
     job: JobData;
     liftCfg: TwoPosCfg;

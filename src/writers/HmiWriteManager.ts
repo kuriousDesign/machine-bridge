@@ -496,15 +496,17 @@ export default class HmiWriteManager {
             }
 
             const machineWriteRootTag = this.getMachineWriteRootTag();
+            const recipeTag = `${machineWriteRootTag}.recipeStore.recipes[${writeRecipeRequest.index}]`;
             const result = await driver.writeTagList([
                 {
-                    tag: `${machineWriteRootTag}.recipeStore.recipes[${writeRecipeRequest.index}]`,
+                    tag: recipeTag,
                     value: writeRecipeRequest.recipe,
                 },
             ], true);
 
             if (!result.success) {
                 console.warn(`[HMI_MANAGER] Recipe write request failed for index ${writeRecipeRequest.index}: ${result.message}`);
+                return;
             }
         } catch (error) {
             await this.handleSessionFailure(`recipe write failed for topic ${topic}`, error);

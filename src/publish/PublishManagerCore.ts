@@ -674,7 +674,7 @@ export default class PublishManagerCore {
                     }
 
                     const lastHeartbeatActivityTime = Math.max(lastUpdateTime, this.lastHeartbeatObservedAt);
-                    if (Date.now() - lastHeartbeatActivityTime > 5000) {
+                    if (Date.now() - lastHeartbeatActivityTime > Config.HEARTBEAT_STALE_AFTER_MS) {
                         // Heartbeat not updating, transition to waiting state
                         if (this.state !== OpcuaState.WaitingForHeartbeat)
                             console.warn(`⚠️ PLC heartbeat not updating. Waiting for heartbeat, last update was ${Date.now() - lastHeartbeatActivityTime} ms ago`);

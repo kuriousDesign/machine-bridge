@@ -5,7 +5,7 @@
 export const machineTypeSource = {
     "controllerName": "CODESYS Control for Linux SL",
     "endpoint": "opc.tcp://127.0.0.1:4840",
-    "generatedAt": "2026-05-29T19:58:24.224Z",
+    "generatedAt": "2026-06-23T16:23:24.489Z",
     "rootNodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00251",
     "rootTag": "Machine_00251"
 } as const;
@@ -98,6 +98,7 @@ export interface AbbDataOutputs {
     tubeMassKg: number;
     tubeOuterDiameterMax: number;
     tubeTypeId: number;
+    unclampPartDone: boolean;
     uniqueTaskReqId: number;
     updatePartDataDone: boolean;
     weighingFingerId: number;
@@ -149,6 +150,7 @@ export interface AbbDataInputs {
     transferDataCurrentPartLocationId: number;
     transferDataTargetPartLocationId: number;
     transferPartDataReq: boolean;
+    unclampPartReq: boolean;
     uniqueTaskActiveId: number;
     updatePartDataReq: boolean;
     weighTubeReq: boolean;
@@ -188,7 +190,6 @@ export interface RctrlSts {
     actualPosition: RobPositionData;
     actualTCPSpeed: number;
     actualWaypoint: number;
-    cfg: RctrlCfg;
     iController: AbbControllerInterface;
     isAtPosAndStandstill: boolean;
     isConnected: boolean;
@@ -229,6 +230,7 @@ export interface RecipeData {
     tubeTypeId: number;
     tubeTypeString: string;
     usesBrushTool: boolean;
+    usesCentrifuge: boolean;
     weighingFingerId: number;
     weighingFingerString: string;
 }
@@ -263,7 +265,6 @@ export interface TwoPosSts {
     actualPosition: number;
     atPosA: boolean;
     atPosB: boolean;
-    cfg: TwoPosCfg;
     overrideA: boolean;
     overrideB: boolean;
     permA: boolean;
@@ -285,210 +286,10 @@ export interface TwoPosGantryCfg {
 }
 export interface TwoPosGantrySts {
     actualPosition: number;
-    cfg: TwoPosGantryCfg;
 }
 export interface HmiCfg {
+    hasMultipleKiosks: boolean;
     startingScreen: string;
-}
-export enum AxisDriveTypes {
-    STINGRAY = 0,
-    BOSCH_FSOE = 1,
-    NANOTEC = 2,
-    TEKNIC = 3,
-}
-export enum PositionReferencingMethods {
-    NONE = 0,
-    HOMING = 1,
-    POSITION_VERIFICATION = 2,
-    HOMING_TO_HARDSTOP = 3,
-}
-export interface SoftMotionScalingParams {
-    gearOutputTurnsLeft: number;
-    gearOutputTurnsRight: number;
-    incrementsLeft: number;
-    invertDir: boolean;
-    motorsTurnsLeft: number;
-    motorTurnsRight: number;
-    unitsInApplicationRight: number;
-}
-export enum AxisSensors {
-    NONE = 0,
-    HOME_SW = 1,
-    NEGATIVE_LIM_SW = 2,
-    POSITIVE_LIM_SW = 3,
-}
-export interface AxisCfg {
-    atPosTol: number;
-    autoPositionVerifyDuringReset: boolean;
-    axesPositionToleranceForSkew: number;
-    axisType: number;
-    driveId: number;
-    driveType: AxisDriveTypes;
-    gearingPositionTolerance: number;
-    hardStopNegative: number;
-    hardStopPositive: number;
-    hasDynamicNegativeLimit: boolean;
-    hasDynamicPositiveLimit: boolean;
-    hasRailBrakes: boolean;
-    homingToHardstopDir: number;
-    ignoreLimitSwitches: boolean;
-    ignores: Array<boolean>;
-    ignoreSoftwareLimits: boolean;
-    keepMasteredStatusAtStartup: boolean;
-    maxCurrentNormalOperation: number;
-    maxCurrentWhileHomingToHardstop: number;
-    motionProfiles: Array<AxisMotionProfileData>;
-    operationalPositionMax: number;
-    operationalPositionMin: number;
-    positionReferencingMethod: PositionReferencingMethods;
-    scaleFactorUnitsPerEncoderCount: number;
-    searchDistance: number;
-    sensorPositions: Array<number>;
-    shippingPosition: number;
-    softMotionScalingParams: SoftMotionScalingParams;
-    softwareLimitNegative: number;
-    softwareLimitPositive: number;
-    unit: string;
-    updateScalingIsNeeded: boolean;
-    validationSensor: AxisSensors;
-    verificationSensorOffsetFromZero: number;
-}
-export enum AxisLimitEnforcements {
-    UNKNOWN = 0,
-    ENFORCED = 1,
-    UNENFORCED = 2,
-}
-export enum DualAxisStopTypes {
-    NONE = 0,
-    NORMAL = 1,
-    SLAVE_FAULT = 2,
-    MASTER_FAULT = 3,
-}
-export interface AxisInterlockCfgData {
-    description: string;
-    direction: number;
-    ignored: boolean;
-    interlockType: number;
-    senderId: number;
-    targetId: number;
-}
-export interface AxisInterlockStsData {
-    conditionsAreMet: boolean;
-    isAllowed: boolean;
-    isIgnoredByCfg: boolean;
-    isOverridden: boolean;
-    overridenTimeLeft: Date | string;
-}
-export interface AxisInterlockData {
-    cfg: AxisInterlockCfgData;
-    sts: AxisInterlockStsData;
-}
-export interface AxisInterlocks {
-    list: Array<AxisInterlockData>;
-}
-export interface AxisPermissiveStsData {
-    conditionsAreMet: boolean;
-    isAllowed: boolean;
-    isIgnoredByCfg: boolean;
-    isOverridden: boolean;
-}
-export interface RailBrakeInputs {
-    railBrake1_CLOSED: boolean;
-    railBrake1_ERROR: boolean;
-    railBrake1_OPEN: boolean;
-    railBrake2_CLOSED: boolean;
-    railBrake2_ERROR: boolean;
-    railBrake2_OPEN: boolean;
-}
-export enum enumRcAxisMode {
-    NONE = 0,
-    STREAMING = 1,
-    WAYPOINT = 2,
-    TORQUEADMIT = 3,
-    WAYPOINT_RELATIVE = 4,
-    HOMING = 5,
-}
-export enum enumRcAxisHomingState {
-    NONE = 0,
-    NOT_HOMED = 1,
-    HOMING = 2,
-    HOMED = 3,
-}
-export enum SM3BasicSMCCONTROLLERMODE {
-    SMC_NOCONTROL = 0,
-    SMC_TORQUE = 1,
-    SMC_VELOCITY = 2,
-    SMC_POSITION = 3,
-    SMC_CURRENT = 4,
-}
-export interface AxisSts {
-    activeStreamType: number;
-    actualAcceleration: number;
-    actualControllerMode: number;
-    actualCurrent: number;
-    actualMasterAxisDevId: number;
-    actualPosition: number;
-    actualTorque: number;
-    actualVelocity: number;
-    axesPositionDifference_CORRECTABLE: boolean;
-    axesPositionDifference_OK: boolean;
-    axisRefState: number;
-    calculatedStoppingPosition: number;
-    cfg: AxisCfg;
-    configuredSoftLimitTravelRange: number;
-    driveHasError: boolean;
-    driveHwLimitsEnforcement: AxisLimitEnforcements;
-    driveIsStoppingMotor: boolean;
-    driveState: number;
-    driveStatusMsg: string;
-    driveStoppedMotor: boolean;
-    driveSwLimitsEnforcement: AxisLimitEnforcements;
-    dualAxisStopType: DualAxisStopTypes;
-    etherCatComms_OK: boolean;
-    homeOffsetFromZero: number;
-    ignoringRailBrakes: boolean;
-    interlocks: AxisInterlocks;
-    isAtPosAndStandstill: boolean;
-    isEnabled: boolean;
-    isGeared: boolean;
-    isHomed: boolean;
-    isHoming: boolean;
-    isJogging: boolean;
-    isMastered: boolean;
-    isMoving: boolean;
-    isStandstill: boolean;
-    isStreaming: boolean;
-    isTorquing: boolean;
-    mutingSwAndHwLimitsWhileHoming: boolean;
-    permissives: Array<AxisPermissiveStsData>;
-    positionDifference: number;
-    railBrakes: RailBrakeInputs;
-    rcControlMode: enumRcAxisMode;
-    rcHomingState: enumRcAxisHomingState;
-    recordedPosition: number;
-    restrictedToSlow: boolean;
-    sensors: Array<boolean>;
-    setAccel: number;
-    setJerk: number;
-    setPosition: number;
-    setTorque: number;
-    setVelocity: number;
-    skippingPositionCorrectionBeforeGearing: boolean;
-    softMotionErrorId: number;
-    softMotionHasError: boolean;
-    targetControllerMode: SM3BasicSMCCONTROLLERMODE;
-    targetDir: number;
-    targetEncoderSetpoint: number;
-    targetMasterAxisDevId: number;
-    targetMaxCurrent: number;
-    targetMotionProfileData: AxisMotionProfileData;
-    targetMotionProfileId: number;
-    targetPosition: number;
-    targetSetpoint: number;
-    targetTorque: number;
-    targetVelocity: number;
-    travelLimitNegative: number;
-    travelLimitPositive: number;
 }
 export enum ActionTypes {
     MISSION = 0,
@@ -521,6 +322,14 @@ export interface ApiOpcuaData {
     orchResp: ApiOpcuaReqData;
     req: ApiOpcuaReqData;
     resp: ApiOpcuaReqData;
+}
+export interface AxisInterlockCfgData {
+    description: string;
+    direction: number;
+    ignored: boolean;
+    interlockType: number;
+    senderId: number;
+    targetId: number;
 }
 export interface DeviceCfg {
     autoReset: boolean;
@@ -744,26 +553,6 @@ export interface HmiDevCtrlData {
     pbStop: ComponentAnimation;
     pbTake: ComponentAnimation;
 }
-export interface HmiAxisCtrlData {
-    pbBackAndForth: ComponentAnimation;
-    pbHomeToTorque: ComponentAnimation;
-    pbJogNeg: ComponentAnimation;
-    pbJogPos: ComponentAnimation;
-    pbMaster: ComponentAnimation;
-    pbMoveToMax: ComponentAnimation;
-    pbMoveToMin: ComponentAnimation;
-    pbSetHardwareLimits: ComponentAnimation;
-    pbSetRailBrakeEnforcement: ComponentAnimation;
-    pbSetSoftwareLimits: ComponentAnimation;
-    pbSetTorqueMode: ComponentAnimation;
-    pbStop: ComponentAnimation;
-    pbTorqueNeg: ComponentAnimation;
-    pbTorquePos: ComponentAnimation;
-    pbUnitTest: ComponentAnimation;
-    pbVerifyNegSw: ComponentAnimation;
-    pbVerifyPosSw: ComponentAnimation;
-    radioBtnMotionProfile: number;
-}
 export interface ButtonBar {
     clearFaultsBtn: ComponentAnimation;
     energizeBtn: ComponentAnimation;
@@ -778,16 +567,6 @@ export interface ButtonBar {
     unlockBtn: ComponentAnimation;
 }
 export type BYTE = number | string | unknown;
-export interface HmiIbData {
-    inductBtn: ComponentAnimation;
-    requestControlBtn: ComponentAnimation;
-    retrieveAndStowBtn: ComponentAnimation;
-    retrieveBtn: ComponentAnimation;
-    selectedCubbyId: number;
-    selectedMissionId: number;
-    stowBtn: ComponentAnimation;
-    vendBtn: ComponentAnimation;
-}
 export interface StatusBar {
     bannerMode: number;
     batchQty: number;
@@ -800,35 +579,30 @@ export interface StatusBar {
     status: number;
     statusMsg: number;
 }
-export interface HmiStwgData {
-    dryCycleTestBtn: ComponentAnimation;
-    inductBtn: ComponentAnimation;
-    requestControlBtn: ComponentAnimation;
-    retrieveBtn: ComponentAnimation;
-    stopBtn: ComponentAnimation;
-    stowBtn: ComponentAnimation;
-}
-export interface HmiData {
-    activeAxisSts: AxisSts;
+export interface HmiSts {
     activeCodesysHmiScreenName: string;
     activeDev: Device;
     activeDevCtrl: HmiDevCtrlData;
     activeDeviceId: number;
-    activePage: number;
-    axisCtrl: HmiAxisCtrlData;
+    activeKioskId: number;
     buttonBar: ButtonBar;
     heartbeatHMI: BYTE;
     heartbeatPLC: BYTE;
-    IB: HmiIbData;
     isConnected: boolean;
     remoteControlPage: number;
-    screenChangeBtn: ComponentAnimation;
     statusBar: StatusBar;
-    STWG: HmiStwgData;
 }
 export interface TwoPosInputs {
     sensA_ON: boolean;
     sensB_ON: boolean;
+}
+export interface RailBrakeInputs {
+    railBrake1_CLOSED: boolean;
+    railBrake1_ERROR: boolean;
+    railBrake1_OPEN: boolean;
+    railBrake2_CLOSED: boolean;
+    railBrake2_ERROR: boolean;
+    railBrake2_OPEN: boolean;
 }
 export interface AxisInputs {
     brakes: RailBrakeInputs;
@@ -889,7 +663,7 @@ export interface SysInputs {
     powerSupplies_OK: Array<boolean>;
     pressureSwitches: Array<PressureSwitchInputs>;
 }
-export interface inputs_00251 {
+export interface inputs {
     CLAMP_S: TwoPosInputs;
     CLAMP_T: TwoPosInputs;
     dummy: AxisInputs;
@@ -934,11 +708,6 @@ export interface TwoPosOutputs {
     outA: boolean;
     outB: boolean;
 }
-export interface LiteOutputs {
-    green_ON: boolean;
-    red_ON: boolean;
-    yellow_ON: boolean;
-}
 export interface PotOutputs {
     ballValveOpen_REQ: boolean;
     paintPot: TwoPosOutputs;
@@ -975,17 +744,19 @@ export interface WeidmullerIoPwmOutput {
     pulseDuration: number;
 }
 export interface SysOutputs {
+    green_ON: boolean;
+    red_ON: boolean;
     startPb_FLASH: boolean;
     startPb_ILLUM: boolean;
+    yellow_ON: boolean;
 }
-export interface outputs_00251 {
+export interface outputs {
     CLAMP_S: TwoPosOutputs;
     CLAMP_T: TwoPosOutputs;
     EOAT: TwoPosOutputs;
     FLSB_S: TwoPosOutputs;
     FLSB_T: TwoPosOutputs;
     GRIP: TwoPosOutputs;
-    LITE: LiteOutputs;
     POT: PotOutputs;
     ROB: RobOutputs;
     SFTY: SftyOutputs;
@@ -1086,6 +857,9 @@ export interface RecipeStore {
 export interface RobCfg {
     placeholder: boolean;
 }
+export interface RobMeta {
+    adjustedSetpoints: Array<ApplicatorSetpoint>;
+}
 export interface StrainGaugeSts {
     calibOffset: number;
     calibScaleFactor: number;
@@ -1106,14 +880,12 @@ export interface RobSts {
     actualWaypoint: number;
     actualZone: number;
     actualZPositionRelativeToFalseBottom: number;
-    adjustedSetpoints: Array<ApplicatorSetpoint>;
     applicatorHasBeenPrimed: boolean;
     applicatorIsDirty: boolean;
     applyLinerStartSetpointMovesReq: boolean;
     autoRecoveryNeeded: boolean;
     autoRecoveryOk: boolean;
     cameraIsRecording: boolean;
-    cfg: RobCfg;
     gripperIsCalibrated: boolean;
     iController: AbbControllerInterface;
     lastCrossedApplyLinerSetpointId: number;
@@ -1124,6 +896,7 @@ export interface RobSts {
     squeegeeIsCalibrated: boolean;
     squeegeeIsHomed: boolean;
     targetWaypoint: number;
+    unclampPartDone: boolean;
     visionIsCalibrated: boolean;
     weighTubeTareDone: boolean;
     weighTubeWeighDone: boolean;
@@ -1133,6 +906,102 @@ export interface SftyCfg {
 }
 export interface SftySts {
     placeholder: boolean;
+}
+export enum AxisDriveTypes {
+    STINGRAY = 0,
+    BOSCH_FSOE = 1,
+    NANOTEC = 2,
+    TEKNIC = 3,
+    TEKNIC_DISCRETE_IO = 4,
+}
+export enum PositionReferencingMethods {
+    NONE = 0,
+    HOMING = 1,
+    POSITION_VERIFICATION = 2,
+    HOMING_TO_HARDSTOP = 3,
+}
+export interface SoftMotionScalingParams {
+    gearOutputTurnsLeft: number;
+    gearOutputTurnsRight: number;
+    incrementsLeft: number;
+    invertDir: boolean;
+    motorsTurnsLeft: number;
+    motorTurnsRight: number;
+    unitsInApplicationRight: number;
+}
+export enum AxisSensors {
+    NONE = 0,
+    HOME_SW = 1,
+    NEGATIVE_LIM_SW = 2,
+    POSITIVE_LIM_SW = 3,
+}
+export interface AxisCfg {
+    atPosTol: number;
+    autoPositionVerifyDuringReset: boolean;
+    axesPositionToleranceForSkew: number;
+    axisType: number;
+    driveId: number;
+    driveType: AxisDriveTypes;
+    gearingPositionTolerance: number;
+    hardStopNegative: number;
+    hardStopPositive: number;
+    hasDynamicNegativeLimit: boolean;
+    hasDynamicPositiveLimit: boolean;
+    hasRailBrakes: boolean;
+    homingMethod: number;
+    homingToHardstopDir: number;
+    ignoreLimitSwitches: boolean;
+    ignores: Array<boolean>;
+    ignoreSoftwareLimits: boolean;
+    keepMasteredStatusAtStartup: boolean;
+    maxCurrentNormalOperation: number;
+    maxCurrentWhileHomingToHardstop: number;
+    motionProfiles: Array<AxisMotionProfileData>;
+    operationalPositionMax: number;
+    operationalPositionMin: number;
+    positionReferencingMethod: PositionReferencingMethods;
+    scaleFactorUnitsPerEncoderCount: number;
+    searchDistance: number;
+    sensorPositions: Array<number>;
+    shippingPosition: number;
+    softMotionScalingParams: SoftMotionScalingParams;
+    softwareLimitNegative: number;
+    softwareLimitPositive: number;
+    unit: string;
+    updateScalingIsNeeded: boolean;
+    validationSensor: AxisSensors;
+    verificationSensorOffsetFromZero: number;
+}
+export enum AxisLimitEnforcements {
+    UNKNOWN = 0,
+    ENFORCED = 1,
+    UNENFORCED = 2,
+}
+export enum DualAxisStopTypes {
+    NONE = 0,
+    NORMAL = 1,
+    SLAVE_FAULT = 2,
+    MASTER_FAULT = 3,
+}
+export interface AxisInterlockStsData {
+    conditionsAreMet: boolean;
+    isAllowed: boolean;
+    isIgnoredByCfg: boolean;
+    isOverridden: boolean;
+    overridenTimeLeft: Date | string;
+}
+export interface AxisInterlockData {
+    cfg: AxisInterlockCfgData;
+    sts: AxisInterlockStsData;
+}
+export interface AxisInterlocks {
+    list: Array<AxisInterlockData>;
+}
+export interface AxisPermissiveStsData {
+    conditionsAreMet: boolean;
+    isAllowed: boolean;
+    isIgnoredByCfg: boolean;
+    isOverridden: boolean;
 }
 export enum SM3ErrorSMCERROR {
     SMC_NO_ERROR = 0,
@@ -1642,7 +1511,6 @@ export interface AxisSimpleSts {
     axesPositionDifference_CORRECTABLE: boolean;
     axesPositionDifference_OK: boolean;
     calculatedStoppingPosition: number;
-    cfg: AxisCfg;
     configuredSoftLimitTravelRange: number;
     driveHasError: boolean;
     driveHwLimitsEnforcement: AxisLimitEnforcements;
@@ -1671,8 +1539,6 @@ export interface AxisSimpleSts {
     permissives: Array<AxisPermissiveStsData>;
     positionDifference: number;
     railBrakes: RailBrakeInputs;
-    rcControlMode: enumRcAxisMode;
-    rcHomingState: enumRcAxisHomingState;
     recordedPosition: number;
     restrictedToSlow: boolean;
     sensors: Array<boolean>;
@@ -1790,7 +1656,7 @@ export interface VisSts {
     pluggedInSerialNumbers: Array<string>;
 }
 
-export type Machine_00251 = {
+export type Machine = {
     abbCfg: RctrlCfg;
     abbHmiManual: RctrlHmiManual;
     abbSts: RctrlSts;
@@ -1812,15 +1678,16 @@ export type Machine_00251 = {
     gripCfg: TwoPosCfg;
     gripSts: TwoPosSts;
     hmiCfg: HmiCfg;
-    hmiSts: HmiData;
-    inputs: inputs_00251;
+    hmiSts: HmiSts;
+    inputs: inputs;
     job: JobData;
-    outputs: outputs_00251;
+    outputs: outputs;
     pdmSts: PartDataStatus;
     potCfg: PotCfg;
     potSts: PotSts;
     recipeStore: RecipeStore;
     robCfg: RobCfg;
+    robMeta: RobMeta;
     robSts: RobSts;
     sftyCfg: SftyCfg;
     sftySts: SftySts;
@@ -1857,15 +1724,16 @@ export type MachineTypeRoot = {
     gripCfg: TwoPosCfg;
     gripSts: TwoPosSts;
     hmiCfg: HmiCfg;
-    hmiSts: HmiData;
-    inputs: inputs_00251;
+    hmiSts: HmiSts;
+    inputs: inputs;
     job: JobData;
-    outputs: outputs_00251;
+    outputs: outputs;
     pdmSts: PartDataStatus;
     potCfg: PotCfg;
     potSts: PotSts;
     recipeStore: RecipeStore;
     robCfg: RobCfg;
+    robMeta: RobMeta;
     robSts: RobSts;
     sftyCfg: SftyCfg;
     sftySts: SftySts;
@@ -1880,6 +1748,6 @@ export type MachineTypeRoot = {
     visSts: VisSts;
     visStsExtService: VisSts;
 };
-export type Machine_00251RuntimeExcludedKeys = 'SyncClockReq' | 'ResetEthercat_REQ' | 'DeviceLogs' | 'RegisteredInputs' | 'Utilities' | 'RegisteredDevices' | 'Devices' | 'DeviceRegisteredActions' | 'SysFb';
-export type Machine_00251Runtime = Omit<Machine_00251, Machine_00251RuntimeExcludedKeys>;
-export type MachineRuntimeRoot = Omit<MachineTypeRoot, Machine_00251RuntimeExcludedKeys>;
+export type MachineRuntimeExcludedKeys = 'SyncClockReq' | 'ResetEthercat_REQ' | 'DeviceLogs' | 'RegisteredInputs' | 'Utilities' | 'RegisteredDevices' | 'Devices' | 'DeviceRegisteredActions' | 'SysFb';
+export type MachineRuntime = Omit<Machine, MachineRuntimeExcludedKeys>;
+export type MachineRuntimeRoot = Omit<MachineTypeRoot, MachineRuntimeExcludedKeys>;

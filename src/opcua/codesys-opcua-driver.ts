@@ -1,4 +1,4 @@
-import { ClientSession, Variant, AttributeIds, DataType, VariantArrayType, ReadValueIdOptions, StatusCodes, DataValue } from "node-opcua";
+import { ClientSession, Variant, AttributeIds, DataType, VariantArrayType, ReadValueIdOptions, StatusCodes, DataValue, WriteValueOptions } from "node-opcua";
 import { ActionTypes, initialApiOpcuaReqData, DeviceCmds, States, ApiOpcuaReqData, DeviceActionRequestData, ApiReqRespStates, AxisProcesses, DeviceConstants, actionTypeToString, apiReqRespStateToString, deviceIdToString, Device, initialDevice, initialDeviceActionRequestData } from "@kuriousdesign/machine-sdk";
 import { read, write } from "fs";
 import { BaseMachineBootstrapTags, BaseMachinePollingTags, getProjectMachineTag, PlcNamespaces } from "./plc-tags";
@@ -28,8 +28,15 @@ type ActionRequestLogContext = {
     targetLabel?: string;
 };
 
+type RuntimeWriteResult = {
+    nodeId: string;
+    success: boolean;
+    error?: string;
+};
+
 
 export default class CodesysOpcuaDriver {
+    private static readonly MAX_RUNTIME_WRITE_BATCH_SIZE = 50;
     private id: number;
     private session: ClientSession;
     private nodePrefix: string;
@@ -117,6 +124,11 @@ export default class CodesysOpcuaDriver {
         if (this.machineId) {
             console.log(`[OPCUA] Using machineId-aware write tag resolution for ${this.machineId}`);
         }
+    }
+
+    async readCurrentValue(tag: string): Promise<any> {
+        const normalizedTag = this.normalizeProjectSpecificMachineTag(tag);
+        return this.readOpcuaValue(normalizedTag);
     }
 
     public setKnownMachineTagRoots(tagIds: string[]): void {
@@ -268,10 +280,41 @@ export default class CodesysOpcuaDriver {
             throw new Error(`Cannot determine data type for tag ${tag}`);
         } else if (true || dType === DataType.ExtensionObject) {
             console.log('writing extension object tag');
-            writeExtensionObject(this.session, this.addNodePrefix(tag), value);
+            await writeExtensionObject(this.session, this.addNodePrefix(tag), value);
         } else {
             console.log('writing simple tag');
             //this.writeTag(tag, value, dType);
+        }
+    }
+
+    async writeStructuredTag(tag: string, value: Record<string, any>): Promise<{ success: boolean; message: string }> {
+        if (!this.session) {
+            return {
+                success: false,
+                message: "OPC UA session is not initialized",
+            };
+        }
+
+        try {
+            const normalizedTag = this.normalizeProjectSpecificMachineTag(tag);
+            await writeExtensionObject(this.session, this.addNodePrefix(normalizedTag), value);
+            return {
+                success: true,
+                message: `Wrote structured value to node ${normalizedTag}`,
+            };
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+
+            if (this.isOpcuaConnectionClosedError(errorMessage)) {
+                console.warn(`Skipped structured write to node ${tag} because the OPC UA connection is closed.`);
+            } else {
+                console.error(`Failed structured write to node ${tag}:`, error);
+            }
+
+            return {
+                success: false,
+                message: `Failed structured write to node ${tag}: ${errorMessage}`,
+            };
         }
     }
 
@@ -501,6 +544,72 @@ export default class CodesysOpcuaDriver {
         }
 
         try {
+            if (skipValidation) {
+                const writeResults: RuntimeWriteResult[] = [];
+
+                for (
+                    let startIndex = 0;
+                    startIndex < runtimeWritePlan.length;
+                    startIndex += CodesysOpcuaDriver.MAX_RUNTIME_WRITE_BATCH_SIZE
+                ) {
+                    const runtimeWritePlanChunk = runtimeWritePlan.slice(
+                        startIndex,
+                        startIndex + CodesysOpcuaDriver.MAX_RUNTIME_WRITE_BATCH_SIZE,
+                    );
+                    const writeValues: WriteValueOptions[] = runtimeWritePlanChunk.map((runtimeWritePlanItem) => ({
+                        nodeId: this.addNodePrefix(runtimeWritePlanItem.tag),
+                        attributeId: AttributeIds.Value,
+                        value: {
+                            value: new Variant({
+                                dataType: runtimeWritePlanItem.dataType,
+                                value: runtimeWritePlanItem.value,
+                            }),
+                        },
+                    }));
+
+                    const statusCodes = await this.session.write(writeValues);
+                    runtimeWritePlanChunk.forEach((runtimeWritePlanItem, index) => {
+                        const statusCode = statusCodes[index];
+
+                        if (!statusCode || statusCode.isNotGood()) {
+                            writeResults.push({
+                                nodeId: runtimeWritePlanItem.tag,
+                                success: false,
+                                error: statusCode
+                                    ? `Failed to write to node ${runtimeWritePlanItem.tag}: ${statusCode.toString()}`
+                                    : `Failed to write to node ${runtimeWritePlanItem.tag}: missing status code`,
+                            });
+                            return;
+                        }
+
+                        writeResults.push({
+                            nodeId: runtimeWritePlanItem.tag,
+                            success: true,
+                        });
+                    });
+                }
+
+                const successCount = writeResults.filter((result) => result.success).length;
+                const failed = writeResults.filter((result) => !result.success);
+                const message = `Wrote ${successCount}/${writeResults.length} tags`;
+                const fullSuccess = failed.length === 0;
+
+                if (!fullSuccess) {
+                    console.warn("Some batched writes failed:", failed);
+                }
+
+                return {
+                    success: fullSuccess,
+                    message,
+                    details: {
+                        total: writeResults.length,
+                        success: successCount,
+                        failed: failed.length,
+                        errors: failed,
+                    },
+                };
+            }
+
             const writeResults: Array<{ nodeId: string; success: boolean; error?: string }> = [];
 
             for (const runtimeWritePlanItem of runtimeWritePlan) {

@@ -900,6 +900,106 @@ export const machineTags: MachineTagNode = {
                                     } as const,
                                 },
                                 {
+                                    tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[10]",
+                                    children: {
+                                        BallValveOn: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[10].BallValveOn",
+                                        },
+                                        Speed: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[10].Speed",
+                                        },
+                                        SqueegeeDiameter: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[10].SqueegeeDiameter",
+                                        },
+                                        StepperPosition: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[10].StepperPosition",
+                                        },
+                                        ZOffset: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[10].ZOffset",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[11]",
+                                    children: {
+                                        BallValveOn: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[11].BallValveOn",
+                                        },
+                                        Speed: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[11].Speed",
+                                        },
+                                        SqueegeeDiameter: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[11].SqueegeeDiameter",
+                                        },
+                                        StepperPosition: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[11].StepperPosition",
+                                        },
+                                        ZOffset: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[11].ZOffset",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[12]",
+                                    children: {
+                                        BallValveOn: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[12].BallValveOn",
+                                        },
+                                        Speed: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[12].Speed",
+                                        },
+                                        SqueegeeDiameter: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[12].SqueegeeDiameter",
+                                        },
+                                        StepperPosition: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[12].StepperPosition",
+                                        },
+                                        ZOffset: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[12].ZOffset",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[13]",
+                                    children: {
+                                        BallValveOn: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[13].BallValveOn",
+                                        },
+                                        Speed: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[13].Speed",
+                                        },
+                                        SqueegeeDiameter: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[13].SqueegeeDiameter",
+                                        },
+                                        StepperPosition: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[13].StepperPosition",
+                                        },
+                                        ZOffset: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[13].ZOffset",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[14]",
+                                    children: {
+                                        BallValveOn: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[14].BallValveOn",
+                                        },
+                                        Speed: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[14].Speed",
+                                        },
+                                        SqueegeeDiameter: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[14].SqueegeeDiameter",
+                                        },
+                                        StepperPosition: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[14].StepperPosition",
+                                        },
+                                        ZOffset: {
+                                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[14].ZOffset",
+                                        },
+                                    } as const,
+                                },
+                                {
                                     tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.ApplicatorSetpoints[2]",
                                     children: {
                                         BallValveOn: {
@@ -1175,6 +1275,9 @@ export const machineTags: MachineTagNode = {
                         TubeTypeId: {
                             tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.TubeTypeId",
                         },
+                        UnclampPartDone: {
+                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.UnclampPartDone",
+                        },
                         UniqueTaskReqId: {
                             tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.UniqueTaskReqId",
                         },
@@ -1234,832 +1337,6 @@ export const machineTags: MachineTagNode = {
                 },
                 ActualWaypoint: {
                     tag: "Machine_00251.AbbSts.ActualWaypoint",
-                },
-                Cfg: {
-                    tag: "Machine_00251.AbbSts.Cfg",
-                    children: {
-                        AtLinearPosTol: {
-                            tag: "Machine_00251.AbbSts.Cfg.AtLinearPosTol",
-                        },
-                        AtRotationalPosTol: {
-                            tag: "Machine_00251.AbbSts.Cfg.AtRotationalPosTol",
-                        },
-                        ControllerId: {
-                            tag: "Machine_00251.AbbSts.Cfg.ControllerId",
-                        },
-                        ControllerType: {
-                            tag: "Machine_00251.AbbSts.Cfg.ControllerType",
-                        },
-                        IgnoreLimitSwitches: {
-                            tag: "Machine_00251.AbbSts.Cfg.IgnoreLimitSwitches",
-                        },
-                        Ignores: {
-                            tag: "Machine_00251.AbbSts.Cfg.Ignores",
-                            items: [
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.Ignores[0]",
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.Ignores[1]",
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.Ignores[2]",
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.Ignores[3]",
-                                },
-                            ] as const,
-                        },
-                        IgnoreSoftwareLimits: {
-                            tag: "Machine_00251.AbbSts.Cfg.IgnoreSoftwareLimits",
-                        },
-                        LinearUnit: {
-                            tag: "Machine_00251.AbbSts.Cfg.LinearUnit",
-                        },
-                        MotionProfiles: {
-                            tag: "Machine_00251.AbbSts.Cfg.MotionProfiles",
-                            items: [
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[0]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[0].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[0].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[0].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[1]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[1].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[1].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[1].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[2]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[2].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[2].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[2].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[3]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[3].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[3].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[3].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[4]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[4].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[4].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00251.AbbSts.Cfg.MotionProfiles[4].speed",
-                                        },
-                                    } as const,
-                                },
-                            ] as const,
-                        },
-                        Positions: {
-                            tag: "Machine_00251.AbbSts.Cfg.Positions",
-                            items: [
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.Positions[0]",
-                                    children: {
-                                        pdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[0].pdeg",
-                                        },
-                                        rdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[0].rdeg",
-                                        },
-                                        toolFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[0].toolFrameId",
-                                        },
-                                        userFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[0].userFrameId",
-                                        },
-                                        wdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[0].wdeg",
-                                        },
-                                        x: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[0].x",
-                                        },
-                                        y: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[0].y",
-                                        },
-                                        z: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[0].z",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.Positions[1]",
-                                    children: {
-                                        pdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[1].pdeg",
-                                        },
-                                        rdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[1].rdeg",
-                                        },
-                                        toolFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[1].toolFrameId",
-                                        },
-                                        userFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[1].userFrameId",
-                                        },
-                                        wdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[1].wdeg",
-                                        },
-                                        x: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[1].x",
-                                        },
-                                        y: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[1].y",
-                                        },
-                                        z: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[1].z",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.Positions[2]",
-                                    children: {
-                                        pdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[2].pdeg",
-                                        },
-                                        rdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[2].rdeg",
-                                        },
-                                        toolFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[2].toolFrameId",
-                                        },
-                                        userFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[2].userFrameId",
-                                        },
-                                        wdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[2].wdeg",
-                                        },
-                                        x: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[2].x",
-                                        },
-                                        y: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[2].y",
-                                        },
-                                        z: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[2].z",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.Positions[3]",
-                                    children: {
-                                        pdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[3].pdeg",
-                                        },
-                                        rdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[3].rdeg",
-                                        },
-                                        toolFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[3].toolFrameId",
-                                        },
-                                        userFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[3].userFrameId",
-                                        },
-                                        wdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[3].wdeg",
-                                        },
-                                        x: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[3].x",
-                                        },
-                                        y: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[3].y",
-                                        },
-                                        z: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[3].z",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.Positions[4]",
-                                    children: {
-                                        pdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[4].pdeg",
-                                        },
-                                        rdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[4].rdeg",
-                                        },
-                                        toolFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[4].toolFrameId",
-                                        },
-                                        userFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[4].userFrameId",
-                                        },
-                                        wdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[4].wdeg",
-                                        },
-                                        x: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[4].x",
-                                        },
-                                        y: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[4].y",
-                                        },
-                                        z: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[4].z",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.Positions[5]",
-                                    children: {
-                                        pdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[5].pdeg",
-                                        },
-                                        rdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[5].rdeg",
-                                        },
-                                        toolFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[5].toolFrameId",
-                                        },
-                                        userFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[5].userFrameId",
-                                        },
-                                        wdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[5].wdeg",
-                                        },
-                                        x: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[5].x",
-                                        },
-                                        y: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[5].y",
-                                        },
-                                        z: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[5].z",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.Positions[6]",
-                                    children: {
-                                        pdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[6].pdeg",
-                                        },
-                                        rdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[6].rdeg",
-                                        },
-                                        toolFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[6].toolFrameId",
-                                        },
-                                        userFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[6].userFrameId",
-                                        },
-                                        wdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[6].wdeg",
-                                        },
-                                        x: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[6].x",
-                                        },
-                                        y: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[6].y",
-                                        },
-                                        z: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[6].z",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.Positions[7]",
-                                    children: {
-                                        pdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[7].pdeg",
-                                        },
-                                        rdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[7].rdeg",
-                                        },
-                                        toolFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[7].toolFrameId",
-                                        },
-                                        userFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[7].userFrameId",
-                                        },
-                                        wdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[7].wdeg",
-                                        },
-                                        x: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[7].x",
-                                        },
-                                        y: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[7].y",
-                                        },
-                                        z: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[7].z",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.Positions[8]",
-                                    children: {
-                                        pdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[8].pdeg",
-                                        },
-                                        rdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[8].rdeg",
-                                        },
-                                        toolFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[8].toolFrameId",
-                                        },
-                                        userFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[8].userFrameId",
-                                        },
-                                        wdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[8].wdeg",
-                                        },
-                                        x: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[8].x",
-                                        },
-                                        y: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[8].y",
-                                        },
-                                        z: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[8].z",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.Positions[9]",
-                                    children: {
-                                        pdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[9].pdeg",
-                                        },
-                                        rdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[9].rdeg",
-                                        },
-                                        toolFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[9].toolFrameId",
-                                        },
-                                        userFrameId: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[9].userFrameId",
-                                        },
-                                        wdeg: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[9].wdeg",
-                                        },
-                                        x: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[9].x",
-                                        },
-                                        y: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[9].y",
-                                        },
-                                        z: {
-                                            tag: "Machine_00251.AbbSts.Cfg.Positions[9].z",
-                                        },
-                                    } as const,
-                                },
-                            ] as const,
-                        },
-                        RotationalUnit: {
-                            tag: "Machine_00251.AbbSts.Cfg.RotationalUnit",
-                        },
-                        ToolFrames: {
-                            tag: "Machine_00251.AbbSts.Cfg.ToolFrames",
-                            items: [
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[0]",
-                                    children: {
-                                        id: {
-                                            tag: "Machine_00251.AbbSts.Cfg.ToolFrames[0].id",
-                                        },
-                                        location: {
-                                            tag: "Machine_00251.AbbSts.Cfg.ToolFrames[0].location",
-                                            children: {
-                                                pdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[0].location.pdeg",
-                                                },
-                                                rdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[0].location.rdeg",
-                                                },
-                                                toolFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[0].location.toolFrameId",
-                                                },
-                                                userFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[0].location.userFrameId",
-                                                },
-                                                wdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[0].location.wdeg",
-                                                },
-                                                x: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[0].location.x",
-                                                },
-                                                y: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[0].location.y",
-                                                },
-                                                z: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[0].location.z",
-                                                },
-                                            } as const,
-                                        },
-                                        name: {
-                                            tag: "Machine_00251.AbbSts.Cfg.ToolFrames[0].name",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[1]",
-                                    children: {
-                                        id: {
-                                            tag: "Machine_00251.AbbSts.Cfg.ToolFrames[1].id",
-                                        },
-                                        location: {
-                                            tag: "Machine_00251.AbbSts.Cfg.ToolFrames[1].location",
-                                            children: {
-                                                pdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[1].location.pdeg",
-                                                },
-                                                rdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[1].location.rdeg",
-                                                },
-                                                toolFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[1].location.toolFrameId",
-                                                },
-                                                userFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[1].location.userFrameId",
-                                                },
-                                                wdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[1].location.wdeg",
-                                                },
-                                                x: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[1].location.x",
-                                                },
-                                                y: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[1].location.y",
-                                                },
-                                                z: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[1].location.z",
-                                                },
-                                            } as const,
-                                        },
-                                        name: {
-                                            tag: "Machine_00251.AbbSts.Cfg.ToolFrames[1].name",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[2]",
-                                    children: {
-                                        id: {
-                                            tag: "Machine_00251.AbbSts.Cfg.ToolFrames[2].id",
-                                        },
-                                        location: {
-                                            tag: "Machine_00251.AbbSts.Cfg.ToolFrames[2].location",
-                                            children: {
-                                                pdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[2].location.pdeg",
-                                                },
-                                                rdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[2].location.rdeg",
-                                                },
-                                                toolFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[2].location.toolFrameId",
-                                                },
-                                                userFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[2].location.userFrameId",
-                                                },
-                                                wdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[2].location.wdeg",
-                                                },
-                                                x: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[2].location.x",
-                                                },
-                                                y: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[2].location.y",
-                                                },
-                                                z: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[2].location.z",
-                                                },
-                                            } as const,
-                                        },
-                                        name: {
-                                            tag: "Machine_00251.AbbSts.Cfg.ToolFrames[2].name",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[3]",
-                                    children: {
-                                        id: {
-                                            tag: "Machine_00251.AbbSts.Cfg.ToolFrames[3].id",
-                                        },
-                                        location: {
-                                            tag: "Machine_00251.AbbSts.Cfg.ToolFrames[3].location",
-                                            children: {
-                                                pdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[3].location.pdeg",
-                                                },
-                                                rdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[3].location.rdeg",
-                                                },
-                                                toolFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[3].location.toolFrameId",
-                                                },
-                                                userFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[3].location.userFrameId",
-                                                },
-                                                wdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[3].location.wdeg",
-                                                },
-                                                x: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[3].location.x",
-                                                },
-                                                y: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[3].location.y",
-                                                },
-                                                z: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[3].location.z",
-                                                },
-                                            } as const,
-                                        },
-                                        name: {
-                                            tag: "Machine_00251.AbbSts.Cfg.ToolFrames[3].name",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[4]",
-                                    children: {
-                                        id: {
-                                            tag: "Machine_00251.AbbSts.Cfg.ToolFrames[4].id",
-                                        },
-                                        location: {
-                                            tag: "Machine_00251.AbbSts.Cfg.ToolFrames[4].location",
-                                            children: {
-                                                pdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[4].location.pdeg",
-                                                },
-                                                rdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[4].location.rdeg",
-                                                },
-                                                toolFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[4].location.toolFrameId",
-                                                },
-                                                userFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[4].location.userFrameId",
-                                                },
-                                                wdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[4].location.wdeg",
-                                                },
-                                                x: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[4].location.x",
-                                                },
-                                                y: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[4].location.y",
-                                                },
-                                                z: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.ToolFrames[4].location.z",
-                                                },
-                                            } as const,
-                                        },
-                                        name: {
-                                            tag: "Machine_00251.AbbSts.Cfg.ToolFrames[4].name",
-                                        },
-                                    } as const,
-                                },
-                            ] as const,
-                        },
-                        UserFrames: {
-                            tag: "Machine_00251.AbbSts.Cfg.UserFrames",
-                            items: [
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[0]",
-                                    children: {
-                                        id: {
-                                            tag: "Machine_00251.AbbSts.Cfg.UserFrames[0].id",
-                                        },
-                                        location: {
-                                            tag: "Machine_00251.AbbSts.Cfg.UserFrames[0].location",
-                                            children: {
-                                                pdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[0].location.pdeg",
-                                                },
-                                                rdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[0].location.rdeg",
-                                                },
-                                                toolFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[0].location.toolFrameId",
-                                                },
-                                                userFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[0].location.userFrameId",
-                                                },
-                                                wdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[0].location.wdeg",
-                                                },
-                                                x: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[0].location.x",
-                                                },
-                                                y: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[0].location.y",
-                                                },
-                                                z: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[0].location.z",
-                                                },
-                                            } as const,
-                                        },
-                                        name: {
-                                            tag: "Machine_00251.AbbSts.Cfg.UserFrames[0].name",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[1]",
-                                    children: {
-                                        id: {
-                                            tag: "Machine_00251.AbbSts.Cfg.UserFrames[1].id",
-                                        },
-                                        location: {
-                                            tag: "Machine_00251.AbbSts.Cfg.UserFrames[1].location",
-                                            children: {
-                                                pdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[1].location.pdeg",
-                                                },
-                                                rdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[1].location.rdeg",
-                                                },
-                                                toolFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[1].location.toolFrameId",
-                                                },
-                                                userFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[1].location.userFrameId",
-                                                },
-                                                wdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[1].location.wdeg",
-                                                },
-                                                x: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[1].location.x",
-                                                },
-                                                y: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[1].location.y",
-                                                },
-                                                z: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[1].location.z",
-                                                },
-                                            } as const,
-                                        },
-                                        name: {
-                                            tag: "Machine_00251.AbbSts.Cfg.UserFrames[1].name",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[2]",
-                                    children: {
-                                        id: {
-                                            tag: "Machine_00251.AbbSts.Cfg.UserFrames[2].id",
-                                        },
-                                        location: {
-                                            tag: "Machine_00251.AbbSts.Cfg.UserFrames[2].location",
-                                            children: {
-                                                pdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[2].location.pdeg",
-                                                },
-                                                rdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[2].location.rdeg",
-                                                },
-                                                toolFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[2].location.toolFrameId",
-                                                },
-                                                userFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[2].location.userFrameId",
-                                                },
-                                                wdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[2].location.wdeg",
-                                                },
-                                                x: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[2].location.x",
-                                                },
-                                                y: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[2].location.y",
-                                                },
-                                                z: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[2].location.z",
-                                                },
-                                            } as const,
-                                        },
-                                        name: {
-                                            tag: "Machine_00251.AbbSts.Cfg.UserFrames[2].name",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[3]",
-                                    children: {
-                                        id: {
-                                            tag: "Machine_00251.AbbSts.Cfg.UserFrames[3].id",
-                                        },
-                                        location: {
-                                            tag: "Machine_00251.AbbSts.Cfg.UserFrames[3].location",
-                                            children: {
-                                                pdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[3].location.pdeg",
-                                                },
-                                                rdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[3].location.rdeg",
-                                                },
-                                                toolFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[3].location.toolFrameId",
-                                                },
-                                                userFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[3].location.userFrameId",
-                                                },
-                                                wdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[3].location.wdeg",
-                                                },
-                                                x: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[3].location.x",
-                                                },
-                                                y: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[3].location.y",
-                                                },
-                                                z: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[3].location.z",
-                                                },
-                                            } as const,
-                                        },
-                                        name: {
-                                            tag: "Machine_00251.AbbSts.Cfg.UserFrames[3].name",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[4]",
-                                    children: {
-                                        id: {
-                                            tag: "Machine_00251.AbbSts.Cfg.UserFrames[4].id",
-                                        },
-                                        location: {
-                                            tag: "Machine_00251.AbbSts.Cfg.UserFrames[4].location",
-                                            children: {
-                                                pdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[4].location.pdeg",
-                                                },
-                                                rdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[4].location.rdeg",
-                                                },
-                                                toolFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[4].location.toolFrameId",
-                                                },
-                                                userFrameId: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[4].location.userFrameId",
-                                                },
-                                                wdeg: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[4].location.wdeg",
-                                                },
-                                                x: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[4].location.x",
-                                                },
-                                                y: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[4].location.y",
-                                                },
-                                                z: {
-                                                    tag: "Machine_00251.AbbSts.Cfg.UserFrames[4].location.z",
-                                                },
-                                            } as const,
-                                        },
-                                        name: {
-                                            tag: "Machine_00251.AbbSts.Cfg.UserFrames[4].name",
-                                        },
-                                    } as const,
-                                },
-                            ] as const,
-                        },
-                    } as const,
                 },
                 IController: {
                     tag: "Machine_00251.AbbSts.IController",
@@ -2193,6 +1470,9 @@ export const machineTags: MachineTagNode = {
                                         TransferPartDataReq: {
                                             tag: "Machine_00251.AbbSts.IController.i.data.TransferPartDataReq",
                                         },
+                                        UnclampPartReq: {
+                                            tag: "Machine_00251.AbbSts.IController.i.data.UnclampPartReq",
+                                        },
                                         UniqueTaskActiveId: {
                                             tag: "Machine_00251.AbbSts.IController.i.data.UniqueTaskActiveId",
                                         },
@@ -2293,6 +1573,106 @@ export const machineTags: MachineTagNode = {
                                                         },
                                                         ZOffset: {
                                                             tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[1].ZOffset",
+                                                        },
+                                                    } as const,
+                                                },
+                                                {
+                                                    tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[10]",
+                                                    children: {
+                                                        BallValveOn: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[10].BallValveOn",
+                                                        },
+                                                        Speed: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[10].Speed",
+                                                        },
+                                                        SqueegeeDiameter: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                        },
+                                                        StepperPosition: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[10].StepperPosition",
+                                                        },
+                                                        ZOffset: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[10].ZOffset",
+                                                        },
+                                                    } as const,
+                                                },
+                                                {
+                                                    tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[11]",
+                                                    children: {
+                                                        BallValveOn: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[11].BallValveOn",
+                                                        },
+                                                        Speed: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[11].Speed",
+                                                        },
+                                                        SqueegeeDiameter: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                        },
+                                                        StepperPosition: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[11].StepperPosition",
+                                                        },
+                                                        ZOffset: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[11].ZOffset",
+                                                        },
+                                                    } as const,
+                                                },
+                                                {
+                                                    tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[12]",
+                                                    children: {
+                                                        BallValveOn: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[12].BallValveOn",
+                                                        },
+                                                        Speed: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[12].Speed",
+                                                        },
+                                                        SqueegeeDiameter: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                        },
+                                                        StepperPosition: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[12].StepperPosition",
+                                                        },
+                                                        ZOffset: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[12].ZOffset",
+                                                        },
+                                                    } as const,
+                                                },
+                                                {
+                                                    tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[13]",
+                                                    children: {
+                                                        BallValveOn: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[13].BallValveOn",
+                                                        },
+                                                        Speed: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[13].Speed",
+                                                        },
+                                                        SqueegeeDiameter: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                        },
+                                                        StepperPosition: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[13].StepperPosition",
+                                                        },
+                                                        ZOffset: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[13].ZOffset",
+                                                        },
+                                                    } as const,
+                                                },
+                                                {
+                                                    tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[14]",
+                                                    children: {
+                                                        BallValveOn: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[14].BallValveOn",
+                                                        },
+                                                        Speed: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[14].Speed",
+                                                        },
+                                                        SqueegeeDiameter: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                        },
+                                                        StepperPosition: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[14].StepperPosition",
+                                                        },
+                                                        ZOffset: {
+                                                            tag: "Machine_00251.AbbSts.IController.o.data.ApplicatorSetpoints[14].ZOffset",
                                                         },
                                                     } as const,
                                                 },
@@ -2572,6 +1952,9 @@ export const machineTags: MachineTagNode = {
                                         TubeTypeId: {
                                             tag: "Machine_00251.AbbSts.IController.o.data.TubeTypeId",
                                         },
+                                        UnclampPartDone: {
+                                            tag: "Machine_00251.AbbSts.IController.o.data.UnclampPartDone",
+                                        },
                                         UniqueTaskReqId: {
                                             tag: "Machine_00251.AbbSts.IController.o.data.UniqueTaskReqId",
                                         },
@@ -2717,6 +2100,106 @@ export const machineTags: MachineTagNode = {
                                 },
                                 ZOffset: {
                                     tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[1].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[10]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[10].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[10].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[10].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[10].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[10].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[11]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[11].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[11].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[11].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[11].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[11].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[12]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[12].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[12].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[12].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[12].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[12].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[13]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[13].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[13].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[13].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[13].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[13].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[14]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[14].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[14].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[14].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[14].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.ActiveRecipe.ApplicatorSetpoints[14].ZOffset",
                                 },
                             } as const,
                         },
@@ -2954,6 +2437,9 @@ export const machineTags: MachineTagNode = {
                 UsesBrushTool: {
                     tag: "Machine_00251.ActiveRecipe.UsesBrushTool",
                 },
+                UsesCentrifuge: {
+                    tag: "Machine_00251.ActiveRecipe.UsesCentrifuge",
+                },
                 WeighingFingerId: {
                     tag: "Machine_00251.ActiveRecipe.WeighingFingerId",
                 },
@@ -3008,41 +2494,6 @@ export const machineTags: MachineTagNode = {
                 },
                 AtPosB: {
                     tag: "Machine_00251.clamp_sSts.AtPosB",
-                },
-                Cfg: {
-                    tag: "Machine_00251.clamp_sSts.Cfg",
-                    children: {
-                        labelA: {
-                            tag: "Machine_00251.clamp_sSts.Cfg.labelA",
-                        },
-                        labelB: {
-                            tag: "Machine_00251.clamp_sSts.Cfg.labelB",
-                        },
-                        missingSensA: {
-                            tag: "Machine_00251.clamp_sSts.Cfg.missingSensA",
-                        },
-                        missingSensB: {
-                            tag: "Machine_00251.clamp_sSts.Cfg.missingSensB",
-                        },
-                        moveTimeAtoB: {
-                            tag: "Machine_00251.clamp_sSts.Cfg.moveTimeAtoB",
-                        },
-                        moveTimeBtoA: {
-                            tag: "Machine_00251.clamp_sSts.Cfg.moveTimeBtoA",
-                        },
-                        outputMode: {
-                            tag: "Machine_00251.clamp_sSts.Cfg.outputMode",
-                        },
-                        sensorMode: {
-                            tag: "Machine_00251.clamp_sSts.Cfg.sensorMode",
-                        },
-                        solPwrNotOnEstopCircuit: {
-                            tag: "Machine_00251.clamp_sSts.Cfg.solPwrNotOnEstopCircuit",
-                        },
-                        valveType: {
-                            tag: "Machine_00251.clamp_sSts.Cfg.valveType",
-                        },
-                    } as const,
                 },
                 overrideA: {
                     tag: "Machine_00251.clamp_sSts.overrideA",
@@ -3111,41 +2562,6 @@ export const machineTags: MachineTagNode = {
                 AtPosB: {
                     tag: "Machine_00251.clamp_tSts.AtPosB",
                 },
-                Cfg: {
-                    tag: "Machine_00251.clamp_tSts.Cfg",
-                    children: {
-                        labelA: {
-                            tag: "Machine_00251.clamp_tSts.Cfg.labelA",
-                        },
-                        labelB: {
-                            tag: "Machine_00251.clamp_tSts.Cfg.labelB",
-                        },
-                        missingSensA: {
-                            tag: "Machine_00251.clamp_tSts.Cfg.missingSensA",
-                        },
-                        missingSensB: {
-                            tag: "Machine_00251.clamp_tSts.Cfg.missingSensB",
-                        },
-                        moveTimeAtoB: {
-                            tag: "Machine_00251.clamp_tSts.Cfg.moveTimeAtoB",
-                        },
-                        moveTimeBtoA: {
-                            tag: "Machine_00251.clamp_tSts.Cfg.moveTimeBtoA",
-                        },
-                        outputMode: {
-                            tag: "Machine_00251.clamp_tSts.Cfg.outputMode",
-                        },
-                        sensorMode: {
-                            tag: "Machine_00251.clamp_tSts.Cfg.sensorMode",
-                        },
-                        solPwrNotOnEstopCircuit: {
-                            tag: "Machine_00251.clamp_tSts.Cfg.solPwrNotOnEstopCircuit",
-                        },
-                        valveType: {
-                            tag: "Machine_00251.clamp_tSts.Cfg.valveType",
-                        },
-                    } as const,
-                },
                 overrideA: {
                     tag: "Machine_00251.clamp_tSts.overrideA",
                 },
@@ -3212,41 +2628,6 @@ export const machineTags: MachineTagNode = {
                 },
                 AtPosB: {
                     tag: "Machine_00251.EoatSts.AtPosB",
-                },
-                Cfg: {
-                    tag: "Machine_00251.EoatSts.Cfg",
-                    children: {
-                        labelA: {
-                            tag: "Machine_00251.EoatSts.Cfg.labelA",
-                        },
-                        labelB: {
-                            tag: "Machine_00251.EoatSts.Cfg.labelB",
-                        },
-                        missingSensA: {
-                            tag: "Machine_00251.EoatSts.Cfg.missingSensA",
-                        },
-                        missingSensB: {
-                            tag: "Machine_00251.EoatSts.Cfg.missingSensB",
-                        },
-                        moveTimeAtoB: {
-                            tag: "Machine_00251.EoatSts.Cfg.moveTimeAtoB",
-                        },
-                        moveTimeBtoA: {
-                            tag: "Machine_00251.EoatSts.Cfg.moveTimeBtoA",
-                        },
-                        outputMode: {
-                            tag: "Machine_00251.EoatSts.Cfg.outputMode",
-                        },
-                        sensorMode: {
-                            tag: "Machine_00251.EoatSts.Cfg.sensorMode",
-                        },
-                        solPwrNotOnEstopCircuit: {
-                            tag: "Machine_00251.EoatSts.Cfg.solPwrNotOnEstopCircuit",
-                        },
-                        valveType: {
-                            tag: "Machine_00251.EoatSts.Cfg.valveType",
-                        },
-                    } as const,
                 },
                 overrideA: {
                     tag: "Machine_00251.EoatSts.overrideA",
@@ -3720,452 +3101,6 @@ export const machineTags: MachineTagNode = {
                 ActualPosition: {
                     tag: "Machine_00251.Fix_sSts.ActualPosition",
                 },
-                Cfg: {
-                    tag: "Machine_00251.Fix_sSts.Cfg",
-                    children: {
-                        NumAxes: {
-                            tag: "Machine_00251.Fix_sSts.Cfg.NumAxes",
-                        },
-                        Poses: {
-                            tag: "Machine_00251.Fix_sSts.Cfg.Poses",
-                            items: [
-                                {
-                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[0]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[0].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[0].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[0].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[0].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[0].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[0].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[0].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[0].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[0].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[0].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[1]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[1].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[1].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[1].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[1].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[1].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[1].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[1].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[1].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[1].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[1].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[2]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[2].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[2].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[2].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[2].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[2].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[2].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[2].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[2].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[2].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[2].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[3]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[3].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[3].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[3].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[3].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[3].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[3].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[3].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[3].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[3].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[3].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[4]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[4].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[4].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[4].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[4].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[4].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[4].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[4].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[4].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[4].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[4].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[5]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[5].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[5].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[5].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[5].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[5].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[5].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[5].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[5].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[5].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[5].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[6]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[6].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[6].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[6].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[6].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[6].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[6].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[6].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[6].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[6].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[6].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[7]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[7].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[7].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[7].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[7].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[7].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[7].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[7].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[7].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[7].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[7].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[8]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[8].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[8].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[8].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[8].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[8].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[8].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[8].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[8].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[8].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[8].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[9]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[9].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[9].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[9].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[9].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[9].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[9].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[9].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_sSts.Cfg.Poses[9].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[9].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_sSts.Cfg.Poses[9].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                            ] as const,
-                        },
-                        UseSimultaneousMoves: {
-                            tag: "Machine_00251.Fix_sSts.Cfg.UseSimultaneousMoves",
-                        },
-                    } as const,
-                },
             } as const,
         },
         Fix_tCfg: {
@@ -4620,452 +3555,6 @@ export const machineTags: MachineTagNode = {
                 ActualPosition: {
                     tag: "Machine_00251.Fix_tSts.ActualPosition",
                 },
-                Cfg: {
-                    tag: "Machine_00251.Fix_tSts.Cfg",
-                    children: {
-                        NumAxes: {
-                            tag: "Machine_00251.Fix_tSts.Cfg.NumAxes",
-                        },
-                        Poses: {
-                            tag: "Machine_00251.Fix_tSts.Cfg.Poses",
-                            items: [
-                                {
-                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[0]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[0].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[0].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[0].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[0].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[0].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[0].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[0].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[0].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[0].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[0].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[1]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[1].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[1].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[1].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[1].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[1].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[1].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[1].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[1].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[1].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[1].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[2]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[2].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[2].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[2].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[2].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[2].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[2].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[2].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[2].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[2].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[2].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[3]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[3].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[3].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[3].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[3].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[3].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[3].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[3].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[3].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[3].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[3].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[4]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[4].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[4].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[4].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[4].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[4].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[4].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[4].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[4].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[4].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[4].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[5]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[5].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[5].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[5].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[5].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[5].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[5].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[5].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[5].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[5].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[5].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[6]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[6].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[6].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[6].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[6].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[6].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[6].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[6].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[6].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[6].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[6].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[7]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[7].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[7].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[7].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[7].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[7].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[7].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[7].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[7].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[7].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[7].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[8]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[8].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[8].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[8].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[8].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[8].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[8].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[8].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[8].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[8].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[8].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[9]",
-                                    children: {
-                                        ChildPositions: {
-                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[9].ChildPositions",
-                                            items: [
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[9].ChildPositions[0]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[9].ChildPositions[0].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[9].ChildPositions[0].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[9].ChildPositions[1]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[9].ChildPositions[1].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[9].ChildPositions[1].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                {
-                                                    tag: "Machine_00251.Fix_tSts.Cfg.Poses[9].ChildPositions[2]",
-                                                    children: {
-                                                        ChildId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[9].ChildPositions[2].ChildId",
-                                                        },
-                                                        PositionId: {
-                                                            tag: "Machine_00251.Fix_tSts.Cfg.Poses[9].ChildPositions[2].PositionId",
-                                                        },
-                                                    } as const,
-                                                },
-                                            ] as const,
-                                        },
-                                    } as const,
-                                },
-                            ] as const,
-                        },
-                        UseSimultaneousMoves: {
-                            tag: "Machine_00251.Fix_tSts.Cfg.UseSimultaneousMoves",
-                        },
-                    } as const,
-                },
             } as const,
         },
         Flsb_sCfg: {
@@ -5114,41 +3603,6 @@ export const machineTags: MachineTagNode = {
                 },
                 AtPosB: {
                     tag: "Machine_00251.Flsb_sSts.AtPosB",
-                },
-                Cfg: {
-                    tag: "Machine_00251.Flsb_sSts.Cfg",
-                    children: {
-                        labelA: {
-                            tag: "Machine_00251.Flsb_sSts.Cfg.labelA",
-                        },
-                        labelB: {
-                            tag: "Machine_00251.Flsb_sSts.Cfg.labelB",
-                        },
-                        missingSensA: {
-                            tag: "Machine_00251.Flsb_sSts.Cfg.missingSensA",
-                        },
-                        missingSensB: {
-                            tag: "Machine_00251.Flsb_sSts.Cfg.missingSensB",
-                        },
-                        moveTimeAtoB: {
-                            tag: "Machine_00251.Flsb_sSts.Cfg.moveTimeAtoB",
-                        },
-                        moveTimeBtoA: {
-                            tag: "Machine_00251.Flsb_sSts.Cfg.moveTimeBtoA",
-                        },
-                        outputMode: {
-                            tag: "Machine_00251.Flsb_sSts.Cfg.outputMode",
-                        },
-                        sensorMode: {
-                            tag: "Machine_00251.Flsb_sSts.Cfg.sensorMode",
-                        },
-                        solPwrNotOnEstopCircuit: {
-                            tag: "Machine_00251.Flsb_sSts.Cfg.solPwrNotOnEstopCircuit",
-                        },
-                        valveType: {
-                            tag: "Machine_00251.Flsb_sSts.Cfg.valveType",
-                        },
-                    } as const,
                 },
                 overrideA: {
                     tag: "Machine_00251.Flsb_sSts.overrideA",
@@ -5217,41 +3671,6 @@ export const machineTags: MachineTagNode = {
                 AtPosB: {
                     tag: "Machine_00251.Flsb_tSts.AtPosB",
                 },
-                Cfg: {
-                    tag: "Machine_00251.Flsb_tSts.Cfg",
-                    children: {
-                        labelA: {
-                            tag: "Machine_00251.Flsb_tSts.Cfg.labelA",
-                        },
-                        labelB: {
-                            tag: "Machine_00251.Flsb_tSts.Cfg.labelB",
-                        },
-                        missingSensA: {
-                            tag: "Machine_00251.Flsb_tSts.Cfg.missingSensA",
-                        },
-                        missingSensB: {
-                            tag: "Machine_00251.Flsb_tSts.Cfg.missingSensB",
-                        },
-                        moveTimeAtoB: {
-                            tag: "Machine_00251.Flsb_tSts.Cfg.moveTimeAtoB",
-                        },
-                        moveTimeBtoA: {
-                            tag: "Machine_00251.Flsb_tSts.Cfg.moveTimeBtoA",
-                        },
-                        outputMode: {
-                            tag: "Machine_00251.Flsb_tSts.Cfg.outputMode",
-                        },
-                        sensorMode: {
-                            tag: "Machine_00251.Flsb_tSts.Cfg.sensorMode",
-                        },
-                        solPwrNotOnEstopCircuit: {
-                            tag: "Machine_00251.Flsb_tSts.Cfg.solPwrNotOnEstopCircuit",
-                        },
-                        valveType: {
-                            tag: "Machine_00251.Flsb_tSts.Cfg.valveType",
-                        },
-                    } as const,
-                },
                 overrideA: {
                     tag: "Machine_00251.Flsb_tSts.overrideA",
                 },
@@ -5319,41 +3738,6 @@ export const machineTags: MachineTagNode = {
                 AtPosB: {
                     tag: "Machine_00251.GripSts.AtPosB",
                 },
-                Cfg: {
-                    tag: "Machine_00251.GripSts.Cfg",
-                    children: {
-                        labelA: {
-                            tag: "Machine_00251.GripSts.Cfg.labelA",
-                        },
-                        labelB: {
-                            tag: "Machine_00251.GripSts.Cfg.labelB",
-                        },
-                        missingSensA: {
-                            tag: "Machine_00251.GripSts.Cfg.missingSensA",
-                        },
-                        missingSensB: {
-                            tag: "Machine_00251.GripSts.Cfg.missingSensB",
-                        },
-                        moveTimeAtoB: {
-                            tag: "Machine_00251.GripSts.Cfg.moveTimeAtoB",
-                        },
-                        moveTimeBtoA: {
-                            tag: "Machine_00251.GripSts.Cfg.moveTimeBtoA",
-                        },
-                        outputMode: {
-                            tag: "Machine_00251.GripSts.Cfg.outputMode",
-                        },
-                        sensorMode: {
-                            tag: "Machine_00251.GripSts.Cfg.sensorMode",
-                        },
-                        solPwrNotOnEstopCircuit: {
-                            tag: "Machine_00251.GripSts.Cfg.solPwrNotOnEstopCircuit",
-                        },
-                        valveType: {
-                            tag: "Machine_00251.GripSts.Cfg.valveType",
-                        },
-                    } as const,
-                },
                 overrideA: {
                     tag: "Machine_00251.GripSts.overrideA",
                 },
@@ -5377,6 +3761,9 @@ export const machineTags: MachineTagNode = {
         HmiCfg: {
             tag: "Machine_00251.HmiCfg",
             children: {
+                HasMultipleKiosks: {
+                    tag: "Machine_00251.HmiCfg.HasMultipleKiosks",
+                },
                 StartingScreen: {
                     tag: "Machine_00251.HmiCfg.StartingScreen",
                 },
@@ -5385,1041 +3772,6 @@ export const machineTags: MachineTagNode = {
         HmiSts: {
             tag: "Machine_00251.HmiSts",
             children: {
-                ActiveAxisSts: {
-                    tag: "Machine_00251.HmiSts.ActiveAxisSts",
-                    children: {
-                        ActiveStreamType: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.ActiveStreamType",
-                        },
-                        actualAcceleration: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.actualAcceleration",
-                        },
-                        ActualControllerMode: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.ActualControllerMode",
-                        },
-                        ActualCurrent: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.ActualCurrent",
-                        },
-                        actualMasterAxisDevId: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.actualMasterAxisDevId",
-                        },
-                        actualPosition: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.actualPosition",
-                        },
-                        ActualTorque: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.ActualTorque",
-                        },
-                        actualVelocity: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.actualVelocity",
-                        },
-                        AxesPositionDifference_CORRECTABLE: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.AxesPositionDifference_CORRECTABLE",
-                        },
-                        AxesPositionDifference_OK: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.AxesPositionDifference_OK",
-                        },
-                        AxisRefState: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.AxisRefState",
-                        },
-                        CalculatedStoppingPosition: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.CalculatedStoppingPosition",
-                        },
-                        Cfg: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg",
-                            children: {
-                                AtPosTol: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.AtPosTol",
-                                },
-                                AutoPositionVerifyDuringReset: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.AutoPositionVerifyDuringReset",
-                                },
-                                AxesPositionToleranceForSkew: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.AxesPositionToleranceForSkew",
-                                },
-                                AxisType: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.AxisType",
-                                },
-                                DriveId: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.DriveId",
-                                },
-                                DriveType: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.DriveType",
-                                },
-                                GearingPositionTolerance: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.GearingPositionTolerance",
-                                },
-                                HardStopNegative: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.HardStopNegative",
-                                },
-                                HardStopPositive: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.HardStopPositive",
-                                },
-                                hasDynamicNegativeLimit: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.hasDynamicNegativeLimit",
-                                },
-                                hasDynamicPositiveLimit: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.hasDynamicPositiveLimit",
-                                },
-                                hasRailBrakes: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.hasRailBrakes",
-                                },
-                                HomingToHardstopDir: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.HomingToHardstopDir",
-                                },
-                                IgnoreLimitSwitches: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.IgnoreLimitSwitches",
-                                },
-                                Ignores: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.Ignores",
-                                    items: [
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.Ignores[0]",
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.Ignores[1]",
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.Ignores[2]",
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.Ignores[3]",
-                                        },
-                                    ] as const,
-                                },
-                                IgnoreSoftwareLimits: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.IgnoreSoftwareLimits",
-                                },
-                                KeepMasteredStatusAtStartup: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.KeepMasteredStatusAtStartup",
-                                },
-                                MaxCurrentNormalOperation: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MaxCurrentNormalOperation",
-                                },
-                                MaxCurrentWhileHomingToHardstop: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MaxCurrentWhileHomingToHardstop",
-                                },
-                                MotionProfiles: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles",
-                                    items: [
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[0]",
-                                            children: {
-                                                acceleration: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[0].acceleration",
-                                                },
-                                                jerk: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[0].jerk",
-                                                },
-                                                speed: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[0].speed",
-                                                },
-                                            } as const,
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[1]",
-                                            children: {
-                                                acceleration: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[1].acceleration",
-                                                },
-                                                jerk: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[1].jerk",
-                                                },
-                                                speed: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[1].speed",
-                                                },
-                                            } as const,
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[2]",
-                                            children: {
-                                                acceleration: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[2].acceleration",
-                                                },
-                                                jerk: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[2].jerk",
-                                                },
-                                                speed: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[2].speed",
-                                                },
-                                            } as const,
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[3]",
-                                            children: {
-                                                acceleration: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[3].acceleration",
-                                                },
-                                                jerk: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[3].jerk",
-                                                },
-                                                speed: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[3].speed",
-                                                },
-                                            } as const,
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[4]",
-                                            children: {
-                                                acceleration: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[4].acceleration",
-                                                },
-                                                jerk: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[4].jerk",
-                                                },
-                                                speed: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.MotionProfiles[4].speed",
-                                                },
-                                            } as const,
-                                        },
-                                    ] as const,
-                                },
-                                OperationalPositionMax: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.OperationalPositionMax",
-                                },
-                                OperationalPositionMin: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.OperationalPositionMin",
-                                },
-                                PositionReferencingMethod: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.PositionReferencingMethod",
-                                },
-                                ScaleFactorUnitsPerEncoderCount: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.ScaleFactorUnitsPerEncoderCount",
-                                },
-                                SearchDistance: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.SearchDistance",
-                                },
-                                SensorPositions: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.SensorPositions",
-                                    items: [
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.SensorPositions[0]",
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.SensorPositions[1]",
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.SensorPositions[2]",
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.SensorPositions[3]",
-                                        },
-                                    ] as const,
-                                },
-                                ShippingPosition: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.ShippingPosition",
-                                },
-                                SoftMotionScalingParams: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.SoftMotionScalingParams",
-                                    children: {
-                                        gearOutputTurnsLeft: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.SoftMotionScalingParams.gearOutputTurnsLeft",
-                                        },
-                                        gearOutputTurnsRight: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.SoftMotionScalingParams.gearOutputTurnsRight",
-                                        },
-                                        incrementsLeft: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.SoftMotionScalingParams.incrementsLeft",
-                                        },
-                                        invertDir: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.SoftMotionScalingParams.invertDir",
-                                        },
-                                        motorsTurnsLeft: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.SoftMotionScalingParams.motorsTurnsLeft",
-                                        },
-                                        motorTurnsRight: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.SoftMotionScalingParams.motorTurnsRight",
-                                        },
-                                        unitsInApplicationRight: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.SoftMotionScalingParams.unitsInApplicationRight",
-                                        },
-                                    } as const,
-                                },
-                                SoftwareLimitNegative: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.SoftwareLimitNegative",
-                                },
-                                SoftwareLimitPositive: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.SoftwareLimitPositive",
-                                },
-                                Unit: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.Unit",
-                                },
-                                updateScalingIsNeeded: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.updateScalingIsNeeded",
-                                },
-                                ValidationSensor: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.ValidationSensor",
-                                },
-                                VerificationSensorOffsetFromZero: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Cfg.VerificationSensorOffsetFromZero",
-                                },
-                            } as const,
-                        },
-                        ConfiguredSoftLimitTravelRange: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.ConfiguredSoftLimitTravelRange",
-                        },
-                        DriveHasError: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.DriveHasError",
-                        },
-                        DriveHwLimitsEnforcement: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.DriveHwLimitsEnforcement",
-                        },
-                        DriveIsStoppingMotor: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.DriveIsStoppingMotor",
-                        },
-                        DriveState: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.DriveState",
-                        },
-                        DriveStatusMsg: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.DriveStatusMsg",
-                        },
-                        DriveStoppedMotor: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.DriveStoppedMotor",
-                        },
-                        DriveSwLimitsEnforcement: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.DriveSwLimitsEnforcement",
-                        },
-                        DualAxisStopType: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.DualAxisStopType",
-                        },
-                        EtherCatComms_OK: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.EtherCatComms_OK",
-                        },
-                        HomeOffsetFromZero: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.HomeOffsetFromZero",
-                        },
-                        ignoringRailBrakes: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.ignoringRailBrakes",
-                        },
-                        Interlocks: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks",
-                            children: {
-                                List: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List",
-                                    items: [
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[0]",
-                                            children: {
-                                                Cfg: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[0].Cfg",
-                                                    children: {
-                                                        Description: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[0].Cfg.Description",
-                                                        },
-                                                        Direction: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[0].Cfg.Direction",
-                                                        },
-                                                        Ignored: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[0].Cfg.Ignored",
-                                                        },
-                                                        InterlockType: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[0].Cfg.InterlockType",
-                                                        },
-                                                        SenderId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[0].Cfg.SenderId",
-                                                        },
-                                                        TargetId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[0].Cfg.TargetId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                Sts: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[0].Sts",
-                                                    children: {
-                                                        conditionsAreMet: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[0].Sts.conditionsAreMet",
-                                                        },
-                                                        isAllowed: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[0].Sts.isAllowed",
-                                                        },
-                                                        isIgnoredByCfg: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[0].Sts.isIgnoredByCfg",
-                                                        },
-                                                        isOverridden: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[0].Sts.isOverridden",
-                                                        },
-                                                        OverridenTimeLeft: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[0].Sts.OverridenTimeLeft",
-                                                        },
-                                                    } as const,
-                                                },
-                                            } as const,
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[1]",
-                                            children: {
-                                                Cfg: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[1].Cfg",
-                                                    children: {
-                                                        Description: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[1].Cfg.Description",
-                                                        },
-                                                        Direction: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[1].Cfg.Direction",
-                                                        },
-                                                        Ignored: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[1].Cfg.Ignored",
-                                                        },
-                                                        InterlockType: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[1].Cfg.InterlockType",
-                                                        },
-                                                        SenderId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[1].Cfg.SenderId",
-                                                        },
-                                                        TargetId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[1].Cfg.TargetId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                Sts: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[1].Sts",
-                                                    children: {
-                                                        conditionsAreMet: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[1].Sts.conditionsAreMet",
-                                                        },
-                                                        isAllowed: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[1].Sts.isAllowed",
-                                                        },
-                                                        isIgnoredByCfg: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[1].Sts.isIgnoredByCfg",
-                                                        },
-                                                        isOverridden: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[1].Sts.isOverridden",
-                                                        },
-                                                        OverridenTimeLeft: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[1].Sts.OverridenTimeLeft",
-                                                        },
-                                                    } as const,
-                                                },
-                                            } as const,
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[2]",
-                                            children: {
-                                                Cfg: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[2].Cfg",
-                                                    children: {
-                                                        Description: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[2].Cfg.Description",
-                                                        },
-                                                        Direction: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[2].Cfg.Direction",
-                                                        },
-                                                        Ignored: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[2].Cfg.Ignored",
-                                                        },
-                                                        InterlockType: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[2].Cfg.InterlockType",
-                                                        },
-                                                        SenderId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[2].Cfg.SenderId",
-                                                        },
-                                                        TargetId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[2].Cfg.TargetId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                Sts: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[2].Sts",
-                                                    children: {
-                                                        conditionsAreMet: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[2].Sts.conditionsAreMet",
-                                                        },
-                                                        isAllowed: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[2].Sts.isAllowed",
-                                                        },
-                                                        isIgnoredByCfg: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[2].Sts.isIgnoredByCfg",
-                                                        },
-                                                        isOverridden: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[2].Sts.isOverridden",
-                                                        },
-                                                        OverridenTimeLeft: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[2].Sts.OverridenTimeLeft",
-                                                        },
-                                                    } as const,
-                                                },
-                                            } as const,
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[3]",
-                                            children: {
-                                                Cfg: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[3].Cfg",
-                                                    children: {
-                                                        Description: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[3].Cfg.Description",
-                                                        },
-                                                        Direction: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[3].Cfg.Direction",
-                                                        },
-                                                        Ignored: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[3].Cfg.Ignored",
-                                                        },
-                                                        InterlockType: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[3].Cfg.InterlockType",
-                                                        },
-                                                        SenderId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[3].Cfg.SenderId",
-                                                        },
-                                                        TargetId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[3].Cfg.TargetId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                Sts: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[3].Sts",
-                                                    children: {
-                                                        conditionsAreMet: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[3].Sts.conditionsAreMet",
-                                                        },
-                                                        isAllowed: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[3].Sts.isAllowed",
-                                                        },
-                                                        isIgnoredByCfg: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[3].Sts.isIgnoredByCfg",
-                                                        },
-                                                        isOverridden: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[3].Sts.isOverridden",
-                                                        },
-                                                        OverridenTimeLeft: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[3].Sts.OverridenTimeLeft",
-                                                        },
-                                                    } as const,
-                                                },
-                                            } as const,
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[4]",
-                                            children: {
-                                                Cfg: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[4].Cfg",
-                                                    children: {
-                                                        Description: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[4].Cfg.Description",
-                                                        },
-                                                        Direction: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[4].Cfg.Direction",
-                                                        },
-                                                        Ignored: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[4].Cfg.Ignored",
-                                                        },
-                                                        InterlockType: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[4].Cfg.InterlockType",
-                                                        },
-                                                        SenderId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[4].Cfg.SenderId",
-                                                        },
-                                                        TargetId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[4].Cfg.TargetId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                Sts: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[4].Sts",
-                                                    children: {
-                                                        conditionsAreMet: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[4].Sts.conditionsAreMet",
-                                                        },
-                                                        isAllowed: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[4].Sts.isAllowed",
-                                                        },
-                                                        isIgnoredByCfg: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[4].Sts.isIgnoredByCfg",
-                                                        },
-                                                        isOverridden: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[4].Sts.isOverridden",
-                                                        },
-                                                        OverridenTimeLeft: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[4].Sts.OverridenTimeLeft",
-                                                        },
-                                                    } as const,
-                                                },
-                                            } as const,
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[5]",
-                                            children: {
-                                                Cfg: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[5].Cfg",
-                                                    children: {
-                                                        Description: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[5].Cfg.Description",
-                                                        },
-                                                        Direction: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[5].Cfg.Direction",
-                                                        },
-                                                        Ignored: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[5].Cfg.Ignored",
-                                                        },
-                                                        InterlockType: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[5].Cfg.InterlockType",
-                                                        },
-                                                        SenderId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[5].Cfg.SenderId",
-                                                        },
-                                                        TargetId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[5].Cfg.TargetId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                Sts: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[5].Sts",
-                                                    children: {
-                                                        conditionsAreMet: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[5].Sts.conditionsAreMet",
-                                                        },
-                                                        isAllowed: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[5].Sts.isAllowed",
-                                                        },
-                                                        isIgnoredByCfg: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[5].Sts.isIgnoredByCfg",
-                                                        },
-                                                        isOverridden: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[5].Sts.isOverridden",
-                                                        },
-                                                        OverridenTimeLeft: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[5].Sts.OverridenTimeLeft",
-                                                        },
-                                                    } as const,
-                                                },
-                                            } as const,
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[6]",
-                                            children: {
-                                                Cfg: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[6].Cfg",
-                                                    children: {
-                                                        Description: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[6].Cfg.Description",
-                                                        },
-                                                        Direction: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[6].Cfg.Direction",
-                                                        },
-                                                        Ignored: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[6].Cfg.Ignored",
-                                                        },
-                                                        InterlockType: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[6].Cfg.InterlockType",
-                                                        },
-                                                        SenderId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[6].Cfg.SenderId",
-                                                        },
-                                                        TargetId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[6].Cfg.TargetId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                Sts: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[6].Sts",
-                                                    children: {
-                                                        conditionsAreMet: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[6].Sts.conditionsAreMet",
-                                                        },
-                                                        isAllowed: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[6].Sts.isAllowed",
-                                                        },
-                                                        isIgnoredByCfg: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[6].Sts.isIgnoredByCfg",
-                                                        },
-                                                        isOverridden: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[6].Sts.isOverridden",
-                                                        },
-                                                        OverridenTimeLeft: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[6].Sts.OverridenTimeLeft",
-                                                        },
-                                                    } as const,
-                                                },
-                                            } as const,
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[7]",
-                                            children: {
-                                                Cfg: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[7].Cfg",
-                                                    children: {
-                                                        Description: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[7].Cfg.Description",
-                                                        },
-                                                        Direction: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[7].Cfg.Direction",
-                                                        },
-                                                        Ignored: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[7].Cfg.Ignored",
-                                                        },
-                                                        InterlockType: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[7].Cfg.InterlockType",
-                                                        },
-                                                        SenderId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[7].Cfg.SenderId",
-                                                        },
-                                                        TargetId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[7].Cfg.TargetId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                Sts: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[7].Sts",
-                                                    children: {
-                                                        conditionsAreMet: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[7].Sts.conditionsAreMet",
-                                                        },
-                                                        isAllowed: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[7].Sts.isAllowed",
-                                                        },
-                                                        isIgnoredByCfg: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[7].Sts.isIgnoredByCfg",
-                                                        },
-                                                        isOverridden: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[7].Sts.isOverridden",
-                                                        },
-                                                        OverridenTimeLeft: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[7].Sts.OverridenTimeLeft",
-                                                        },
-                                                    } as const,
-                                                },
-                                            } as const,
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[8]",
-                                            children: {
-                                                Cfg: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[8].Cfg",
-                                                    children: {
-                                                        Description: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[8].Cfg.Description",
-                                                        },
-                                                        Direction: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[8].Cfg.Direction",
-                                                        },
-                                                        Ignored: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[8].Cfg.Ignored",
-                                                        },
-                                                        InterlockType: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[8].Cfg.InterlockType",
-                                                        },
-                                                        SenderId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[8].Cfg.SenderId",
-                                                        },
-                                                        TargetId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[8].Cfg.TargetId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                Sts: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[8].Sts",
-                                                    children: {
-                                                        conditionsAreMet: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[8].Sts.conditionsAreMet",
-                                                        },
-                                                        isAllowed: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[8].Sts.isAllowed",
-                                                        },
-                                                        isIgnoredByCfg: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[8].Sts.isIgnoredByCfg",
-                                                        },
-                                                        isOverridden: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[8].Sts.isOverridden",
-                                                        },
-                                                        OverridenTimeLeft: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[8].Sts.OverridenTimeLeft",
-                                                        },
-                                                    } as const,
-                                                },
-                                            } as const,
-                                        },
-                                        {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[9]",
-                                            children: {
-                                                Cfg: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[9].Cfg",
-                                                    children: {
-                                                        Description: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[9].Cfg.Description",
-                                                        },
-                                                        Direction: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[9].Cfg.Direction",
-                                                        },
-                                                        Ignored: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[9].Cfg.Ignored",
-                                                        },
-                                                        InterlockType: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[9].Cfg.InterlockType",
-                                                        },
-                                                        SenderId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[9].Cfg.SenderId",
-                                                        },
-                                                        TargetId: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[9].Cfg.TargetId",
-                                                        },
-                                                    } as const,
-                                                },
-                                                Sts: {
-                                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[9].Sts",
-                                                    children: {
-                                                        conditionsAreMet: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[9].Sts.conditionsAreMet",
-                                                        },
-                                                        isAllowed: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[9].Sts.isAllowed",
-                                                        },
-                                                        isIgnoredByCfg: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[9].Sts.isIgnoredByCfg",
-                                                        },
-                                                        isOverridden: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[9].Sts.isOverridden",
-                                                        },
-                                                        OverridenTimeLeft: {
-                                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Interlocks.List[9].Sts.OverridenTimeLeft",
-                                                        },
-                                                    } as const,
-                                                },
-                                            } as const,
-                                        },
-                                    ] as const,
-                                },
-                            } as const,
-                        },
-                        isAtPosAndStandstill: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.isAtPosAndStandstill",
-                        },
-                        isEnabled: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.isEnabled",
-                        },
-                        isGeared: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.isGeared",
-                        },
-                        isHomed: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.isHomed",
-                        },
-                        isHoming: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.isHoming",
-                        },
-                        isJogging: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.isJogging",
-                        },
-                        isMastered: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.isMastered",
-                        },
-                        isMoving: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.isMoving",
-                        },
-                        isStandstill: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.isStandstill",
-                        },
-                        isStreaming: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.isStreaming",
-                        },
-                        isTorquing: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.isTorquing",
-                        },
-                        mutingSwAndHwLimitsWhileHoming: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.mutingSwAndHwLimitsWhileHoming",
-                        },
-                        Permissives: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives",
-                            items: [
-                                {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[0]",
-                                    children: {
-                                        conditionsAreMet: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[0].conditionsAreMet",
-                                        },
-                                        isAllowed: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[0].isAllowed",
-                                        },
-                                        isIgnoredByCfg: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[0].isIgnoredByCfg",
-                                        },
-                                        isOverridden: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[0].isOverridden",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[1]",
-                                    children: {
-                                        conditionsAreMet: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[1].conditionsAreMet",
-                                        },
-                                        isAllowed: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[1].isAllowed",
-                                        },
-                                        isIgnoredByCfg: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[1].isIgnoredByCfg",
-                                        },
-                                        isOverridden: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[1].isOverridden",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[2]",
-                                    children: {
-                                        conditionsAreMet: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[2].conditionsAreMet",
-                                        },
-                                        isAllowed: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[2].isAllowed",
-                                        },
-                                        isIgnoredByCfg: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[2].isIgnoredByCfg",
-                                        },
-                                        isOverridden: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[2].isOverridden",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[3]",
-                                    children: {
-                                        conditionsAreMet: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[3].conditionsAreMet",
-                                        },
-                                        isAllowed: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[3].isAllowed",
-                                        },
-                                        isIgnoredByCfg: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[3].isIgnoredByCfg",
-                                        },
-                                        isOverridden: {
-                                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Permissives[3].isOverridden",
-                                        },
-                                    } as const,
-                                },
-                            ] as const,
-                        },
-                        PositionDifference: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.PositionDifference",
-                        },
-                        RailBrakes: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.RailBrakes",
-                            children: {
-                                RailBrake1_CLOSED: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.RailBrakes.RailBrake1_CLOSED",
-                                },
-                                RailBrake1_ERROR: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.RailBrakes.RailBrake1_ERROR",
-                                },
-                                RailBrake1_OPEN: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.RailBrakes.RailBrake1_OPEN",
-                                },
-                                RailBrake2_CLOSED: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.RailBrakes.RailBrake2_CLOSED",
-                                },
-                                RailBrake2_ERROR: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.RailBrakes.RailBrake2_ERROR",
-                                },
-                                RailBrake2_OPEN: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.RailBrakes.RailBrake2_OPEN",
-                                },
-                            } as const,
-                        },
-                        RcControlMode: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.RcControlMode",
-                        },
-                        RcHomingState: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.RcHomingState",
-                        },
-                        RecordedPosition: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.RecordedPosition",
-                        },
-                        RestrictedToSlow: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.RestrictedToSlow",
-                        },
-                        Sensors: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.Sensors",
-                            items: [
-                                {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Sensors[0]",
-                                },
-                                {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Sensors[1]",
-                                },
-                                {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Sensors[2]",
-                                },
-                                {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.Sensors[3]",
-                                },
-                            ] as const,
-                        },
-                        setAccel: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.setAccel",
-                        },
-                        setJerk: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.setJerk",
-                        },
-                        setPosition: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.setPosition",
-                        },
-                        setTorque: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.setTorque",
-                        },
-                        setVelocity: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.setVelocity",
-                        },
-                        SkippingPositionCorrectionBeforeGearing: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.SkippingPositionCorrectionBeforeGearing",
-                        },
-                        SoftMotionErrorId: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.SoftMotionErrorId",
-                        },
-                        SoftMotionHasError: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.SoftMotionHasError",
-                        },
-                        TargetControllerMode: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.TargetControllerMode",
-                        },
-                        targetDir: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.targetDir",
-                        },
-                        targetEncoderSetpoint: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.targetEncoderSetpoint",
-                        },
-                        targetMasterAxisDevId: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.targetMasterAxisDevId",
-                        },
-                        targetMaxCurrent: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.targetMaxCurrent",
-                        },
-                        targetMotionProfileData: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.targetMotionProfileData",
-                            children: {
-                                acceleration: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.targetMotionProfileData.acceleration",
-                                },
-                                jerk: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.targetMotionProfileData.jerk",
-                                },
-                                speed: {
-                                    tag: "Machine_00251.HmiSts.ActiveAxisSts.targetMotionProfileData.speed",
-                                },
-                            } as const,
-                        },
-                        targetMotionProfileId: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.targetMotionProfileId",
-                        },
-                        targetPosition: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.targetPosition",
-                        },
-                        targetSetpoint: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.targetSetpoint",
-                        },
-                        targetTorque: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.targetTorque",
-                        },
-                        targetVelocity: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.targetVelocity",
-                        },
-                        TravelLimitNegative: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.TravelLimitNegative",
-                        },
-                        TravelLimitPositive: {
-                            tag: "Machine_00251.HmiSts.ActiveAxisSts.TravelLimitPositive",
-                        },
-                    } as const,
-                },
                 ActiveCodesysHmiScreenName: {
                     tag: "Machine_00251.HmiSts.ActiveCodesysHmiScreenName",
                 },
@@ -8884,407 +6236,8 @@ export const machineTags: MachineTagNode = {
                 ActiveDeviceId: {
                     tag: "Machine_00251.HmiSts.ActiveDeviceId",
                 },
-                ActivePage: {
-                    tag: "Machine_00251.HmiSts.ActivePage",
-                },
-                AxisCtrl: {
-                    tag: "Machine_00251.HmiSts.AxisCtrl",
-                    children: {
-                        pbBackAndForth: {
-                            tag: "Machine_00251.HmiSts.AxisCtrl.pbBackAndForth",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbBackAndForth.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbBackAndForth.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbBackAndForth.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbBackAndForth.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbBackAndForth.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbBackAndForth.wasClicked",
-                                },
-                            } as const,
-                        },
-                        pbHomeToTorque: {
-                            tag: "Machine_00251.HmiSts.AxisCtrl.pbHomeToTorque",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbHomeToTorque.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbHomeToTorque.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbHomeToTorque.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbHomeToTorque.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbHomeToTorque.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbHomeToTorque.wasClicked",
-                                },
-                            } as const,
-                        },
-                        pbJogNeg: {
-                            tag: "Machine_00251.HmiSts.AxisCtrl.pbJogNeg",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbJogNeg.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbJogNeg.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbJogNeg.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbJogNeg.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbJogNeg.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbJogNeg.wasClicked",
-                                },
-                            } as const,
-                        },
-                        pbJogPos: {
-                            tag: "Machine_00251.HmiSts.AxisCtrl.pbJogPos",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbJogPos.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbJogPos.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbJogPos.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbJogPos.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbJogPos.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbJogPos.wasClicked",
-                                },
-                            } as const,
-                        },
-                        pbMaster: {
-                            tag: "Machine_00251.HmiSts.AxisCtrl.pbMaster",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbMaster.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbMaster.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbMaster.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbMaster.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbMaster.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbMaster.wasClicked",
-                                },
-                            } as const,
-                        },
-                        pbMoveToMax: {
-                            tag: "Machine_00251.HmiSts.AxisCtrl.pbMoveToMax",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbMoveToMax.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbMoveToMax.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbMoveToMax.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbMoveToMax.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbMoveToMax.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbMoveToMax.wasClicked",
-                                },
-                            } as const,
-                        },
-                        pbMoveToMin: {
-                            tag: "Machine_00251.HmiSts.AxisCtrl.pbMoveToMin",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbMoveToMin.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbMoveToMin.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbMoveToMin.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbMoveToMin.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbMoveToMin.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbMoveToMin.wasClicked",
-                                },
-                            } as const,
-                        },
-                        pbSetHardwareLimits: {
-                            tag: "Machine_00251.HmiSts.AxisCtrl.pbSetHardwareLimits",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetHardwareLimits.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetHardwareLimits.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetHardwareLimits.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetHardwareLimits.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetHardwareLimits.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetHardwareLimits.wasClicked",
-                                },
-                            } as const,
-                        },
-                        pbSetRailBrakeEnforcement: {
-                            tag: "Machine_00251.HmiSts.AxisCtrl.pbSetRailBrakeEnforcement",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetRailBrakeEnforcement.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetRailBrakeEnforcement.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetRailBrakeEnforcement.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetRailBrakeEnforcement.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetRailBrakeEnforcement.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetRailBrakeEnforcement.wasClicked",
-                                },
-                            } as const,
-                        },
-                        pbSetSoftwareLimits: {
-                            tag: "Machine_00251.HmiSts.AxisCtrl.pbSetSoftwareLimits",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetSoftwareLimits.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetSoftwareLimits.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetSoftwareLimits.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetSoftwareLimits.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetSoftwareLimits.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetSoftwareLimits.wasClicked",
-                                },
-                            } as const,
-                        },
-                        pbSetTorqueMode: {
-                            tag: "Machine_00251.HmiSts.AxisCtrl.pbSetTorqueMode",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetTorqueMode.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetTorqueMode.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetTorqueMode.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetTorqueMode.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetTorqueMode.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbSetTorqueMode.wasClicked",
-                                },
-                            } as const,
-                        },
-                        pbStop: {
-                            tag: "Machine_00251.HmiSts.AxisCtrl.pbStop",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbStop.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbStop.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbStop.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbStop.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbStop.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbStop.wasClicked",
-                                },
-                            } as const,
-                        },
-                        pbTorqueNeg: {
-                            tag: "Machine_00251.HmiSts.AxisCtrl.pbTorqueNeg",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbTorqueNeg.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbTorqueNeg.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbTorqueNeg.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbTorqueNeg.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbTorqueNeg.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbTorqueNeg.wasClicked",
-                                },
-                            } as const,
-                        },
-                        pbTorquePos: {
-                            tag: "Machine_00251.HmiSts.AxisCtrl.pbTorquePos",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbTorquePos.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbTorquePos.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbTorquePos.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbTorquePos.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbTorquePos.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbTorquePos.wasClicked",
-                                },
-                            } as const,
-                        },
-                        pbUnitTest: {
-                            tag: "Machine_00251.HmiSts.AxisCtrl.pbUnitTest",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbUnitTest.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbUnitTest.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbUnitTest.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbUnitTest.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbUnitTest.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbUnitTest.wasClicked",
-                                },
-                            } as const,
-                        },
-                        pbVerifyNegSw: {
-                            tag: "Machine_00251.HmiSts.AxisCtrl.pbVerifyNegSw",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbVerifyNegSw.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbVerifyNegSw.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbVerifyNegSw.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbVerifyNegSw.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbVerifyNegSw.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbVerifyNegSw.wasClicked",
-                                },
-                            } as const,
-                        },
-                        pbVerifyPosSw: {
-                            tag: "Machine_00251.HmiSts.AxisCtrl.pbVerifyPosSw",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbVerifyPosSw.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbVerifyPosSw.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbVerifyPosSw.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbVerifyPosSw.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbVerifyPosSw.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.AxisCtrl.pbVerifyPosSw.wasClicked",
-                                },
-                            } as const,
-                        },
-                        radioBtnMotionProfile: {
-                            tag: "Machine_00251.HmiSts.AxisCtrl.radioBtnMotionProfile",
-                        },
-                    } as const,
+                ActiveKioskId: {
+                    tag: "Machine_00251.HmiSts.ActiveKioskId",
                 },
                 ButtonBar: {
                     tag: "Machine_00251.HmiSts.ButtonBar",
@@ -9550,183 +6503,11 @@ export const machineTags: MachineTagNode = {
                 HeartbeatPLC: {
                     tag: "Machine_00251.HmiSts.HeartbeatPLC",
                 },
-                IB: {
-                    tag: "Machine_00251.HmiSts.IB",
-                    children: {
-                        InductBtn: {
-                            tag: "Machine_00251.HmiSts.IB.InductBtn",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.IB.InductBtn.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.IB.InductBtn.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.IB.InductBtn.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.IB.InductBtn.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.IB.InductBtn.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.IB.InductBtn.wasClicked",
-                                },
-                            } as const,
-                        },
-                        requestControlBtn: {
-                            tag: "Machine_00251.HmiSts.IB.requestControlBtn",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.IB.requestControlBtn.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.IB.requestControlBtn.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.IB.requestControlBtn.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.IB.requestControlBtn.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.IB.requestControlBtn.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.IB.requestControlBtn.wasClicked",
-                                },
-                            } as const,
-                        },
-                        RetrieveAndStowBtn: {
-                            tag: "Machine_00251.HmiSts.IB.RetrieveAndStowBtn",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.IB.RetrieveAndStowBtn.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.IB.RetrieveAndStowBtn.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.IB.RetrieveAndStowBtn.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.IB.RetrieveAndStowBtn.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.IB.RetrieveAndStowBtn.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.IB.RetrieveAndStowBtn.wasClicked",
-                                },
-                            } as const,
-                        },
-                        RetrieveBtn: {
-                            tag: "Machine_00251.HmiSts.IB.RetrieveBtn",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.IB.RetrieveBtn.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.IB.RetrieveBtn.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.IB.RetrieveBtn.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.IB.RetrieveBtn.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.IB.RetrieveBtn.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.IB.RetrieveBtn.wasClicked",
-                                },
-                            } as const,
-                        },
-                        selectedCubbyId: {
-                            tag: "Machine_00251.HmiSts.IB.selectedCubbyId",
-                        },
-                        selectedMissionId: {
-                            tag: "Machine_00251.HmiSts.IB.selectedMissionId",
-                        },
-                        StowBtn: {
-                            tag: "Machine_00251.HmiSts.IB.StowBtn",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.IB.StowBtn.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.IB.StowBtn.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.IB.StowBtn.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.IB.StowBtn.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.IB.StowBtn.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.IB.StowBtn.wasClicked",
-                                },
-                            } as const,
-                        },
-                        VendBtn: {
-                            tag: "Machine_00251.HmiSts.IB.VendBtn",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.IB.VendBtn.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.IB.VendBtn.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.IB.VendBtn.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.IB.VendBtn.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.IB.VendBtn.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.IB.VendBtn.wasClicked",
-                                },
-                            } as const,
-                        },
-                    } as const,
-                },
                 isConnected: {
                     tag: "Machine_00251.HmiSts.isConnected",
                 },
                 RemoteControlPage: {
                     tag: "Machine_00251.HmiSts.RemoteControlPage",
-                },
-                ScreenChangeBtn: {
-                    tag: "Machine_00251.HmiSts.ScreenChangeBtn",
-                    children: {
-                        AccentColor: {
-                            tag: "Machine_00251.HmiSts.ScreenChangeBtn.AccentColor",
-                        },
-                        BackgroundColor: {
-                            tag: "Machine_00251.HmiSts.ScreenChangeBtn.BackgroundColor",
-                        },
-                        FontColor: {
-                            tag: "Machine_00251.HmiSts.ScreenChangeBtn.FontColor",
-                        },
-                        needsExpertUser: {
-                            tag: "Machine_00251.HmiSts.ScreenChangeBtn.needsExpertUser",
-                        },
-                        Visibility: {
-                            tag: "Machine_00251.HmiSts.ScreenChangeBtn.Visibility",
-                        },
-                        wasClicked: {
-                            tag: "Machine_00251.HmiSts.ScreenChangeBtn.wasClicked",
-                        },
-                    } as const,
                 },
                 StatusBar: {
                     tag: "Machine_00251.HmiSts.StatusBar",
@@ -9789,149 +6570,6 @@ export const machineTags: MachineTagNode = {
                         },
                         StatusMsg: {
                             tag: "Machine_00251.HmiSts.StatusBar.StatusMsg",
-                        },
-                    } as const,
-                },
-                STWG: {
-                    tag: "Machine_00251.HmiSts.STWG",
-                    children: {
-                        DryCycleTestBtn: {
-                            tag: "Machine_00251.HmiSts.STWG.DryCycleTestBtn",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.STWG.DryCycleTestBtn.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.STWG.DryCycleTestBtn.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.STWG.DryCycleTestBtn.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.STWG.DryCycleTestBtn.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.STWG.DryCycleTestBtn.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.STWG.DryCycleTestBtn.wasClicked",
-                                },
-                            } as const,
-                        },
-                        InductBtn: {
-                            tag: "Machine_00251.HmiSts.STWG.InductBtn",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.STWG.InductBtn.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.STWG.InductBtn.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.STWG.InductBtn.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.STWG.InductBtn.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.STWG.InductBtn.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.STWG.InductBtn.wasClicked",
-                                },
-                            } as const,
-                        },
-                        requestControlBtn: {
-                            tag: "Machine_00251.HmiSts.STWG.requestControlBtn",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.STWG.requestControlBtn.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.STWG.requestControlBtn.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.STWG.requestControlBtn.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.STWG.requestControlBtn.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.STWG.requestControlBtn.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.STWG.requestControlBtn.wasClicked",
-                                },
-                            } as const,
-                        },
-                        RetrieveBtn: {
-                            tag: "Machine_00251.HmiSts.STWG.RetrieveBtn",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.STWG.RetrieveBtn.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.STWG.RetrieveBtn.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.STWG.RetrieveBtn.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.STWG.RetrieveBtn.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.STWG.RetrieveBtn.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.STWG.RetrieveBtn.wasClicked",
-                                },
-                            } as const,
-                        },
-                        StopBtn: {
-                            tag: "Machine_00251.HmiSts.STWG.StopBtn",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.STWG.StopBtn.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.STWG.StopBtn.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.STWG.StopBtn.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.STWG.StopBtn.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.STWG.StopBtn.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.STWG.StopBtn.wasClicked",
-                                },
-                            } as const,
-                        },
-                        StowBtn: {
-                            tag: "Machine_00251.HmiSts.STWG.StowBtn",
-                            children: {
-                                AccentColor: {
-                                    tag: "Machine_00251.HmiSts.STWG.StowBtn.AccentColor",
-                                },
-                                BackgroundColor: {
-                                    tag: "Machine_00251.HmiSts.STWG.StowBtn.BackgroundColor",
-                                },
-                                FontColor: {
-                                    tag: "Machine_00251.HmiSts.STWG.StowBtn.FontColor",
-                                },
-                                needsExpertUser: {
-                                    tag: "Machine_00251.HmiSts.STWG.StowBtn.needsExpertUser",
-                                },
-                                Visibility: {
-                                    tag: "Machine_00251.HmiSts.STWG.StowBtn.Visibility",
-                                },
-                                wasClicked: {
-                                    tag: "Machine_00251.HmiSts.STWG.StowBtn.wasClicked",
-                                },
-                            } as const,
                         },
                     } as const,
                 },
@@ -10633,20 +7271,6 @@ export const machineTags: MachineTagNode = {
                         },
                     } as const,
                 },
-                LITE: {
-                    tag: "Machine_00251.outputs.LITE",
-                    children: {
-                        Green_ON: {
-                            tag: "Machine_00251.outputs.LITE.Green_ON",
-                        },
-                        Red_ON: {
-                            tag: "Machine_00251.outputs.LITE.Red_ON",
-                        },
-                        Yellow_ON: {
-                            tag: "Machine_00251.outputs.LITE.Yellow_ON",
-                        },
-                    } as const,
-                },
                 POT: {
                     tag: "Machine_00251.outputs.POT",
                     children: {
@@ -10838,11 +7462,20 @@ export const machineTags: MachineTagNode = {
                 SYS: {
                     tag: "Machine_00251.outputs.SYS",
                     children: {
+                        Green_ON: {
+                            tag: "Machine_00251.outputs.SYS.Green_ON",
+                        },
+                        Red_ON: {
+                            tag: "Machine_00251.outputs.SYS.Red_ON",
+                        },
                         StartPb_FLASH: {
                             tag: "Machine_00251.outputs.SYS.StartPb_FLASH",
                         },
                         StartPb_ILLUM: {
                             tag: "Machine_00251.outputs.SYS.StartPb_ILLUM",
+                        },
+                        Yellow_ON: {
+                            tag: "Machine_00251.outputs.SYS.Yellow_ON",
                         },
                     } as const,
                 },
@@ -12187,6 +8820,106 @@ export const machineTags: MachineTagNode = {
                                             } as const,
                                         },
                                         {
+                                            tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[14].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
                                             tag: "Machine_00251.RecipeStore.Recipes[0].ApplicatorSetpoints[2]",
                                             children: {
                                                 BallValveOn: {
@@ -12420,6 +9153,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[0].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[0].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[0].WeighingFingerId",
                                 },
@@ -12480,6 +9216,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[1].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -12717,6 +9553,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[1].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[1].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[1].WeighingFingerId",
                                 },
@@ -12777,6 +9616,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[10].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -13014,6 +9953,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[10].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[10].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[10].WeighingFingerId",
                                 },
@@ -13074,6 +10016,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[11].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -13311,6 +10353,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[11].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[11].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[11].WeighingFingerId",
                                 },
@@ -13371,6 +10416,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[12].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -13608,6 +10753,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[12].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[12].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[12].WeighingFingerId",
                                 },
@@ -13668,6 +10816,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[13].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -13905,6 +11153,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[13].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[13].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[13].WeighingFingerId",
                                 },
@@ -13965,6 +11216,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[14].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -14202,6 +11553,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[14].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[14].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[14].WeighingFingerId",
                                 },
@@ -14262,6 +11616,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[15].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -14499,6 +11953,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[15].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[15].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[15].WeighingFingerId",
                                 },
@@ -14559,6 +12016,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[16].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -14796,6 +12353,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[16].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[16].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[16].WeighingFingerId",
                                 },
@@ -14856,6 +12416,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[17].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -15093,6 +12753,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[17].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[17].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[17].WeighingFingerId",
                                 },
@@ -15153,6 +12816,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[18].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -15390,6 +13153,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[18].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[18].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[18].WeighingFingerId",
                                 },
@@ -15450,6 +13216,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[19].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -15687,6 +13553,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[19].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[19].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[19].WeighingFingerId",
                                 },
@@ -15747,6 +13616,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[2].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -15984,6 +13953,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[2].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[2].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[2].WeighingFingerId",
                                 },
@@ -16044,6 +14016,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[3].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -16281,6 +14353,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[3].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[3].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[3].WeighingFingerId",
                                 },
@@ -16341,6 +14416,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[4].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -16578,6 +14753,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[4].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[4].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[4].WeighingFingerId",
                                 },
@@ -16638,6 +14816,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[5].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -16875,6 +15153,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[5].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[5].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[5].WeighingFingerId",
                                 },
@@ -16935,6 +15216,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[6].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -17172,6 +15553,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[6].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[6].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[6].WeighingFingerId",
                                 },
@@ -17232,6 +15616,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[7].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -17469,6 +15953,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[7].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[7].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[7].WeighingFingerId",
                                 },
@@ -17529,6 +16016,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[8].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -17766,6 +16353,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[8].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[8].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[8].WeighingFingerId",
                                 },
@@ -17826,6 +16416,106 @@ export const machineTags: MachineTagNode = {
                                                 },
                                                 ZOffset: {
                                                     tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[1].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[10]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[10].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[10].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[10].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[10].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[11]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[11].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[11].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[11].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[11].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[12]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[12].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[12].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[12].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[12].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[13]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[13].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[13].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[13].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[13].ZOffset",
+                                                },
+                                            } as const,
+                                        },
+                                        {
+                                            tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[14]",
+                                            children: {
+                                                BallValveOn: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[14].BallValveOn",
+                                                },
+                                                Speed: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[14].Speed",
+                                                },
+                                                SqueegeeDiameter: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                },
+                                                StepperPosition: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[14].StepperPosition",
+                                                },
+                                                ZOffset: {
+                                                    tag: "Machine_00251.RecipeStore.Recipes[9].ApplicatorSetpoints[14].ZOffset",
                                                 },
                                             } as const,
                                         },
@@ -18063,6 +16753,9 @@ export const machineTags: MachineTagNode = {
                                 UsesBrushTool: {
                                     tag: "Machine_00251.RecipeStore.Recipes[9].UsesBrushTool",
                                 },
+                                UsesCentrifuge: {
+                                    tag: "Machine_00251.RecipeStore.Recipes[9].UsesCentrifuge",
+                                },
                                 WeighingFingerId: {
                                     tag: "Machine_00251.RecipeStore.Recipes[9].WeighingFingerId",
                                 },
@@ -18080,6 +16773,316 @@ export const machineTags: MachineTagNode = {
             children: {
                 placeholder: {
                     tag: "Machine_00251.RobCfg.placeholder",
+                },
+            } as const,
+        },
+        RobMeta: {
+            tag: "Machine_00251.RobMeta",
+            children: {
+                AdjustedSetpoints: {
+                    tag: "Machine_00251.RobMeta.AdjustedSetpoints",
+                    items: [
+                        {
+                            tag: "Machine_00251.RobMeta.AdjustedSetpoints[0]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[0].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[0].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[0].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[0].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[0].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.RobMeta.AdjustedSetpoints[1]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[1].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[1].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[1].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[1].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[1].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.RobMeta.AdjustedSetpoints[10]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[10].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[10].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[10].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[10].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[10].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.RobMeta.AdjustedSetpoints[11]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[11].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[11].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[11].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[11].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[11].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.RobMeta.AdjustedSetpoints[12]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[12].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[12].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[12].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[12].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[12].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.RobMeta.AdjustedSetpoints[13]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[13].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[13].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[13].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[13].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[13].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.RobMeta.AdjustedSetpoints[14]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[14].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[14].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[14].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[14].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[14].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.RobMeta.AdjustedSetpoints[2]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[2].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[2].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[2].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[2].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[2].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.RobMeta.AdjustedSetpoints[3]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[3].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[3].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[3].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[3].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[3].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.RobMeta.AdjustedSetpoints[4]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[4].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[4].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[4].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[4].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[4].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.RobMeta.AdjustedSetpoints[5]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[5].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[5].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[5].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[5].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[5].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.RobMeta.AdjustedSetpoints[6]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[6].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[6].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[6].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[6].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[6].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.RobMeta.AdjustedSetpoints[7]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[7].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[7].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[7].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[7].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[7].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.RobMeta.AdjustedSetpoints[8]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[8].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[8].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[8].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[8].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[8].ZOffset",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00251.RobMeta.AdjustedSetpoints[9]",
+                            children: {
+                                BallValveOn: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[9].BallValveOn",
+                                },
+                                Speed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[9].Speed",
+                                },
+                                SqueegeeDiameter: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[9].SqueegeeDiameter",
+                                },
+                                StepperPosition: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[9].StepperPosition",
+                                },
+                                ZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[9].ZOffset",
+                                },
+                            } as const,
+                        },
+                    ] as const,
                 },
             } as const,
         },
@@ -18130,211 +17133,6 @@ export const machineTags: MachineTagNode = {
                 ActualZPositionRelativeToFalseBottom: {
                     tag: "Machine_00251.RobSts.ActualZPositionRelativeToFalseBottom",
                 },
-                AdjustedSetpoints: {
-                    tag: "Machine_00251.RobSts.AdjustedSetpoints",
-                    items: [
-                        {
-                            tag: "Machine_00251.RobSts.AdjustedSetpoints[0]",
-                            children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[0].BallValveOn",
-                                },
-                                Speed: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[0].Speed",
-                                },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[0].SqueegeeDiameter",
-                                },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[0].StepperPosition",
-                                },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[0].ZOffset",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00251.RobSts.AdjustedSetpoints[1]",
-                            children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[1].BallValveOn",
-                                },
-                                Speed: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[1].Speed",
-                                },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[1].SqueegeeDiameter",
-                                },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[1].StepperPosition",
-                                },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[1].ZOffset",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00251.RobSts.AdjustedSetpoints[2]",
-                            children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[2].BallValveOn",
-                                },
-                                Speed: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[2].Speed",
-                                },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[2].SqueegeeDiameter",
-                                },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[2].StepperPosition",
-                                },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[2].ZOffset",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00251.RobSts.AdjustedSetpoints[3]",
-                            children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[3].BallValveOn",
-                                },
-                                Speed: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[3].Speed",
-                                },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[3].SqueegeeDiameter",
-                                },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[3].StepperPosition",
-                                },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[3].ZOffset",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00251.RobSts.AdjustedSetpoints[4]",
-                            children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[4].BallValveOn",
-                                },
-                                Speed: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[4].Speed",
-                                },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[4].SqueegeeDiameter",
-                                },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[4].StepperPosition",
-                                },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[4].ZOffset",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00251.RobSts.AdjustedSetpoints[5]",
-                            children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[5].BallValveOn",
-                                },
-                                Speed: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[5].Speed",
-                                },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[5].SqueegeeDiameter",
-                                },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[5].StepperPosition",
-                                },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[5].ZOffset",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00251.RobSts.AdjustedSetpoints[6]",
-                            children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[6].BallValveOn",
-                                },
-                                Speed: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[6].Speed",
-                                },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[6].SqueegeeDiameter",
-                                },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[6].StepperPosition",
-                                },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[6].ZOffset",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00251.RobSts.AdjustedSetpoints[7]",
-                            children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[7].BallValveOn",
-                                },
-                                Speed: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[7].Speed",
-                                },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[7].SqueegeeDiameter",
-                                },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[7].StepperPosition",
-                                },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[7].ZOffset",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00251.RobSts.AdjustedSetpoints[8]",
-                            children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[8].BallValveOn",
-                                },
-                                Speed: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[8].Speed",
-                                },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[8].SqueegeeDiameter",
-                                },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[8].StepperPosition",
-                                },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[8].ZOffset",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00251.RobSts.AdjustedSetpoints[9]",
-                            children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[9].BallValveOn",
-                                },
-                                Speed: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[9].Speed",
-                                },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[9].SqueegeeDiameter",
-                                },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[9].StepperPosition",
-                                },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobSts.AdjustedSetpoints[9].ZOffset",
-                                },
-                            } as const,
-                        },
-                    ] as const,
-                },
                 ApplicatorHasBeenPrimed: {
                     tag: "Machine_00251.RobSts.ApplicatorHasBeenPrimed",
                 },
@@ -18352,14 +17150,6 @@ export const machineTags: MachineTagNode = {
                 },
                 CameraIsRecording: {
                     tag: "Machine_00251.RobSts.CameraIsRecording",
-                },
-                Cfg: {
-                    tag: "Machine_00251.RobSts.Cfg",
-                    children: {
-                        placeholder: {
-                            tag: "Machine_00251.RobSts.Cfg.placeholder",
-                        },
-                    } as const,
                 },
                 GripperIsCalibrated: {
                     tag: "Machine_00251.RobSts.GripperIsCalibrated",
@@ -18496,6 +17286,9 @@ export const machineTags: MachineTagNode = {
                                         TransferPartDataReq: {
                                             tag: "Machine_00251.RobSts.IController.i.data.TransferPartDataReq",
                                         },
+                                        UnclampPartReq: {
+                                            tag: "Machine_00251.RobSts.IController.i.data.UnclampPartReq",
+                                        },
                                         UniqueTaskActiveId: {
                                             tag: "Machine_00251.RobSts.IController.i.data.UniqueTaskActiveId",
                                         },
@@ -18596,6 +17389,106 @@ export const machineTags: MachineTagNode = {
                                                         },
                                                         ZOffset: {
                                                             tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[1].ZOffset",
+                                                        },
+                                                    } as const,
+                                                },
+                                                {
+                                                    tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[10]",
+                                                    children: {
+                                                        BallValveOn: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[10].BallValveOn",
+                                                        },
+                                                        Speed: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[10].Speed",
+                                                        },
+                                                        SqueegeeDiameter: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[10].SqueegeeDiameter",
+                                                        },
+                                                        StepperPosition: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[10].StepperPosition",
+                                                        },
+                                                        ZOffset: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[10].ZOffset",
+                                                        },
+                                                    } as const,
+                                                },
+                                                {
+                                                    tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[11]",
+                                                    children: {
+                                                        BallValveOn: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[11].BallValveOn",
+                                                        },
+                                                        Speed: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[11].Speed",
+                                                        },
+                                                        SqueegeeDiameter: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[11].SqueegeeDiameter",
+                                                        },
+                                                        StepperPosition: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[11].StepperPosition",
+                                                        },
+                                                        ZOffset: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[11].ZOffset",
+                                                        },
+                                                    } as const,
+                                                },
+                                                {
+                                                    tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[12]",
+                                                    children: {
+                                                        BallValveOn: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[12].BallValveOn",
+                                                        },
+                                                        Speed: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[12].Speed",
+                                                        },
+                                                        SqueegeeDiameter: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[12].SqueegeeDiameter",
+                                                        },
+                                                        StepperPosition: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[12].StepperPosition",
+                                                        },
+                                                        ZOffset: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[12].ZOffset",
+                                                        },
+                                                    } as const,
+                                                },
+                                                {
+                                                    tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[13]",
+                                                    children: {
+                                                        BallValveOn: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[13].BallValveOn",
+                                                        },
+                                                        Speed: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[13].Speed",
+                                                        },
+                                                        SqueegeeDiameter: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[13].SqueegeeDiameter",
+                                                        },
+                                                        StepperPosition: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[13].StepperPosition",
+                                                        },
+                                                        ZOffset: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[13].ZOffset",
+                                                        },
+                                                    } as const,
+                                                },
+                                                {
+                                                    tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[14]",
+                                                    children: {
+                                                        BallValveOn: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[14].BallValveOn",
+                                                        },
+                                                        Speed: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[14].Speed",
+                                                        },
+                                                        SqueegeeDiameter: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[14].SqueegeeDiameter",
+                                                        },
+                                                        StepperPosition: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[14].StepperPosition",
+                                                        },
+                                                        ZOffset: {
+                                                            tag: "Machine_00251.RobSts.IController.o.data.ApplicatorSetpoints[14].ZOffset",
                                                         },
                                                     } as const,
                                                 },
@@ -18875,6 +17768,9 @@ export const machineTags: MachineTagNode = {
                                         TubeTypeId: {
                                             tag: "Machine_00251.RobSts.IController.o.data.TubeTypeId",
                                         },
+                                        UnclampPartDone: {
+                                            tag: "Machine_00251.RobSts.IController.o.data.UnclampPartDone",
+                                        },
                                         UniqueTaskReqId: {
                                             tag: "Machine_00251.RobSts.IController.o.data.UniqueTaskReqId",
                                         },
@@ -18972,6 +17868,9 @@ export const machineTags: MachineTagNode = {
                 TargetWaypoint: {
                     tag: "Machine_00251.RobSts.TargetWaypoint",
                 },
+                UnclampPartDone: {
+                    tag: "Machine_00251.RobSts.UnclampPartDone",
+                },
                 VisionIsCalibrated: {
                     tag: "Machine_00251.RobSts.VisionIsCalibrated",
                 },
@@ -19037,6 +17936,9 @@ export const machineTags: MachineTagNode = {
                 },
                 hasRailBrakes: {
                     tag: "Machine_00251.SqueeCfg.hasRailBrakes",
+                },
+                HomingMethod: {
+                    tag: "Machine_00251.SqueeCfg.HomingMethod",
                 },
                 HomingToHardstopDir: {
                     tag: "Machine_00251.SqueeCfg.HomingToHardstopDir",
@@ -19273,236 +18175,6 @@ export const machineTags: MachineTagNode = {
                 },
                 CalculatedStoppingPosition: {
                     tag: "Machine_00251.SqueeSts.CalculatedStoppingPosition",
-                },
-                Cfg: {
-                    tag: "Machine_00251.SqueeSts.Cfg",
-                    children: {
-                        AtPosTol: {
-                            tag: "Machine_00251.SqueeSts.Cfg.AtPosTol",
-                        },
-                        AutoPositionVerifyDuringReset: {
-                            tag: "Machine_00251.SqueeSts.Cfg.AutoPositionVerifyDuringReset",
-                        },
-                        AxesPositionToleranceForSkew: {
-                            tag: "Machine_00251.SqueeSts.Cfg.AxesPositionToleranceForSkew",
-                        },
-                        AxisType: {
-                            tag: "Machine_00251.SqueeSts.Cfg.AxisType",
-                        },
-                        DriveId: {
-                            tag: "Machine_00251.SqueeSts.Cfg.DriveId",
-                        },
-                        DriveType: {
-                            tag: "Machine_00251.SqueeSts.Cfg.DriveType",
-                        },
-                        GearingPositionTolerance: {
-                            tag: "Machine_00251.SqueeSts.Cfg.GearingPositionTolerance",
-                        },
-                        HardStopNegative: {
-                            tag: "Machine_00251.SqueeSts.Cfg.HardStopNegative",
-                        },
-                        HardStopPositive: {
-                            tag: "Machine_00251.SqueeSts.Cfg.HardStopPositive",
-                        },
-                        hasDynamicNegativeLimit: {
-                            tag: "Machine_00251.SqueeSts.Cfg.hasDynamicNegativeLimit",
-                        },
-                        hasDynamicPositiveLimit: {
-                            tag: "Machine_00251.SqueeSts.Cfg.hasDynamicPositiveLimit",
-                        },
-                        hasRailBrakes: {
-                            tag: "Machine_00251.SqueeSts.Cfg.hasRailBrakes",
-                        },
-                        HomingToHardstopDir: {
-                            tag: "Machine_00251.SqueeSts.Cfg.HomingToHardstopDir",
-                        },
-                        IgnoreLimitSwitches: {
-                            tag: "Machine_00251.SqueeSts.Cfg.IgnoreLimitSwitches",
-                        },
-                        Ignores: {
-                            tag: "Machine_00251.SqueeSts.Cfg.Ignores",
-                            items: [
-                                {
-                                    tag: "Machine_00251.SqueeSts.Cfg.Ignores[0]",
-                                },
-                                {
-                                    tag: "Machine_00251.SqueeSts.Cfg.Ignores[1]",
-                                },
-                                {
-                                    tag: "Machine_00251.SqueeSts.Cfg.Ignores[2]",
-                                },
-                                {
-                                    tag: "Machine_00251.SqueeSts.Cfg.Ignores[3]",
-                                },
-                            ] as const,
-                        },
-                        IgnoreSoftwareLimits: {
-                            tag: "Machine_00251.SqueeSts.Cfg.IgnoreSoftwareLimits",
-                        },
-                        KeepMasteredStatusAtStartup: {
-                            tag: "Machine_00251.SqueeSts.Cfg.KeepMasteredStatusAtStartup",
-                        },
-                        MaxCurrentNormalOperation: {
-                            tag: "Machine_00251.SqueeSts.Cfg.MaxCurrentNormalOperation",
-                        },
-                        MaxCurrentWhileHomingToHardstop: {
-                            tag: "Machine_00251.SqueeSts.Cfg.MaxCurrentWhileHomingToHardstop",
-                        },
-                        MotionProfiles: {
-                            tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles",
-                            items: [
-                                {
-                                    tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[0]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[0].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[0].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[0].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[1]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[1].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[1].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[1].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[2]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[2].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[2].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[2].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[3]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[3].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[3].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[3].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[4]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[4].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[4].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00251.SqueeSts.Cfg.MotionProfiles[4].speed",
-                                        },
-                                    } as const,
-                                },
-                            ] as const,
-                        },
-                        OperationalPositionMax: {
-                            tag: "Machine_00251.SqueeSts.Cfg.OperationalPositionMax",
-                        },
-                        OperationalPositionMin: {
-                            tag: "Machine_00251.SqueeSts.Cfg.OperationalPositionMin",
-                        },
-                        PositionReferencingMethod: {
-                            tag: "Machine_00251.SqueeSts.Cfg.PositionReferencingMethod",
-                        },
-                        ScaleFactorUnitsPerEncoderCount: {
-                            tag: "Machine_00251.SqueeSts.Cfg.ScaleFactorUnitsPerEncoderCount",
-                        },
-                        SearchDistance: {
-                            tag: "Machine_00251.SqueeSts.Cfg.SearchDistance",
-                        },
-                        SensorPositions: {
-                            tag: "Machine_00251.SqueeSts.Cfg.SensorPositions",
-                            items: [
-                                {
-                                    tag: "Machine_00251.SqueeSts.Cfg.SensorPositions[0]",
-                                },
-                                {
-                                    tag: "Machine_00251.SqueeSts.Cfg.SensorPositions[1]",
-                                },
-                                {
-                                    tag: "Machine_00251.SqueeSts.Cfg.SensorPositions[2]",
-                                },
-                                {
-                                    tag: "Machine_00251.SqueeSts.Cfg.SensorPositions[3]",
-                                },
-                            ] as const,
-                        },
-                        ShippingPosition: {
-                            tag: "Machine_00251.SqueeSts.Cfg.ShippingPosition",
-                        },
-                        SoftMotionScalingParams: {
-                            tag: "Machine_00251.SqueeSts.Cfg.SoftMotionScalingParams",
-                            children: {
-                                gearOutputTurnsLeft: {
-                                    tag: "Machine_00251.SqueeSts.Cfg.SoftMotionScalingParams.gearOutputTurnsLeft",
-                                },
-                                gearOutputTurnsRight: {
-                                    tag: "Machine_00251.SqueeSts.Cfg.SoftMotionScalingParams.gearOutputTurnsRight",
-                                },
-                                incrementsLeft: {
-                                    tag: "Machine_00251.SqueeSts.Cfg.SoftMotionScalingParams.incrementsLeft",
-                                },
-                                invertDir: {
-                                    tag: "Machine_00251.SqueeSts.Cfg.SoftMotionScalingParams.invertDir",
-                                },
-                                motorsTurnsLeft: {
-                                    tag: "Machine_00251.SqueeSts.Cfg.SoftMotionScalingParams.motorsTurnsLeft",
-                                },
-                                motorTurnsRight: {
-                                    tag: "Machine_00251.SqueeSts.Cfg.SoftMotionScalingParams.motorTurnsRight",
-                                },
-                                unitsInApplicationRight: {
-                                    tag: "Machine_00251.SqueeSts.Cfg.SoftMotionScalingParams.unitsInApplicationRight",
-                                },
-                            } as const,
-                        },
-                        SoftwareLimitNegative: {
-                            tag: "Machine_00251.SqueeSts.Cfg.SoftwareLimitNegative",
-                        },
-                        SoftwareLimitPositive: {
-                            tag: "Machine_00251.SqueeSts.Cfg.SoftwareLimitPositive",
-                        },
-                        Unit: {
-                            tag: "Machine_00251.SqueeSts.Cfg.Unit",
-                        },
-                        updateScalingIsNeeded: {
-                            tag: "Machine_00251.SqueeSts.Cfg.updateScalingIsNeeded",
-                        },
-                        ValidationSensor: {
-                            tag: "Machine_00251.SqueeSts.Cfg.ValidationSensor",
-                        },
-                        VerificationSensorOffsetFromZero: {
-                            tag: "Machine_00251.SqueeSts.Cfg.VerificationSensorOffsetFromZero",
-                        },
-                    } as const,
                 },
                 ConfiguredSoftLimitTravelRange: {
                     tag: "Machine_00251.SqueeSts.ConfiguredSoftLimitTravelRange",
@@ -20164,12 +18836,6 @@ export const machineTags: MachineTagNode = {
                             tag: "Machine_00251.SqueeSts.RailBrakes.RailBrake2_OPEN",
                         },
                     } as const,
-                },
-                RcControlMode: {
-                    tag: "Machine_00251.SqueeSts.RcControlMode",
-                },
-                RcHomingState: {
-                    tag: "Machine_00251.SqueeSts.RcHomingState",
                 },
                 RecordedPosition: {
                     tag: "Machine_00251.SqueeSts.RecordedPosition",

@@ -48,6 +48,7 @@ Config.OPCUA_ENDPOINT = `opc.tcp://${Config.OPCUA_SERVER_IP_ADDRESS}:${Config.OP
 Config.NODE_LIST_PREFIX = nodeListString + Config.OPCUA_CONTROLLER_NAME + '.Application.';
 
 Config.BRIDGE_STATUS_PUBLISH_INTERVAL_MS = 1000;
+Config.HEARTBEAT_STALE_AFTER_MS = 10000;
 Config.POLLING_RATE_MS = 250;
 Config.REPUBLISH_RATE_MS = 5000; // only used when ENABLE_STALE_POLLING_REPUBLISH is true, to prevent tight loop of republishing unchanged values
 //Config.LOOP_DELAY_MS = 250; // Small delay to prevent tight loop

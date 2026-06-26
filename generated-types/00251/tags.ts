@@ -7490,23 +7490,11 @@ export const machineTags: MachineTagNode = {
                 AllFixturesAreEmpty: {
                     tag: "Machine_00251.PdmSts.AllFixturesAreEmpty",
                 },
-                AllStationsAreEmpty: {
-                    tag: "Machine_00251.PdmSts.AllStationsAreEmpty",
-                },
-                BatchCntFlag: {
-                    tag: "Machine_00251.PdmSts.BatchCntFlag",
-                },
-                DoneShelfIsEmpty: {
-                    tag: "Machine_00251.PdmSts.DoneShelfIsEmpty",
-                },
-                DoneShelfIsFull: {
-                    tag: "Machine_00251.PdmSts.DoneShelfIsFull",
-                },
-                DoneShelfSpacesLeftCnt: {
-                    tag: "Machine_00251.PdmSts.DoneShelfSpacesLeftCnt",
-                },
                 FinishedCnt: {
                     tag: "Machine_00251.PdmSts.FinishedCnt",
+                },
+                LowestPartStatus: {
+                    tag: "Machine_00251.PdmSts.LowestPartStatus",
                 },
                 OneOrMoreRejectPartsInCell: {
                     tag: "Machine_00251.PdmSts.OneOrMoreRejectPartsInCell",
@@ -8669,32 +8657,11 @@ export const machineTags: MachineTagNode = {
                         },
                     ] as const,
                 },
-                RawShelfIsEmpty: {
-                    tag: "Machine_00251.PdmSts.RawShelfIsEmpty",
-                },
-                RawShelfPartsLeftCnt: {
-                    tag: "Machine_00251.PdmSts.RawShelfPartsLeftCnt",
-                },
-                RobotHasMachinedParts: {
-                    tag: "Machine_00251.PdmSts.RobotHasMachinedParts",
-                },
-                RobotHasNoPostOpParts: {
-                    tag: "Machine_00251.PdmSts.RobotHasNoPostOpParts",
-                },
                 RobotHasOneFinishedPart: {
                     tag: "Machine_00251.PdmSts.RobotHasOneFinishedPart",
                 },
-                RobotHasOnePreMachining: {
-                    tag: "Machine_00251.PdmSts.RobotHasOnePreMachining",
-                },
-                RobotHasOnePreTopDeburring: {
-                    tag: "Machine_00251.PdmSts.RobotHasOnePreTopDeburring",
-                },
                 RobotHasOneRaw: {
                     tag: "Machine_00251.PdmSts.RobotHasOneRaw",
-                },
-                RobotHasTwoPreMachining: {
-                    tag: "Machine_00251.PdmSts.RobotHasTwoPreMachining",
                 },
                 RobotIsEmpty: {
                     tag: "Machine_00251.PdmSts.RobotIsEmpty",
@@ -8704,6 +8671,9 @@ export const machineTags: MachineTagNode = {
                 },
                 TallFixtureIsEmpty: {
                     tag: "Machine_00251.PdmSts.TallFixtureIsEmpty",
+                },
+                VideosNeedReviewed: {
+                    tag: "Machine_00251.PdmSts.VideosNeedReviewed",
                 },
             } as const,
         },
@@ -16785,304 +16755,307 @@ export const machineTags: MachineTagNode = {
                         {
                             tag: "Machine_00251.RobMeta.AdjustedSetpoints[0]",
                             children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[0].BallValveOn",
+                                MoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[0].MoveTimeSec",
                                 },
-                                Speed: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[0].Speed",
+                                RobotMoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[0].RobotMoveTimeSec",
                                 },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[0].SqueegeeDiameter",
+                                RobotVelocity: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[0].RobotVelocity",
                                 },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[0].StepperPosition",
+                                RobotZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[0].RobotZOffset",
                                 },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[0].ZOffset",
+                                StepperSpeed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[0].StepperSpeed",
                                 },
                             } as const,
                         },
                         {
                             tag: "Machine_00251.RobMeta.AdjustedSetpoints[1]",
                             children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[1].BallValveOn",
+                                MoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[1].MoveTimeSec",
                                 },
-                                Speed: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[1].Speed",
+                                RobotMoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[1].RobotMoveTimeSec",
                                 },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[1].SqueegeeDiameter",
+                                RobotVelocity: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[1].RobotVelocity",
                                 },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[1].StepperPosition",
+                                RobotZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[1].RobotZOffset",
                                 },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[1].ZOffset",
+                                StepperSpeed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[1].StepperSpeed",
                                 },
                             } as const,
                         },
                         {
                             tag: "Machine_00251.RobMeta.AdjustedSetpoints[10]",
                             children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[10].BallValveOn",
+                                MoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[10].MoveTimeSec",
                                 },
-                                Speed: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[10].Speed",
+                                RobotMoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[10].RobotMoveTimeSec",
                                 },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[10].SqueegeeDiameter",
+                                RobotVelocity: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[10].RobotVelocity",
                                 },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[10].StepperPosition",
+                                RobotZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[10].RobotZOffset",
                                 },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[10].ZOffset",
+                                StepperSpeed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[10].StepperSpeed",
                                 },
                             } as const,
                         },
                         {
                             tag: "Machine_00251.RobMeta.AdjustedSetpoints[11]",
                             children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[11].BallValveOn",
+                                MoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[11].MoveTimeSec",
                                 },
-                                Speed: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[11].Speed",
+                                RobotMoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[11].RobotMoveTimeSec",
                                 },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[11].SqueegeeDiameter",
+                                RobotVelocity: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[11].RobotVelocity",
                                 },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[11].StepperPosition",
+                                RobotZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[11].RobotZOffset",
                                 },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[11].ZOffset",
+                                StepperSpeed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[11].StepperSpeed",
                                 },
                             } as const,
                         },
                         {
                             tag: "Machine_00251.RobMeta.AdjustedSetpoints[12]",
                             children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[12].BallValveOn",
+                                MoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[12].MoveTimeSec",
                                 },
-                                Speed: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[12].Speed",
+                                RobotMoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[12].RobotMoveTimeSec",
                                 },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[12].SqueegeeDiameter",
+                                RobotVelocity: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[12].RobotVelocity",
                                 },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[12].StepperPosition",
+                                RobotZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[12].RobotZOffset",
                                 },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[12].ZOffset",
+                                StepperSpeed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[12].StepperSpeed",
                                 },
                             } as const,
                         },
                         {
                             tag: "Machine_00251.RobMeta.AdjustedSetpoints[13]",
                             children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[13].BallValveOn",
+                                MoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[13].MoveTimeSec",
                                 },
-                                Speed: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[13].Speed",
+                                RobotMoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[13].RobotMoveTimeSec",
                                 },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[13].SqueegeeDiameter",
+                                RobotVelocity: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[13].RobotVelocity",
                                 },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[13].StepperPosition",
+                                RobotZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[13].RobotZOffset",
                                 },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[13].ZOffset",
+                                StepperSpeed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[13].StepperSpeed",
                                 },
                             } as const,
                         },
                         {
                             tag: "Machine_00251.RobMeta.AdjustedSetpoints[14]",
                             children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[14].BallValveOn",
+                                MoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[14].MoveTimeSec",
                                 },
-                                Speed: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[14].Speed",
+                                RobotMoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[14].RobotMoveTimeSec",
                                 },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[14].SqueegeeDiameter",
+                                RobotVelocity: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[14].RobotVelocity",
                                 },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[14].StepperPosition",
+                                RobotZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[14].RobotZOffset",
                                 },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[14].ZOffset",
+                                StepperSpeed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[14].StepperSpeed",
                                 },
                             } as const,
                         },
                         {
                             tag: "Machine_00251.RobMeta.AdjustedSetpoints[2]",
                             children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[2].BallValveOn",
+                                MoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[2].MoveTimeSec",
                                 },
-                                Speed: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[2].Speed",
+                                RobotMoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[2].RobotMoveTimeSec",
                                 },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[2].SqueegeeDiameter",
+                                RobotVelocity: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[2].RobotVelocity",
                                 },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[2].StepperPosition",
+                                RobotZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[2].RobotZOffset",
                                 },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[2].ZOffset",
+                                StepperSpeed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[2].StepperSpeed",
                                 },
                             } as const,
                         },
                         {
                             tag: "Machine_00251.RobMeta.AdjustedSetpoints[3]",
                             children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[3].BallValveOn",
+                                MoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[3].MoveTimeSec",
                                 },
-                                Speed: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[3].Speed",
+                                RobotMoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[3].RobotMoveTimeSec",
                                 },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[3].SqueegeeDiameter",
+                                RobotVelocity: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[3].RobotVelocity",
                                 },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[3].StepperPosition",
+                                RobotZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[3].RobotZOffset",
                                 },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[3].ZOffset",
+                                StepperSpeed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[3].StepperSpeed",
                                 },
                             } as const,
                         },
                         {
                             tag: "Machine_00251.RobMeta.AdjustedSetpoints[4]",
                             children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[4].BallValveOn",
+                                MoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[4].MoveTimeSec",
                                 },
-                                Speed: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[4].Speed",
+                                RobotMoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[4].RobotMoveTimeSec",
                                 },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[4].SqueegeeDiameter",
+                                RobotVelocity: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[4].RobotVelocity",
                                 },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[4].StepperPosition",
+                                RobotZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[4].RobotZOffset",
                                 },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[4].ZOffset",
+                                StepperSpeed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[4].StepperSpeed",
                                 },
                             } as const,
                         },
                         {
                             tag: "Machine_00251.RobMeta.AdjustedSetpoints[5]",
                             children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[5].BallValveOn",
+                                MoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[5].MoveTimeSec",
                                 },
-                                Speed: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[5].Speed",
+                                RobotMoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[5].RobotMoveTimeSec",
                                 },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[5].SqueegeeDiameter",
+                                RobotVelocity: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[5].RobotVelocity",
                                 },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[5].StepperPosition",
+                                RobotZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[5].RobotZOffset",
                                 },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[5].ZOffset",
+                                StepperSpeed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[5].StepperSpeed",
                                 },
                             } as const,
                         },
                         {
                             tag: "Machine_00251.RobMeta.AdjustedSetpoints[6]",
                             children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[6].BallValveOn",
+                                MoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[6].MoveTimeSec",
                                 },
-                                Speed: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[6].Speed",
+                                RobotMoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[6].RobotMoveTimeSec",
                                 },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[6].SqueegeeDiameter",
+                                RobotVelocity: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[6].RobotVelocity",
                                 },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[6].StepperPosition",
+                                RobotZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[6].RobotZOffset",
                                 },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[6].ZOffset",
+                                StepperSpeed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[6].StepperSpeed",
                                 },
                             } as const,
                         },
                         {
                             tag: "Machine_00251.RobMeta.AdjustedSetpoints[7]",
                             children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[7].BallValveOn",
+                                MoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[7].MoveTimeSec",
                                 },
-                                Speed: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[7].Speed",
+                                RobotMoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[7].RobotMoveTimeSec",
                                 },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[7].SqueegeeDiameter",
+                                RobotVelocity: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[7].RobotVelocity",
                                 },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[7].StepperPosition",
+                                RobotZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[7].RobotZOffset",
                                 },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[7].ZOffset",
+                                StepperSpeed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[7].StepperSpeed",
                                 },
                             } as const,
                         },
                         {
                             tag: "Machine_00251.RobMeta.AdjustedSetpoints[8]",
                             children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[8].BallValveOn",
+                                MoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[8].MoveTimeSec",
                                 },
-                                Speed: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[8].Speed",
+                                RobotMoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[8].RobotMoveTimeSec",
                                 },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[8].SqueegeeDiameter",
+                                RobotVelocity: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[8].RobotVelocity",
                                 },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[8].StepperPosition",
+                                RobotZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[8].RobotZOffset",
                                 },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[8].ZOffset",
+                                StepperSpeed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[8].StepperSpeed",
                                 },
                             } as const,
                         },
                         {
                             tag: "Machine_00251.RobMeta.AdjustedSetpoints[9]",
                             children: {
-                                BallValveOn: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[9].BallValveOn",
+                                MoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[9].MoveTimeSec",
                                 },
-                                Speed: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[9].Speed",
+                                RobotMoveTimeSec: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[9].RobotMoveTimeSec",
                                 },
-                                SqueegeeDiameter: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[9].SqueegeeDiameter",
+                                RobotVelocity: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[9].RobotVelocity",
                                 },
-                                StepperPosition: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[9].StepperPosition",
+                                RobotZOffset: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[9].RobotZOffset",
                                 },
-                                ZOffset: {
-                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[9].ZOffset",
+                                StepperSpeed: {
+                                    tag: "Machine_00251.RobMeta.AdjustedSetpoints[9].StepperSpeed",
                                 },
                             } as const,
                         },
                     ] as const,
+                },
+                ApplicatorSqueegeeMidlineOffset: {
+                    tag: "Machine_00251.RobMeta.ApplicatorSqueegeeMidlineOffset",
                 },
             } as const,
         },
@@ -17129,9 +17102,6 @@ export const machineTags: MachineTagNode = {
                 },
                 ActualZone: {
                     tag: "Machine_00251.RobSts.ActualZone",
-                },
-                ActualZPositionRelativeToFalseBottom: {
-                    tag: "Machine_00251.RobSts.ActualZPositionRelativeToFalseBottom",
                 },
                 ApplicatorHasBeenPrimed: {
                     tag: "Machine_00251.RobSts.ApplicatorHasBeenPrimed",

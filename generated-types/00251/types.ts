@@ -5,7 +5,7 @@
 export const machineTypeSource = {
     "controllerName": "CODESYS Control for Linux SL",
     "endpoint": "opc.tcp://127.0.0.1:4840",
-    "generatedAt": "2026-06-23T16:23:24.489Z",
+    "generatedAt": "2026-06-26T14:37:45.093Z",
     "rootNodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00251",
     "rootTag": "Machine_00251"
 } as const;
@@ -773,6 +773,7 @@ export enum PartStates {
     LINERAPPLIED = 40,
     STARTEDLINERBRUSHING = 41,
     LINERBRUSHED = 50,
+    LINERSPUN = 60,
     STARTEDPHOTOGRAPHING = 61,
     PHOTOGRAPHED = 70,
     STARTEDPOSTWEIGHING = 71,
@@ -813,27 +814,17 @@ export interface PartData {
 export interface PartDataStatus {
     activeCnt: number;
     allFixturesAreEmpty: boolean;
-    allStationsAreEmpty: boolean;
-    batchCntFlag: boolean;
-    doneShelfIsEmpty: boolean;
-    doneShelfIsFull: boolean;
-    doneShelfSpacesLeftCnt: number;
     finishedCnt: number;
+    lowestPartStatus: PartStates;
     oneOrMoreRejectPartsInCell: boolean;
     oneOrMoreRejectPartsInRobot: boolean;
     parts: Array<PartData>;
-    rawShelfIsEmpty: boolean;
-    rawShelfPartsLeftCnt: number;
-    robotHasMachinedParts: boolean;
-    robotHasNoPostOpParts: boolean;
     robotHasOneFinishedPart: boolean;
-    robotHasOnePreMachining: boolean;
-    robotHasOnePreTopDeburring: boolean;
     robotHasOneRaw: boolean;
-    robotHasTwoPreMachining: boolean;
     robotIsEmpty: boolean;
     shortFixtureIsEmpty: boolean;
     tallFixtureIsEmpty: boolean;
+    videosNeedReviewed: boolean;
 }
 export interface PotCfg {
     placeholder: boolean;
@@ -857,8 +848,16 @@ export interface RecipeStore {
 export interface RobCfg {
     placeholder: boolean;
 }
+export interface AdjustedSetpoint {
+    moveTimeSec: number;
+    robotMoveTimeSec: number;
+    robotVelocity: number;
+    robotZOffset: number;
+    stepperSpeed: number;
+}
 export interface RobMeta {
-    adjustedSetpoints: Array<ApplicatorSetpoint>;
+    adjustedSetpoints: Array<AdjustedSetpoint>;
+    applicatorSqueegeeMidlineOffset: number;
 }
 export interface StrainGaugeSts {
     calibOffset: number;
@@ -879,7 +878,6 @@ export interface RobSts {
     actualPosition: RobPositionData;
     actualWaypoint: number;
     actualZone: number;
-    actualZPositionRelativeToFalseBottom: number;
     applicatorHasBeenPrimed: boolean;
     applicatorIsDirty: boolean;
     applyLinerStartSetpointMovesReq: boolean;

@@ -5,7 +5,7 @@
 export const machineTypeSource = {
     "controllerName": "CODESYS Control for Linux SL",
     "endpoint": "opc.tcp://127.0.0.1:4840",
-    "generatedAt": "2026-06-26T14:37:45.093Z",
+    "generatedAt": "2026-06-29T19:39:49.423Z",
     "rootNodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00251",
     "rootTag": "Machine_00251"
 } as const;
@@ -80,6 +80,7 @@ export interface AbbDataOutputs {
     gripperIsOpen: boolean;
     heartbeatVal: number;
     killReq: boolean;
+    moveToNextSetpointOK: boolean;
     pauseReq: boolean;
     plcPartState: number;
     recordingIsActive: boolean;
@@ -271,6 +272,37 @@ export interface TwoPosSts {
     permB: boolean;
     stickyA: boolean;
     stickyB: boolean;
+}
+export interface ConCfg {
+    placeholder: boolean;
+}
+export enum Priorities {
+    NONE = 0,
+    RECOVER_ROBOT = 1,
+    CALIBRATE_GRIPPER = 2,
+    ACTIVATE_RECIPE = 3,
+    PERFORM_CHANGEOVER = 4,
+    CALIBRATE_SQUEEGEE = 5,
+    ENTER_JOB_DATA = 6,
+    LOAD_RAW_TUBES = 10,
+    ENTER_BATCH_DATA = 11,
+    PRIME_APPLICATOR = 13,
+    START_POT_PRESSURIZATION = 15,
+    PRE_WEIGH_TUBES = 20,
+    APPLY_LINER = 30,
+    SPIN_TUBES = 33,
+    BRUSH_LINER = 35,
+    START_POT_DEPRESSURIZATION = 39,
+    PHOTOGRAPH_TUBES = 40,
+    POST_WEIGH_TUBES = 50,
+    PREP_FOR_UNLOAD = 60,
+    REVIEW_VIDEOS = 70,
+    SAVE_BATCH_DATA = 80,
+    UNLOAD_PARTS = 85,
+    DONE = 1000,
+}
+export interface ConSts {
+    activePriority: Priorities;
 }
 export interface TwoPosGantryPoseChildPosition {
     childId: number;
@@ -875,7 +907,10 @@ export interface StrainGaugeSts {
 export interface RobSts {
     activeToolDeviceId: number;
     activeToolId: number;
+    actualApplicatorZPositionRFB: number;
+    actualApplicatorZVelocityRFB: number;
     actualPosition: RobPositionData;
+    actualRobotZPositionRFB: number;
     actualWaypoint: number;
     actualZone: number;
     applicatorHasBeenPrimed: boolean;
@@ -890,6 +925,7 @@ export interface RobSts {
     lastRecordedLoadCellValue_g: number;
     loadCellCurrentValue_g: number;
     loadCellSts: StrainGaugeSts;
+    moveToNextSetpointOK: boolean;
     squeegeeCalibrationOffset: number;
     squeegeeIsCalibrated: boolean;
     squeegeeIsHomed: boolean;
@@ -1663,6 +1699,8 @@ export type Machine = {
     clamp_sSts: TwoPosSts;
     clamp_tCfg: TwoPosCfg;
     clamp_tSts: TwoPosSts;
+    conCfg: ConCfg;
+    conSts: ConSts;
     eoatCfg: TwoPosCfg;
     eoatSts: TwoPosSts;
     fix_sCfg: TwoPosGantryCfg;
@@ -1709,6 +1747,8 @@ export type MachineTypeRoot = {
     clamp_sSts: TwoPosSts;
     clamp_tCfg: TwoPosCfg;
     clamp_tSts: TwoPosSts;
+    conCfg: ConCfg;
+    conSts: ConSts;
     eoatCfg: TwoPosCfg;
     eoatSts: TwoPosSts;
     fix_sCfg: TwoPosGantryCfg;

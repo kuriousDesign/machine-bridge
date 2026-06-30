@@ -752,7 +752,7 @@ async function buildSchemaFromDataTypeDefinition(
 
     const usefulFields = (definition.fields ?? []).filter((field) => {
         const fieldName = field.name ?? '';
-        return fieldName.length > 0 && !isHelperFieldName(fieldName) && !shouldExcludeBrowseName(fieldName);
+        return fieldName.length > 0 && !isHelperFieldName(fieldName);
     });
 
     if (usefulFields.length === 0) {
@@ -885,7 +885,6 @@ async function buildSchemaTree(
     const childReferences = dedupeChildReferences((await browseChildren(session, nodeId))
         .map((reference) => toChildReferenceInfo(reference))
         .filter((reference) => reference.browseName.length > 0)
-        .filter((reference) => !shouldExcludeBrowseName(reference.browseName))
         .filter((reference) => reference.nodeClass === NodeClass.Object || reference.nodeClass === NodeClass.Variable)
         .sort((left, right) => left.browseName.localeCompare(right.browseName)));
 
@@ -1092,6 +1091,7 @@ async function buildTagTree(
     browseName: string,
     tagPath: string,
     visited: Set<string>,
+    depth: number = 0,
 ): Promise<GeneratedTagNode> {
     const visitKey = `tags:${nodeId}`;
     if (visited.has(visitKey)) {
@@ -1103,7 +1103,7 @@ async function buildTagTree(
     const childReferences = dedupeChildReferences((await browseChildren(session, nodeId))
         .map((reference) => toChildReferenceInfo(reference))
         .filter((reference) => reference.browseName.length > 0)
-        .filter((reference) => !shouldExcludeBrowseName(reference.browseName))
+        .filter((reference) => depth > 0 || !shouldExcludeBrowseName(reference.browseName))
         .filter((reference) => reference.nodeClass === NodeClass.Object || reference.nodeClass === NodeClass.Variable)
         .sort((left, right) => left.browseName.localeCompare(right.browseName)));
 
@@ -1120,6 +1120,7 @@ async function buildTagTree(
                 childReference.browseName,
                 childTagPath,
                 visited,
+                depth + 1,
             );
         }
         node.children = children;
@@ -1135,6 +1136,7 @@ async function buildTagTree(
                 childReference.browseName,
                 childTagPath,
                 visited,
+                depth + 1,
             ));
         }
     }

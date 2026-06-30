@@ -1221,6 +1221,9 @@ export const machineTags: MachineTagNode = {
                         KillReq: {
                             tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.KillReq",
                         },
+                        MoveToNextSetpointOK: {
+                            tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.MoveToNextSetpointOK",
+                        },
                         PauseReq: {
                             tag: "Machine_00251.AbbHmiManual.AbbDataOutputs.PauseReq",
                         },
@@ -1897,6 +1900,9 @@ export const machineTags: MachineTagNode = {
                                         },
                                         KillReq: {
                                             tag: "Machine_00251.AbbSts.IController.o.data.KillReq",
+                                        },
+                                        MoveToNextSetpointOK: {
+                                            tag: "Machine_00251.AbbSts.IController.o.data.MoveToNextSetpointOK",
                                         },
                                         PauseReq: {
                                             tag: "Machine_00251.AbbSts.IController.o.data.PauseReq",
@@ -2579,6 +2585,22 @@ export const machineTags: MachineTagNode = {
                 },
                 StickyB: {
                     tag: "Machine_00251.clamp_tSts.StickyB",
+                },
+            } as const,
+        },
+        ConCfg: {
+            tag: "Machine_00251.ConCfg",
+            children: {
+                placeholder: {
+                    tag: "Machine_00251.ConCfg.placeholder",
+                },
+            } as const,
+        },
+        ConSts: {
+            tag: "Machine_00251.ConSts",
+            children: {
+                activePriority: {
+                    tag: "Machine_00251.ConSts.activePriority",
                 },
             } as const,
         },
@@ -17068,6 +17090,12 @@ export const machineTags: MachineTagNode = {
                 ActiveToolId: {
                     tag: "Machine_00251.RobSts.ActiveToolId",
                 },
+                ActualApplicatorZPositionRFB: {
+                    tag: "Machine_00251.RobSts.ActualApplicatorZPositionRFB",
+                },
+                ActualApplicatorZVelocityRFB: {
+                    tag: "Machine_00251.RobSts.ActualApplicatorZVelocityRFB",
+                },
                 ActualPosition: {
                     tag: "Machine_00251.RobSts.ActualPosition",
                     children: {
@@ -17096,6 +17124,9 @@ export const machineTags: MachineTagNode = {
                             tag: "Machine_00251.RobSts.ActualPosition.z",
                         },
                     } as const,
+                },
+                ActualRobotZPositionRFB: {
+                    tag: "Machine_00251.RobSts.ActualRobotZPositionRFB",
                 },
                 ActualWaypoint: {
                     tag: "Machine_00251.RobSts.ActualWaypoint",
@@ -17684,6 +17715,9 @@ export const machineTags: MachineTagNode = {
                                         KillReq: {
                                             tag: "Machine_00251.RobSts.IController.o.data.KillReq",
                                         },
+                                        MoveToNextSetpointOK: {
+                                            tag: "Machine_00251.RobSts.IController.o.data.MoveToNextSetpointOK",
+                                        },
                                         PauseReq: {
                                             tag: "Machine_00251.RobSts.IController.o.data.PauseReq",
                                         },
@@ -17825,6 +17859,9 @@ export const machineTags: MachineTagNode = {
                             tag: "Machine_00251.RobSts.LoadCellSts.Unit",
                         },
                     } as const,
+                },
+                MoveToNextSetpointOK: {
+                    tag: "Machine_00251.RobSts.MoveToNextSetpointOK",
                 },
                 SqueegeeCalibrationOffset: {
                     tag: "Machine_00251.RobSts.SqueegeeCalibrationOffset",

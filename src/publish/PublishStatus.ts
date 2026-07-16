@@ -60,12 +60,6 @@ export async function publishBridgeStatus(params: {
     await mqttClientManager.publish(MqttTopics.BRIDGE_STATUS, payload, true);
     await publishKioskControlStatus(mqttClientManager, kioskControlData);
 
-    if (deviceMapEntries.length > 0) {
-        await mqttClientManager.publish(MqttTopics.DEVICE_MAP, deviceMapEntries, true);
-    } else {
-        console.log('DeviceMap not yet available, cannot publish to bridge/deviceMap');
-    }
-
     return {
         lastPublishTime: now,
         lastPublishedState: currentState,

@@ -17,7 +17,7 @@ The bridge does not implement these as synchronous request/response APIs. A clie
 | --- | --- | --- |
 | `bridge/cmd` | client -> bridge | Bridge command channel. Includes connect requests. |
 | `bridge/status` | bridge -> clients | Retained bridge status snapshot. |
-| `deviceMap` | bridge -> clients | Current registered device map. Published on connect and status updates. |
+| `deviceMap` | bridge -> clients | Current registered device map. Published in response to bridge commands. |
 | `bridge/control` | bridge -> clients | Kiosk control status snapshot. |
 | `hmi/action_req/:deviceId` | client -> bridge | Execute a device action through the HMI writer. |
 | `bridge/api/write_tag` | client -> bridge | Write an arbitrary nested OPC UA tag. |

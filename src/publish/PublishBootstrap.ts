@@ -1,5 +1,5 @@
 import { AttributeIds, ClientSession, StatusCodes } from 'node-opcua';
-import { DeviceRegistration, DeviceTypes, MachineCfg, buildFullTopicPath } from '@kuriousdesign/machine-sdk';
+import { DeviceRegistration, DeviceTypes, MachineCfg, buildFullTopicPath, getMachineTopic } from '@kuriousdesign/machine-sdk';
 
 import { getDeviceReadItems, getMachineReadItems, getOptionalDeviceBootstrapReadItems, ReadItemInfo, ReadItemValidationResult, validateReadItemsDetailed } from '../opcua/polling-items';
 import { BaseMachineBootstrapTags, PlcNamespaces } from '../opcua/plc-tags';
@@ -59,13 +59,14 @@ export async function loadMachineCfg(
 }
 
 export async function loadRegisteredDevices(
+    machineId: string,
     registeredDevicesNodeId: string,
     readOpcuaValue: (nodeId: string) => Promise<unknown>,
     deviceMap: Map<number, DeviceRegistration>,
 ): Promise<DeviceRegistration[]> {
     console.log('[BOOTSTRAP] Retrieving registered devices from OPC UA...');
     logBootstrapReadItemBatch('Base machine bootstrap reads', [
-        createBootstrapReadItem(registeredDevicesNodeId, 'machine/registereddevices'),
+        createBootstrapReadItem(registeredDevicesNodeId, getMachineTopic(machineId, 'registereddevices')),
     ]);
 
     const registeredDevices = await readOpcuaValue(registeredDevicesNodeId) as DeviceRegistration[];
@@ -79,7 +80,7 @@ export async function loadRegisteredDevices(
     deviceMap.clear();
     filteredDevices.forEach((deviceReg) => {
         deviceReg.isExternalService = deviceReg.isExternalService || deviceReg.deviceType === DeviceTypes.ExtService;
-        const topicPath = buildFullTopicPath(deviceReg, deviceMap);
+        const topicPath = buildFullTopicPath(deviceReg, deviceMap, machineId);
         const devicePath = topicPath.split('/');
         deviceReg.devicePath = devicePath;
         deviceMap.set(deviceReg.id, deviceReg);

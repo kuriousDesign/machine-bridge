@@ -1,6 +1,6 @@
 import { DataType } from 'node-opcua';
 
-import { KioskControlData, MqttTopics } from '@kuriousdesign/machine-sdk';
+import { getMqttTopics, KioskControlData, MqttTopics } from '@kuriousdesign/machine-sdk';
 
 import CodesysOpcuaDriver from '../opcua/codesys-opcua-driver';
 import MqttClientManager from '../shared/MqttClientManager';
@@ -10,8 +10,10 @@ import { BridgeStatusSnapshot, PublishManagerStatus } from './PublishManagerCont
 export async function publishKioskControlStatus(
     mqttClientManager: MqttClientManager,
     controlData: KioskControlData,
+    machineId: string | null,
 ): Promise<void> {
-    await mqttClientManager.publish(MqttTopics.KIOSK_CONTROL, controlData);
+    const topics = machineId ? getMqttTopics(machineId) : MqttTopics;
+    await mqttClientManager.publish(topics.KIOSK_CONTROL, controlData);
 }
 
 export async function publishBridgeStatus(params: {
@@ -22,6 +24,7 @@ export async function publishBridgeStatus(params: {
     kioskControlData: KioskControlData;
     lastPublishTime: number;
     lastPublishedState: number | null;
+    machineId: string | null;
     mqttClientManager: MqttClientManager;
     now?: number;
     publishManagerStatus: PublishManagerStatus;
@@ -35,11 +38,13 @@ export async function publishBridgeStatus(params: {
         kioskControlData,
         lastPublishTime,
         lastPublishedState,
+        machineId,
         mqttClientManager,
         now = Date.now(),
         publishManagerStatus,
         registeredDeviceCount,
     } = params;
+    const topics = machineId ? getMqttTopics(machineId) : MqttTopics;
 
     const stateChanged = currentState !== lastPublishedState;
     const publishIntervalElapsed = now - lastPublishTime >= Config.BRIDGE_STATUS_PUBLISH_INTERVAL_MS;
@@ -57,8 +62,8 @@ export async function publishBridgeStatus(params: {
         registeredDeviceCount,
     };
 
-    await mqttClientManager.publish(MqttTopics.BRIDGE_STATUS, payload, true);
-    await publishKioskControlStatus(mqttClientManager, kioskControlData);
+    await mqttClientManager.publish(topics.BRIDGE_STATUS, payload, true);
+    await publishKioskControlStatus(mqttClientManager, kioskControlData, machineId);
 
     return {
         lastPublishTime: now,

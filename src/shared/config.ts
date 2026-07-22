@@ -2,7 +2,7 @@
 import 'dotenv/config'; // Load .env FIRST
 import os from 'os';
 import mqtt from 'mqtt';
-import { nodeListString } from '@kuriousdesign/machine-sdk';
+import { getBridgeApiUpdateDeviceRoot, getBridgeApiWriteTagTopic, nodeListString } from '@kuriousdesign/machine-sdk';
 import { makeApplicationUrn, MessageSecurityMode, SecurityPolicy, OPCUAClientOptions, CreateSubscriptionRequestOptions, DataChangeFilter, MonitoringParametersOptions, DataChangeTrigger, DeadbandType } from 'node-opcua';
 
 const sharedApplicationName = process.env.OPCUA_APPLICATION_NAME || 'OpcuaMqttBridge';
@@ -39,6 +39,7 @@ export const Config: any = {
     MQTT_BROKER_USERNAME: process.env.MQTT_BROKER_USERNAME || "admin",
     MQTT_BROKER_PASSWORD: process.env.MQTT_BROKER_PASSWORD || "Admin1234",
     MQTT_BROKER_TYPE: process.env.MQTT_BROKER_TYPE,
+    MQTT_MACHINE_ID: process.env.MQTT_MACHINE_ID?.trim() || '',
     ApplicationIdentity,
 
 };
@@ -86,8 +87,12 @@ Config.OPTIONS_GROUP = {
 } as MonitoringParametersOptions;
 
 
-Config.BRIDGE_API_UPDATE_DEVICE = "bridge/api/update_device";
-Config.BRIDGE_API_WRITE_TAG = "bridge/api/write_tag";
+Config.BRIDGE_API_UPDATE_DEVICE = Config.MQTT_MACHINE_ID
+    ? getBridgeApiUpdateDeviceRoot(Config.MQTT_MACHINE_ID)
+    : "bridge/api/update_device";
+Config.BRIDGE_API_WRITE_TAG = Config.MQTT_MACHINE_ID
+    ? getBridgeApiWriteTagTopic(Config.MQTT_MACHINE_ID)
+    : "bridge/api/write_tag";
 
 // Derive MQTT URL and Options based on Config settings
 const selectedMqttUrl = Config.MQTT_BROKER_TYPE === "cloud"

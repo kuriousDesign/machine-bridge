@@ -1,4 +1,13 @@
-import { DeviceActionRequestData as SdkDeviceActionRequestData, DeviceId, DeviceRegistration, actionTypeToString, MqttTopics, TopicData } from '@kuriousdesign/machine-sdk';
+import {
+    DeviceActionRequestData as SdkDeviceActionRequestData,
+    DeviceId,
+    DeviceRegistration,
+    actionTypeToString,
+    getBridgeApiWriteTagTopic,
+    getMqttTopics,
+    MqttTopics,
+    TopicData,
+} from '@kuriousdesign/machine-sdk';
 
 import Config from '../shared/config';
 import MqttClientManager from '../shared/MqttClientManager';
@@ -106,10 +115,6 @@ function formatDeviceLabel(deviceMap: Map<number, DeviceRegistration>, deviceId:
     return `${getDeviceLabel(deviceMap, deviceId)}(${deviceId})`;
 }
 
-const HMI_WRITE_RECIPE_TOPIC = MqttTopics.HMI_WRITE_RECIPE;
-const HMI_WRITE_JOB_TOPIC = MqttTopics.HMI_WRITE_JOB;
-const HMI_WRITE_ACTIVE_RECIPE_INDEX_TOPIC = MqttTopics.HMI_WRITE_ACTIVE_RECIPE_INDEX;
-
 export default class HmiWriteManager {
     private state: HmiWriteManagerState = HmiWriteManagerState.Idle;
     private dependencies: HmiWriteManagerDependencies | null = null;
@@ -163,8 +168,10 @@ export default class HmiWriteManager {
         await this.syncWriteJobSubscription();
         await this.syncWriteActiveRecipeIndexSubscription();
 
+        const topics = this.getTopics();
+
         for (const device of devices) {
-            const topic = `${MqttTopics.HMI_ACTION_REQ}/${device.id}`;
+            const topic = `${topics.HMI_ACTION_REQ}/${device.id}`;
             if (this.subscribedTopics.has(topic)) {
                 continue;
             }
@@ -201,6 +208,16 @@ export default class HmiWriteManager {
         return machineId ? getProjectMachineTag(machineId) : PlcNamespaces.Machine;
     }
 
+    private getTopics() {
+        const machineId = this.dependencies?.getMachineId()?.trim();
+        return machineId ? getMqttTopics(machineId) : MqttTopics;
+    }
+
+    private getWriteTagTopic(): string {
+        const machineId = this.dependencies?.getMachineId()?.trim();
+        return machineId ? getBridgeApiWriteTagTopic(machineId) : Config.BRIDGE_API_WRITE_TAG;
+    }
+
     private async enqueueAction(topic: string, message: Buffer): Promise<void> {
         this.actionQueue = this.actionQueue
             .then(async () => {
@@ -227,15 +244,17 @@ export default class HmiWriteManager {
             throw new Error('HMI manager dependencies are not configured');
         }
 
-        if (this.subscribedTopics.has(Config.BRIDGE_API_WRITE_TAG)) {
+        const writeTagTopic = this.getWriteTagTopic();
+
+        if (this.subscribedTopics.has(writeTagTopic)) {
             return;
         }
 
-        console.log('[HMI_MANAGER] Subscribing to bridge api write_tag topic:', Config.BRIDGE_API_WRITE_TAG);
-        await this.dependencies.mqttClientManager.subscribe(Config.BRIDGE_API_WRITE_TAG, (recvTopic: string, message: Buffer) => {
+        console.log('[HMI_MANAGER] Subscribing to bridge api write_tag topic:', writeTagTopic);
+        await this.dependencies.mqttClientManager.subscribe(writeTagTopic, (recvTopic: string, message: Buffer) => {
             void this.enqueueWriteTag(recvTopic, message);
         });
-        this.subscribedTopics.add(Config.BRIDGE_API_WRITE_TAG);
+        this.subscribedTopics.add(writeTagTopic);
     }
 
     private async syncWriteRecipeSubscription(): Promise<void> {
@@ -243,15 +262,17 @@ export default class HmiWriteManager {
             throw new Error('HMI manager dependencies are not configured');
         }
 
-        if (this.subscribedTopics.has(HMI_WRITE_RECIPE_TOPIC)) {
+        const recipeTopic = this.getTopics().HMI_WRITE_RECIPE;
+
+        if (this.subscribedTopics.has(recipeTopic)) {
             return;
         }
 
-        console.log('[HMI_MANAGER] Subscribing to recipe write topic:', HMI_WRITE_RECIPE_TOPIC);
-        await this.dependencies.mqttClientManager.subscribe(HMI_WRITE_RECIPE_TOPIC, (recvTopic: string, message: Buffer) => {
+        console.log('[HMI_MANAGER] Subscribing to recipe write topic:', recipeTopic);
+        await this.dependencies.mqttClientManager.subscribe(recipeTopic, (recvTopic: string, message: Buffer) => {
             void this.enqueueWriteRecipe(recvTopic, message);
         });
-        this.subscribedTopics.add(HMI_WRITE_RECIPE_TOPIC);
+        this.subscribedTopics.add(recipeTopic);
     }
 
     private async syncWriteJobSubscription(): Promise<void> {
@@ -259,15 +280,17 @@ export default class HmiWriteManager {
             throw new Error('HMI manager dependencies are not configured');
         }
 
-        if (this.subscribedTopics.has(HMI_WRITE_JOB_TOPIC)) {
+        const jobTopic = this.getTopics().HMI_WRITE_JOB;
+
+        if (this.subscribedTopics.has(jobTopic)) {
             return;
         }
 
-        console.log('[HMI_MANAGER] Subscribing to job write topic:', HMI_WRITE_JOB_TOPIC);
-        await this.dependencies.mqttClientManager.subscribe(HMI_WRITE_JOB_TOPIC, (recvTopic: string, message: Buffer) => {
+        console.log('[HMI_MANAGER] Subscribing to job write topic:', jobTopic);
+        await this.dependencies.mqttClientManager.subscribe(jobTopic, (recvTopic: string, message: Buffer) => {
             void this.enqueueWriteJob(recvTopic, message);
         });
-        this.subscribedTopics.add(HMI_WRITE_JOB_TOPIC);
+        this.subscribedTopics.add(jobTopic);
     }
 
     private async syncWriteActiveRecipeIndexSubscription(): Promise<void> {
@@ -275,15 +298,17 @@ export default class HmiWriteManager {
             throw new Error('HMI manager dependencies are not configured');
         }
 
-        if (this.subscribedTopics.has(HMI_WRITE_ACTIVE_RECIPE_INDEX_TOPIC)) {
+        const activeRecipeIndexTopic = this.getTopics().HMI_WRITE_ACTIVE_RECIPE_INDEX;
+
+        if (this.subscribedTopics.has(activeRecipeIndexTopic)) {
             return;
         }
 
-        console.log('[HMI_MANAGER] Subscribing to active recipe index write topic:', HMI_WRITE_ACTIVE_RECIPE_INDEX_TOPIC);
-        await this.dependencies.mqttClientManager.subscribe(HMI_WRITE_ACTIVE_RECIPE_INDEX_TOPIC, (recvTopic: string, message: Buffer) => {
+        console.log('[HMI_MANAGER] Subscribing to active recipe index write topic:', activeRecipeIndexTopic);
+        await this.dependencies.mqttClientManager.subscribe(activeRecipeIndexTopic, (recvTopic: string, message: Buffer) => {
             void this.enqueueWriteActiveRecipeIndex(recvTopic, message);
         });
-        this.subscribedTopics.add(HMI_WRITE_ACTIVE_RECIPE_INDEX_TOPIC);
+        this.subscribedTopics.add(activeRecipeIndexTopic);
     }
 
     private async enqueueWriteTag(topic: string, message: Buffer): Promise<void> {

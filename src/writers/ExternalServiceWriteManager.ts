@@ -1,4 +1,4 @@
-import { DeviceId, DeviceRegistration, DeviceTypes, TopicData } from '@kuriousdesign/machine-sdk';
+import { DeviceId, DeviceRegistration, DeviceTypes, getBridgeApiUpdateDeviceRoot, TopicData } from '@kuriousdesign/machine-sdk';
 import { OptionalDevicePollingTags } from '../opcua/plc-tags';
 
 function isExternalServiceDevice(device: DeviceRegistration): boolean {
@@ -80,12 +80,17 @@ export default class ExternalServiceWriteManager {
             return;
         }
 
+        const machineId = this.dependencies.getMachineId()?.trim();
+        const deviceUpdateRoot = machineId
+            ? getBridgeApiUpdateDeviceRoot(machineId)
+            : Config.BRIDGE_API_UPDATE_DEVICE;
+
         for (const device of devices) {
             if (!isExternalServiceDevice(device)) {
                 continue;
             }
 
-            const topic = `${Config.BRIDGE_API_UPDATE_DEVICE}/${device.id}/sts`;
+            const topic = `${deviceUpdateRoot}/${device.id}/sts`;
             if (this.subscribedTopics.has(topic)) {
                 continue;
             }

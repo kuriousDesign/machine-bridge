@@ -1,6 +1,7 @@
 import {
     buildFullTopicPath,
     DeviceRegistration,
+    getMachineTopic,
 } from "@kuriousdesign/machine-sdk";
 import { ClientSession, ReadValueIdOptions, AttributeIds, StatusCodes } from "node-opcua-client";
 import Config from "../shared/config";
@@ -138,7 +139,7 @@ export function getOptionalDeviceBootstrapReadItems(
     const readItems: ReadItemInfo[] = [];
 
     registeredDevices.forEach((device) => {
-        const deviceTopic = buildFullTopicPath(device, deviceMap);
+        const deviceTopic = buildFullTopicPath(device, deviceMap, machineId);
         Object.entries(OptionalDeviceBootstrapTags(device, machineId)).forEach(([key, tagId]) => {
             pushReadItem(readItems, makeReadItem(tagId, `${deviceTopic}/${key.toLowerCase()}`));
         });
@@ -161,7 +162,7 @@ export async function getDeviceReadItems(
     const readIteams: ReadItemInfo[] = [];
     registeredDevices.forEach((device) => {
         const deviceTag = `${PlcNamespaces.Machine}.${DEVICE_STORE_TAG}[${device.id}]`;
-        const deviceTopic = buildFullTopicPath(device, deviceMap);
+        const deviceTopic = buildFullTopicPath(device, deviceMap, machineId);
         Object.values(BaseDevicePollingTags).forEach((subTag: string) => {
             const tag = `${deviceTag}.${subTag}`;
             const topic = `${deviceTopic}/${toTopicSegment(subTag)}`;
@@ -188,12 +189,12 @@ export function getMachineReadItems(machineId: string): ReadItemInfo[] {
     const itemsToRead: ReadItemInfo[] = [];
     Object.entries(BaseMachinePollingTags).forEach(([key, subTag]) => {
         const tag = `${PlcNamespaces.Machine}.${subTag}`;
-        const topic = `${PlcNamespaces.Machine.toLowerCase()}/${key.toLowerCase()}`;
+        const topic = getMachineTopic(machineId, key.toLowerCase());
         pushReadItem(itemsToRead, makeReadItem(tag, topic));
     });
 
     Object.entries(ProjectMachinePollingTags(machineId)).forEach(([key, tag]) => {
-        const topic = `${PlcNamespaces.Machine.toLowerCase()}/${key.toLowerCase()}`;
+        const topic = getMachineTopic(machineId, key.toLowerCase());
         pushReadItem(itemsToRead, makeReadItem(tag, topic));
     });
     if (Config.SHOW_SUCCESSFUL_TAG_SUBSCRIPTION_LOGS) {

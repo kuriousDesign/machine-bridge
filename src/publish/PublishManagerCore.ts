@@ -22,7 +22,7 @@ import path from 'node:path';
 
 import Config from '../shared/config'; // <--- Use the central config
 
-import { DeviceId, DeviceRegistration, initialKioskControlData, KioskControlData, MachineCfg, TopicData } from '@kuriousdesign/machine-sdk';
+import { DeviceId, DeviceRegistration, getMachineTopic, initialKioskControlData, KioskControlData, MachineCfg, TopicData } from '@kuriousdesign/machine-sdk';
 import CodesysOpcuaDriver from '../opcua/codesys-opcua-driver';
 import { BaseMachinePollingTags, OptionalDevicePollingTags, PlcNamespaces } from '../opcua/plc-tags';
 import { ReadItemInfo, ReadItemValidationResult } from '../opcua/polling-items';
@@ -130,6 +130,10 @@ export default class PublishManagerCore {
     private connectionAttemptStartedAt: number | null = null;
     private lastDisconnectedStatusLogAt: number = 0;
     private connectionStatusLogTimer: NodeJS.Timeout | null = null;
+
+    private getTopicMachineId(): string | null {
+        return this.machineId?.trim() || Config.MQTT_MACHINE_ID || null;
+    }
 
     private canPerformOpcuaWrites(): boolean {
         return !!this.session
@@ -810,7 +814,7 @@ export default class PublishManagerCore {
         const machineCfgItem: ReadItemInfo = {
             attributeId: AttributeIds.Value,
             last_publish_time: 0,
-            mqttTopic: 'machine/cfg',
+            mqttTopic: this.getTopicMachineId() ? getMachineTopic(this.getTopicMachineId() as string, 'cfg') : 'machine/cfg',
             nodeId: getMachineCfgNodeId(concatNodeId),
             tagId: `${PlcNamespaces.Machine}.Cfg`,
             update_period: 1,
@@ -832,11 +836,12 @@ export default class PublishManagerCore {
         }
         this.machineCfg = machineCfg;
         this.machineId = machineCfg.machineId.trim();
+        machineCfgItem.mqttTopic = getMachineTopic(this.machineId, 'cfg');
 
         const registeredDevicesItem: ReadItemInfo = {
             attributeId: AttributeIds.Value,
             last_publish_time: 0,
-            mqttTopic: 'machine/registereddevices',
+            mqttTopic: getMachineTopic(this.machineId, 'registereddevices'),
             nodeId: getRegisteredDevicesNodeId(concatNodeId),
             tagId: `${PlcNamespaces.Machine}.RegisteredDevices`,
             update_period: 1,
@@ -845,6 +850,7 @@ export default class PublishManagerCore {
 
         try {
             this.registeredDevices = await loadRegisteredDevices(
+                this.machineId,
                 registeredDevicesItem.nodeId,
                 (nodeId) => this.readOpcuaValue(nodeId),
                 this.deviceMap,
@@ -888,6 +894,7 @@ export default class PublishManagerCore {
 
         await subscribeToPublishBridgeCommands({
             handleBridgeCommand: (message) => this.handleBridgeCommand(message),
+            machineId: this.getTopicMachineId(),
             mqttClientManager: this.mqttClientManager,
         });
     }
@@ -971,6 +978,7 @@ export default class PublishManagerCore {
         this.kioskControlData = await handlePublishBridgeCommand({
             deviceMapEntries: Array.from(this.deviceMap.entries()),
             getBridgeCachePayload: () => this.getBridgeCachePayload(),
+            getMachineId: () => this.getTopicMachineId(),
             kioskControlData: this.kioskControlData,
             message,
             mqttClientManager: this.mqttClientManager,
@@ -987,6 +995,7 @@ export default class PublishManagerCore {
             kioskControlData: this.kioskControlData,
             lastPublishTime: this.lastPublishTime,
             lastPublishedState: this.lastPublishedState,
+            machineId: this.getTopicMachineId(),
             mqttClientManager: this.mqttClientManager,
             publishManagerStatus: this.publishStatus,
             registeredDeviceCount: this.deviceMap.size,

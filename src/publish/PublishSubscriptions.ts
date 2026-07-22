@@ -181,10 +181,10 @@ export async function handlePublishPollingItemChange(params: {
 
         mqttClientManager.publish(readInfo.mqttTopic, newValue);
         onPollingItemResult?.(tag, true, 'published');
-        if (readInfo.mqttTopic === 'machine/estopcircuit_ok' || readInfo.mqttTopic === 'machine/estopcircuitdelayed_ok') {
+        if (readInfo.mqttTopic.endsWith('/estopcircuit_ok') || readInfo.mqttTopic.endsWith('/estopcircuitdelayed_ok')) {
             console.log(`[MQTT][ESTOP] Published ${readInfo.mqttTopic}:`, newValue);
         }
-        if (readInfo.mqttTopic === 'machine/heartbeatplc' && typeof newValue === 'number' && newValue % 30 === 0) {
+        if (readInfo.mqttTopic.endsWith('/heartbeatplc') && typeof newValue === 'number' && newValue % 30 === 0) {
             console.log('Machine.heartbeatPlc:', newValue);
         }
     } catch (error) {

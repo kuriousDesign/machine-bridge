@@ -1,5 +1,6 @@
 import {
     BridgeCmds,
+    getMqttTopics,
     KioskControlData,
     MqttTopics,
     TopicData,
@@ -34,6 +35,7 @@ export function patchKioskControlData(
 export async function handlePublishBridgeCommand(params: {
     deviceMapEntries: [number, unknown][];
     getBridgeCachePayload: () => unknown;
+    getMachineId: () => string | null;
     kioskControlData: KioskControlData;
     message: TopicData;
     mqttClientManager: MqttClientManager;
@@ -42,11 +44,13 @@ export async function handlePublishBridgeCommand(params: {
     const {
         deviceMapEntries,
         getBridgeCachePayload,
+        getMachineId,
         kioskControlData,
         message,
         mqttClientManager,
         publishCachedTopics,
     } = params;
+    const topics = getMachineId() ? getMqttTopics(getMachineId() as string) : MqttTopics;
 
     const cmdData = message.payload as {
         allowedKioskIds?: string[];
@@ -89,14 +93,14 @@ export async function handlePublishBridgeCommand(params: {
     switch (cmdData.cmd) {
         case BridgeCmds.CONNECT:
             if (deviceMapEntries.length > 0) {
-                await mqttClientManager.publish(MqttTopics.DEVICE_MAP, deviceMapEntries);
+                await mqttClientManager.publish(topics.DEVICE_MAP, deviceMapEntries);
             } else {
                 console.log('DeviceMap not yet available, cannot publish to bridge/deviceMap');
             }
             break;
         case BridgeCmds.GET_CACHE:
             await publishCachedTopics();
-            await mqttClientManager.publish(MqttTopics.BRIDGE_CACHE, getBridgeCachePayload());
+            await mqttClientManager.publish(topics.BRIDGE_CACHE, getBridgeCachePayload());
             break;
         case BridgeCmds.DISCONNECT:
             break;
@@ -104,18 +108,20 @@ export async function handlePublishBridgeCommand(params: {
             console.warn('Unknown bridge command:', cmdData.cmd);
     }
 
-    await publishKioskControlStatus(mqttClientManager, nextKioskControlData);
+    await publishKioskControlStatus(mqttClientManager, nextKioskControlData, getMachineId());
     return nextKioskControlData;
 }
 
 export async function subscribeToPublishBridgeCommands(params: {
     handleBridgeCommand: (message: TopicData) => Promise<void>;
+    machineId: string | null;
     mqttClientManager: MqttClientManager;
 }): Promise<void> {
-    const { handleBridgeCommand, mqttClientManager } = params;
+    const { handleBridgeCommand, machineId, mqttClientManager } = params;
+    const topics = machineId ? getMqttTopics(machineId) : MqttTopics;
 
-    console.log('Subscribing to bridge command topic:', MqttTopics.BRIDGE_CMD);
-    mqttClientManager.subscribe(MqttTopics.BRIDGE_CMD, async (_topic: string, message: Buffer) => {
+    console.log('Subscribing to bridge command topic:', topics.BRIDGE_CMD);
+    mqttClientManager.subscribe(topics.BRIDGE_CMD, async (_topic: string, message: Buffer) => {
         await handleBridgeCommand(JSON.parse(message.toString()) as TopicData);
     });
 }

@@ -1,4 +1,4 @@
-import { DeviceActionRequestData as SdkDeviceActionRequestData, DeviceId, DeviceRegistration, actionTypeToString, deviceIdToString, MqttTopics, TopicData } from '@kuriousdesign/machine-sdk';
+import { DeviceActionRequestData as SdkDeviceActionRequestData, DeviceId, DeviceRegistration, actionTypeToString, MqttTopics, TopicData } from '@kuriousdesign/machine-sdk';
 
 import Config from '../shared/config';
 import MqttClientManager from '../shared/MqttClientManager';
@@ -89,10 +89,21 @@ function normalizeActionRequest(
     };
 }
 
+function getDeviceLabel(deviceMap: Map<number, DeviceRegistration>, deviceId: number): string {
+    const mnemonic = deviceMap.get(deviceId)?.mnemonic?.trim();
+    if (mnemonic) {
+        return mnemonic;
+    }
+
+    // if (deviceId === DeviceId.HMI) {
+    //     return 'HMI';
+    // }
+
+    return `device-${deviceId}`;
+}
+
 function formatDeviceLabel(deviceMap: Map<number, DeviceRegistration>, deviceId: number): string {
-    const device = deviceMap.get(deviceId);
-    const mnemonic = device?.mnemonic?.trim() || deviceIdToString(deviceId);
-    return `${mnemonic}(${deviceId})`;
+    return `${getDeviceLabel(deviceMap, deviceId)}(${deviceId})`;
 }
 
 const HMI_WRITE_RECIPE_TOPIC = MqttTopics.HMI_WRITE_RECIPE;
@@ -108,6 +119,7 @@ export default class HmiWriteManager {
         'HMI_MANAGER',
         () => this.dependencies?.getMachineId() ?? null,
         () => this.dependencies?.getKnownMachineTagRoots() ?? [],
+        (deviceId) => getDeviceLabel(this.dependencies?.getDeviceMap() ?? new Map<number, DeviceRegistration>(), deviceId),
     );
     private subscribedTopics = new Set<string>();
     private sessionResetCount = 0;

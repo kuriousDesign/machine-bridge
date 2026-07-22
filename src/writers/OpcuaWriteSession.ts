@@ -15,12 +15,14 @@ export default class OpcuaWriteSession {
         private readonly label: string,
         private readonly getMachineId?: () => string | null,
         private readonly getKnownMachineTagRoots?: () => string[],
+        private readonly getDeviceLabel?: (deviceId: number) => string,
     ) {}
 
     public async ensureConnected(): Promise<void> {
         if (this.session && this.driver) {
             this.driver.setMachineId(this.getMachineId?.() ?? null);
             this.driver.setKnownMachineTagRoots(this.getKnownMachineTagRoots?.() ?? []);
+            this.driver.setDeviceLabelResolver(this.getDeviceLabel ?? null);
             return;
         }
 
@@ -39,6 +41,7 @@ export default class OpcuaWriteSession {
         this.driver = new CodesysOpcuaDriver(this.deviceId, this.session, Config.OPCUA_CONTROLLER_NAME);
         this.driver.setMachineId(this.getMachineId?.() ?? null);
         this.driver.setKnownMachineTagRoots(this.getKnownMachineTagRoots?.() ?? []);
+        this.driver.setDeviceLabelResolver(this.getDeviceLabel ?? null);
         console.log(`[${this.label}] Dedicated OPC UA session ready.`);
     }
 

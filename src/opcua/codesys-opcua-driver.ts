@@ -1,7 +1,6 @@
 import { ClientSession, Variant, AttributeIds, DataType, VariantArrayType, ReadValueIdOptions, StatusCodes, DataValue, WriteValueOptions } from "node-opcua";
-import { ActionTypes, initialApiOpcuaReqData, DeviceCmds, States, ApiOpcuaReqData, DeviceActionRequestData, ApiReqRespStates, AxisProcesses, DeviceConstants, actionTypeToString, apiReqRespStateToString, deviceIdToString, Device, initialDevice, initialDeviceActionRequestData } from "@kuriousdesign/machine-sdk";
-import { read, write } from "fs";
-import { BaseMachineBootstrapTags, BaseMachinePollingTags, getProjectMachineTag, PlcNamespaces } from "./plc-tags";
+import { ActionTypes, initialApiOpcuaReqData, DeviceCmds, States, ApiOpcuaReqData, DeviceActionRequestData, ApiReqRespStates, AxisProcesses, DeviceConstants, actionTypeToString, apiReqRespStateToString, Device } from "@kuriousdesign/machine-sdk";
+import { getProjectMachineTag, PlcNamespaces } from "./plc-tags";
 import { writeExtensionObject } from "./opcua-helpers";
 
 // Debug: Log the imported ApiReqRespStates to verify its structure
@@ -27,6 +26,8 @@ type ActionRequestLogContext = {
     senderLabel?: string;
     targetLabel?: string;
 };
+
+type DeviceLabelResolver = (deviceId: number) => string;
 
 type RuntimeWriteResult = {
     nodeId: string;
@@ -56,6 +57,7 @@ export default class CodesysOpcuaDriver {
     private cachedTagDataTypes = new Map<string, DataType>();
     private baseMachineRootSegments = new Map<string, string>();
     private projectMachineRootSegments = new Map<string, string>();
+    private deviceLabelResolver: DeviceLabelResolver | null = null;
 
     private static readonly projectSpecificNestedSegmentAliases = new Map<string, Map<string, string>>([
         ['Job', new Map<string, string>([
@@ -153,6 +155,15 @@ export default class CodesysOpcuaDriver {
                 }
             }
         }
+    }
+
+    public setDeviceLabelResolver(deviceLabelResolver: DeviceLabelResolver | null): void {
+        this.deviceLabelResolver = deviceLabelResolver;
+    }
+
+    private formatDeviceLabel(deviceId: number): string {
+        const label = this.deviceLabelResolver?.(deviceId)?.trim();
+        return `${label || `device-${deviceId}`}(${deviceId})`;
     }
 
     private isOpcuaConnectionClosedError(message: string): boolean {
@@ -751,8 +762,8 @@ export default class CodesysOpcuaDriver {
         logContext: ActionRequestLogContext = {},
     ): Promise<{ success: boolean; message: string }> {
         const senderId = logContext.senderId ?? this.id;
-        const senderLabel = logContext.senderLabel ?? `${deviceIdToString(senderId)}(${senderId})`;
-        const targetLabel = logContext.targetLabel ?? `${deviceIdToString(targetDeviceId)}(${targetDeviceId})`;
+        const senderLabel = logContext.senderLabel ?? this.formatDeviceLabel(senderId);
+        const targetLabel = logContext.targetLabel ?? this.formatDeviceLabel(targetDeviceId);
         const actionTypeLabel = actionTypeToString(actionType);
 
         console.log(`Requesting ${actionTypeLabel}(${actionType}) actionId=${actionId} ${senderLabel} -> ${targetLabel}`);

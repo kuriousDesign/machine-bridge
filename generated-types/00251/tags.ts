@@ -2604,6 +2604,9 @@ export const machineTags: MachineTagNode = {
                 },
             } as const,
         },
+        devicesIds_00251: {
+            tag: "Machine_00251.devicesIds_00251",
+        },
         EoatCfg: {
             tag: "Machine_00251.EoatCfg",
             children: {
@@ -21657,6 +21660,20 @@ export const machineTags: MachineTagNode = {
             children: {
                 triggerErrorIfLostHeartbeat: {
                     tag: "Machine_00251.VisCfg.triggerErrorIfLostHeartbeat",
+                },
+            } as const,
+        },
+        VisMeta: {
+            tag: "Machine_00251.VisMeta",
+            children: {
+                flipBit: {
+                    tag: "Machine_00251.VisMeta.flipBit",
+                },
+                recordingFilenameMetaData: {
+                    tag: "Machine_00251.VisMeta.recordingFilenameMetaData",
+                },
+                recordingFolderPath: {
+                    tag: "Machine_00251.VisMeta.recordingFolderPath",
                 },
             } as const,
         },

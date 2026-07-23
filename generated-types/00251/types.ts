@@ -5,7 +5,7 @@
 export const machineTypeSource = {
     "controllerName": "CODESYS Control for Linux SL",
     "endpoint": "opc.tcp://127.0.0.1:4840",
-    "generatedAt": "2026-06-30T16:43:58.761Z",
+    "generatedAt": "2026-07-22T22:03:52.645Z",
     "rootNodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00251",
     "rootTag": "Machine_00251"
 } as const;
@@ -303,6 +303,21 @@ export enum Priorities {
 }
 export interface ConSts {
     activePriority: Priorities;
+}
+export enum DeviceIds {
+    ABB = 11,
+    EOAT = 12,
+    VIS = 13,
+    FIX_T = 14,
+    FIX_S = 15,
+    CLAMP_T = 16,
+    CLAMP_S = 17,
+    FLSB_T = 18,
+    FLSB_S = 19,
+    POT = 20,
+    SQUEE = 21,
+    GRIP = 22,
+    WEIGH = 23,
 }
 export interface TwoPosGantryPoseChildPosition {
     childId: number;
@@ -1636,6 +1651,11 @@ export interface UdpSts {
 export interface ExtServiceCfg {
     triggerErrorIfLostHeartbeat: boolean;
 }
+export interface VisMeta {
+    flipBit: boolean;
+    recordingFilenameMetaData: string;
+    recordingFolderPath: string;
+}
 export interface CameraStatus {
     isConnected: boolean;
     isPluggedIn: boolean;
@@ -1701,6 +1721,7 @@ export type Machine = {
     clamp_tSts: TwoPosSts;
     conCfg: ConCfg;
     conSts: ConSts;
+    devicesIds_00251: DeviceIds;
     eoatCfg: TwoPosCfg;
     eoatSts: TwoPosSts;
     fix_sCfg: TwoPosGantryCfg;
@@ -1735,6 +1756,7 @@ export type Machine = {
     udpCfg: UdpCfg;
     udpSts: UdpSts;
     visCfg: ExtServiceCfg;
+    visMeta: VisMeta;
     visSts: VisSts;
     visStsExtService: VisSts;
 };
@@ -1749,6 +1771,7 @@ export type MachineTypeRoot = {
     clamp_tSts: TwoPosSts;
     conCfg: ConCfg;
     conSts: ConSts;
+    devicesIds_00251: DeviceIds;
     eoatCfg: TwoPosCfg;
     eoatSts: TwoPosSts;
     fix_sCfg: TwoPosGantryCfg;
@@ -1783,6 +1806,7 @@ export type MachineTypeRoot = {
     udpCfg: UdpCfg;
     udpSts: UdpSts;
     visCfg: ExtServiceCfg;
+    visMeta: VisMeta;
     visSts: VisSts;
     visStsExtService: VisSts;
 };

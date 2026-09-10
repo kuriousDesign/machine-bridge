@@ -30,6 +30,9 @@ export const machineTags: MachineTagNode = {
                 ControllerType: {
                     tag: "Machine_00254.AbbCfg.ControllerType",
                 },
+                DistanceToHomeThreshold: {
+                    tag: "Machine_00254.AbbCfg.DistanceToHomeThreshold",
+                },
                 LinearUnit: {
                     tag: "Machine_00254.AbbCfg.LinearUnit",
                 },
@@ -246,6 +249,18 @@ export const machineTags: MachineTagNode = {
                                         ActionId: {
                                             tag: "Machine_00254.AbbMeta.IController.o.data.ActionId",
                                         },
+                                        ActionParam0: {
+                                            tag: "Machine_00254.AbbMeta.IController.o.data.ActionParam0",
+                                        },
+                                        ActionParam1: {
+                                            tag: "Machine_00254.AbbMeta.IController.o.data.ActionParam1",
+                                        },
+                                        ActionParam2: {
+                                            tag: "Machine_00254.AbbMeta.IController.o.data.ActionParam2",
+                                        },
+                                        ActionParam3: {
+                                            tag: "Machine_00254.AbbMeta.IController.o.data.ActionParam3",
+                                        },
                                         ActionType: {
                                             tag: "Machine_00254.AbbMeta.IController.o.data.ActionType",
                                         },
@@ -257,18 +272,6 @@ export const machineTags: MachineTagNode = {
                                         },
                                         HeartbeatPlc: {
                                             tag: "Machine_00254.AbbMeta.IController.o.data.HeartbeatPlc",
-                                        },
-                                        Param0: {
-                                            tag: "Machine_00254.AbbMeta.IController.o.data.Param0",
-                                        },
-                                        Param1: {
-                                            tag: "Machine_00254.AbbMeta.IController.o.data.Param1",
-                                        },
-                                        Param2: {
-                                            tag: "Machine_00254.AbbMeta.IController.o.data.Param2",
-                                        },
-                                        Param3: {
-                                            tag: "Machine_00254.AbbMeta.IController.o.data.Param3",
                                         },
                                         PartPresentBits: {
                                             tag: "Machine_00254.AbbMeta.IController.o.data.PartPresentBits",
@@ -412,11 +415,1853 @@ export const machineTags: MachineTagNode = {
         ActiveRecipe: {
             tag: "Machine_00254.ActiveRecipe",
             children: {
+                batchAmount_PERC: {
+                    tag: "Machine_00254.ActiveRecipe.batchAmount_PERC",
+                },
+                beakers: {
+                    tag: "Machine_00254.ActiveRecipe.beakers",
+                    items: [
+                        {
+                            tag: "Machine_00254.ActiveRecipe.beakers[0]",
+                            children: {
+                                FixturePosition: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[0].FixturePosition",
+                                },
+                                MaterialQty_g: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[0].MaterialQty_g",
+                                },
+                                MaterialQty_mL: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[0].MaterialQty_mL",
+                                },
+                                MaterialType: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[0].MaterialType",
+                                },
+                                NumRefills: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[0].NumRefills",
+                                },
+                                PouringTimeSec: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[0].PouringTimeSec",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.beakers[1]",
+                            children: {
+                                FixturePosition: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[1].FixturePosition",
+                                },
+                                MaterialQty_g: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[1].MaterialQty_g",
+                                },
+                                MaterialQty_mL: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[1].MaterialQty_mL",
+                                },
+                                MaterialType: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[1].MaterialType",
+                                },
+                                NumRefills: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[1].NumRefills",
+                                },
+                                PouringTimeSec: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[1].PouringTimeSec",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.beakers[2]",
+                            children: {
+                                FixturePosition: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[2].FixturePosition",
+                                },
+                                MaterialQty_g: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[2].MaterialQty_g",
+                                },
+                                MaterialQty_mL: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[2].MaterialQty_mL",
+                                },
+                                MaterialType: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[2].MaterialType",
+                                },
+                                NumRefills: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[2].NumRefills",
+                                },
+                                PouringTimeSec: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[2].PouringTimeSec",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.beakers[3]",
+                            children: {
+                                FixturePosition: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[3].FixturePosition",
+                                },
+                                MaterialQty_g: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[3].MaterialQty_g",
+                                },
+                                MaterialQty_mL: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[3].MaterialQty_mL",
+                                },
+                                MaterialType: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[3].MaterialType",
+                                },
+                                NumRefills: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[3].NumRefills",
+                                },
+                                PouringTimeSec: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[3].PouringTimeSec",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.beakers[4]",
+                            children: {
+                                FixturePosition: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[4].FixturePosition",
+                                },
+                                MaterialQty_g: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[4].MaterialQty_g",
+                                },
+                                MaterialQty_mL: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[4].MaterialQty_mL",
+                                },
+                                MaterialType: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[4].MaterialType",
+                                },
+                                NumRefills: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[4].NumRefills",
+                                },
+                                PouringTimeSec: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[4].PouringTimeSec",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.beakers[5]",
+                            children: {
+                                FixturePosition: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[5].FixturePosition",
+                                },
+                                MaterialQty_g: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[5].MaterialQty_g",
+                                },
+                                MaterialQty_mL: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[5].MaterialQty_mL",
+                                },
+                                MaterialType: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[5].MaterialType",
+                                },
+                                NumRefills: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[5].NumRefills",
+                                },
+                                PouringTimeSec: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[5].PouringTimeSec",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.beakers[6]",
+                            children: {
+                                FixturePosition: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[6].FixturePosition",
+                                },
+                                MaterialQty_g: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[6].MaterialQty_g",
+                                },
+                                MaterialQty_mL: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[6].MaterialQty_mL",
+                                },
+                                MaterialType: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[6].MaterialType",
+                                },
+                                NumRefills: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[6].NumRefills",
+                                },
+                                PouringTimeSec: {
+                                    tag: "Machine_00254.ActiveRecipe.beakers[6].PouringTimeSec",
+                                },
+                            } as const,
+                        },
+                    ] as const,
+                },
                 dbId: {
                     tag: "Machine_00254.ActiveRecipe.dbId",
                 },
                 index: {
                     tag: "Machine_00254.ActiveRecipe.index",
+                },
+                mixingTasks: {
+                    tag: "Machine_00254.ActiveRecipe.mixingTasks",
+                    items: [
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[0]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[0].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[0].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[0].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[0].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[0].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[0].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[0].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[0].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[0].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[0].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[0].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[0].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[0].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[0].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[0].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[0].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[1]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[1].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[1].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[1].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[1].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[1].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[1].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[1].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[1].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[1].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[1].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[1].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[1].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[1].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[1].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[1].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[1].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[10]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[10].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[10].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[10].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[10].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[10].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[10].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[10].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[10].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[10].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[10].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[10].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[10].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[10].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[10].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[10].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[10].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[11]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[11].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[11].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[11].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[11].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[11].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[11].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[11].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[11].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[11].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[11].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[11].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[11].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[11].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[11].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[11].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[11].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[12]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[12].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[12].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[12].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[12].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[12].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[12].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[12].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[12].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[12].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[12].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[12].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[12].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[12].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[12].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[12].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[12].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[13]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[13].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[13].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[13].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[13].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[13].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[13].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[13].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[13].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[13].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[13].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[13].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[13].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[13].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[13].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[13].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[13].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[14]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[14].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[14].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[14].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[14].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[14].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[14].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[14].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[14].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[14].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[14].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[14].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[14].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[14].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[14].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[14].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[14].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[15]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[15].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[15].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[15].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[15].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[15].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[15].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[15].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[15].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[15].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[15].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[15].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[15].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[15].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[15].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[15].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[15].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[16]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[16].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[16].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[16].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[16].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[16].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[16].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[16].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[16].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[16].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[16].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[16].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[16].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[16].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[16].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[16].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[16].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[17]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[17].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[17].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[17].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[17].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[17].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[17].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[17].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[17].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[17].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[17].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[17].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[17].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[17].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[17].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[17].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[17].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[18]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[18].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[18].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[18].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[18].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[18].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[18].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[18].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[18].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[18].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[18].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[18].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[18].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[18].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[18].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[18].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[18].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[19]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[19].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[19].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[19].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[19].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[19].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[19].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[19].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[19].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[19].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[19].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[19].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[19].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[19].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[19].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[19].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[19].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[2]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[2].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[2].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[2].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[2].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[2].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[2].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[2].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[2].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[2].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[2].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[2].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[2].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[2].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[2].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[2].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[2].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[20]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[20].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[20].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[20].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[20].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[20].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[20].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[20].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[20].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[20].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[20].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[20].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[20].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[20].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[20].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[20].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[20].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[21]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[21].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[21].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[21].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[21].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[21].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[21].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[21].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[21].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[21].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[21].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[21].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[21].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[21].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[21].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[21].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[21].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[22]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[22].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[22].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[22].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[22].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[22].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[22].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[22].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[22].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[22].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[22].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[22].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[22].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[22].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[22].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[22].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[22].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[23]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[23].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[23].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[23].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[23].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[23].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[23].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[23].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[23].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[23].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[23].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[23].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[23].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[23].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[23].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[23].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[23].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[24]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[24].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[24].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[24].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[24].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[24].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[24].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[24].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[24].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[24].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[24].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[24].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[24].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[24].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[24].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[24].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[24].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[25]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[25].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[25].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[25].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[25].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[25].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[25].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[25].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[25].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[25].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[25].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[25].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[25].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[25].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[25].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[25].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[25].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[26]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[26].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[26].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[26].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[26].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[26].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[26].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[26].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[26].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[26].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[26].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[26].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[26].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[26].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[26].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[26].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[26].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[27]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[27].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[27].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[27].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[27].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[27].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[27].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[27].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[27].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[27].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[27].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[27].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[27].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[27].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[27].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[27].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[27].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[28]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[28].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[28].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[28].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[28].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[28].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[28].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[28].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[28].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[28].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[28].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[28].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[28].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[28].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[28].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[28].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[28].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[29]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[29].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[29].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[29].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[29].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[29].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[29].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[29].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[29].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[29].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[29].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[29].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[29].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[29].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[29].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[29].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[29].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[3]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[3].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[3].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[3].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[3].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[3].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[3].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[3].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[3].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[3].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[3].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[3].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[3].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[3].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[3].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[3].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[3].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[4]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[4].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[4].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[4].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[4].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[4].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[4].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[4].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[4].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[4].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[4].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[4].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[4].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[4].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[4].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[4].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[4].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[5]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[5].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[5].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[5].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[5].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[5].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[5].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[5].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[5].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[5].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[5].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[5].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[5].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[5].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[5].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[5].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[5].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[6]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[6].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[6].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[6].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[6].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[6].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[6].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[6].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[6].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[6].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[6].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[6].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[6].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[6].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[6].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[6].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[6].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[7]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[7].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[7].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[7].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[7].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[7].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[7].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[7].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[7].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[7].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[7].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[7].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[7].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[7].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[7].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[7].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[7].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[8]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[8].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[8].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[8].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[8].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[8].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[8].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[8].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[8].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[8].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[8].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[8].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[8].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[8].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[8].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[8].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[8].targetId",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ActiveRecipe.mixingTasks[9]",
+                            children: {
+                                actionId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[9].actionId",
+                                },
+                                actionType: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[9].actionType",
+                                },
+                                description: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[9].description",
+                                },
+                                paramArray: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[9].paramArray",
+                                    items: [
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[9].paramArray[0]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[9].paramArray[1]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[9].paramArray[2]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[9].paramArray[3]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[9].paramArray[4]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[9].paramArray[5]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[9].paramArray[6]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[9].paramArray[7]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[9].paramArray[8]",
+                                        },
+                                        {
+                                            tag: "Machine_00254.ActiveRecipe.mixingTasks[9].paramArray[9]",
+                                        },
+                                    ] as const,
+                                },
+                                state: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[9].state",
+                                },
+                                targetId: {
+                                    tag: "Machine_00254.ActiveRecipe.mixingTasks[9].targetId",
+                                },
+                            } as const,
+                        },
+                    ] as const,
+                },
+                name: {
+                    tag: "Machine_00254.ActiveRecipe.name",
+                },
+                robotSpeed_mmPerSec: {
+                    tag: "Machine_00254.ActiveRecipe.robotSpeed_mmPerSec",
+                },
+                sprayerArcRadiusFromBowlCenterline_mm: {
+                    tag: "Machine_00254.ActiveRecipe.sprayerArcRadiusFromBowlCenterline_mm",
+                },
+                sprayerTipHeightFromBowlBottom_mm: {
+                    tag: "Machine_00254.ActiveRecipe.sprayerTipHeightFromBowlBottom_mm",
+                },
+                syringeSpeed_mmPerSec: {
+                    tag: "Machine_00254.ActiveRecipe.syringeSpeed_mmPerSec",
+                },
+                updatedOn: {
+                    tag: "Machine_00254.ActiveRecipe.updatedOn",
                 },
             } as const,
         },
@@ -756,247 +2601,8 @@ export const machineTags: MachineTagNode = {
                 atOperationalPositionMin: {
                     tag: "Machine_00254.BowlSts.atOperationalPositionMin",
                 },
-                AxesPositionDifference_CORRECTABLE: {
-                    tag: "Machine_00254.BowlSts.AxesPositionDifference_CORRECTABLE",
-                },
-                AxesPositionDifference_OK: {
-                    tag: "Machine_00254.BowlSts.AxesPositionDifference_OK",
-                },
                 CalculatedStoppingPosition: {
                     tag: "Machine_00254.BowlSts.CalculatedStoppingPosition",
-                },
-                Cfg: {
-                    tag: "Machine_00254.BowlSts.Cfg",
-                    children: {
-                        AtPosTol: {
-                            tag: "Machine_00254.BowlSts.Cfg.AtPosTol",
-                        },
-                        AutoPositionVerifyDuringReset: {
-                            tag: "Machine_00254.BowlSts.Cfg.AutoPositionVerifyDuringReset",
-                        },
-                        AxesPositionToleranceForSkew: {
-                            tag: "Machine_00254.BowlSts.Cfg.AxesPositionToleranceForSkew",
-                        },
-                        AxisType: {
-                            tag: "Machine_00254.BowlSts.Cfg.AxisType",
-                        },
-                        DriveId: {
-                            tag: "Machine_00254.BowlSts.Cfg.DriveId",
-                        },
-                        DriveType: {
-                            tag: "Machine_00254.BowlSts.Cfg.DriveType",
-                        },
-                        GearingPositionTolerance: {
-                            tag: "Machine_00254.BowlSts.Cfg.GearingPositionTolerance",
-                        },
-                        HardStopNegative: {
-                            tag: "Machine_00254.BowlSts.Cfg.HardStopNegative",
-                        },
-                        HardStopPositive: {
-                            tag: "Machine_00254.BowlSts.Cfg.HardStopPositive",
-                        },
-                        hasDynamicNegativeLimit: {
-                            tag: "Machine_00254.BowlSts.Cfg.hasDynamicNegativeLimit",
-                        },
-                        hasDynamicPositiveLimit: {
-                            tag: "Machine_00254.BowlSts.Cfg.hasDynamicPositiveLimit",
-                        },
-                        hasRailBrakes: {
-                            tag: "Machine_00254.BowlSts.Cfg.hasRailBrakes",
-                        },
-                        HomingMethod: {
-                            tag: "Machine_00254.BowlSts.Cfg.HomingMethod",
-                        },
-                        HomingToHardstopDir: {
-                            tag: "Machine_00254.BowlSts.Cfg.HomingToHardstopDir",
-                        },
-                        IgnoreLimitSwitches: {
-                            tag: "Machine_00254.BowlSts.Cfg.IgnoreLimitSwitches",
-                        },
-                        Ignores: {
-                            tag: "Machine_00254.BowlSts.Cfg.Ignores",
-                            items: [
-                                {
-                                    tag: "Machine_00254.BowlSts.Cfg.Ignores[0]",
-                                },
-                                {
-                                    tag: "Machine_00254.BowlSts.Cfg.Ignores[1]",
-                                },
-                                {
-                                    tag: "Machine_00254.BowlSts.Cfg.Ignores[2]",
-                                },
-                                {
-                                    tag: "Machine_00254.BowlSts.Cfg.Ignores[3]",
-                                },
-                            ] as const,
-                        },
-                        IgnoreSoftwareLimits: {
-                            tag: "Machine_00254.BowlSts.Cfg.IgnoreSoftwareLimits",
-                        },
-                        KeepMasteredStatusAtStartup: {
-                            tag: "Machine_00254.BowlSts.Cfg.KeepMasteredStatusAtStartup",
-                        },
-                        MaxCurrentNormalOperation: {
-                            tag: "Machine_00254.BowlSts.Cfg.MaxCurrentNormalOperation",
-                        },
-                        MaxCurrentWhileHomingToHardstop: {
-                            tag: "Machine_00254.BowlSts.Cfg.MaxCurrentWhileHomingToHardstop",
-                        },
-                        MotionProfiles: {
-                            tag: "Machine_00254.BowlSts.Cfg.MotionProfiles",
-                            items: [
-                                {
-                                    tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[0]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[0].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[0].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[0].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[1]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[1].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[1].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[1].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[2]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[2].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[2].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[2].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[3]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[3].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[3].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[3].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[4]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[4].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[4].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.BowlSts.Cfg.MotionProfiles[4].speed",
-                                        },
-                                    } as const,
-                                },
-                            ] as const,
-                        },
-                        OperationalPositionMax: {
-                            tag: "Machine_00254.BowlSts.Cfg.OperationalPositionMax",
-                        },
-                        OperationalPositionMin: {
-                            tag: "Machine_00254.BowlSts.Cfg.OperationalPositionMin",
-                        },
-                        PositionReferencingMethod: {
-                            tag: "Machine_00254.BowlSts.Cfg.PositionReferencingMethod",
-                        },
-                        ScaleFactorUnitsPerEncoderCount: {
-                            tag: "Machine_00254.BowlSts.Cfg.ScaleFactorUnitsPerEncoderCount",
-                        },
-                        SearchDistance: {
-                            tag: "Machine_00254.BowlSts.Cfg.SearchDistance",
-                        },
-                        SensorPositions: {
-                            tag: "Machine_00254.BowlSts.Cfg.SensorPositions",
-                            items: [
-                                {
-                                    tag: "Machine_00254.BowlSts.Cfg.SensorPositions[0]",
-                                },
-                                {
-                                    tag: "Machine_00254.BowlSts.Cfg.SensorPositions[1]",
-                                },
-                                {
-                                    tag: "Machine_00254.BowlSts.Cfg.SensorPositions[2]",
-                                },
-                                {
-                                    tag: "Machine_00254.BowlSts.Cfg.SensorPositions[3]",
-                                },
-                            ] as const,
-                        },
-                        ShippingPosition: {
-                            tag: "Machine_00254.BowlSts.Cfg.ShippingPosition",
-                        },
-                        SoftMotionScalingParams: {
-                            tag: "Machine_00254.BowlSts.Cfg.SoftMotionScalingParams",
-                            children: {
-                                gearOutputTurnsLeft: {
-                                    tag: "Machine_00254.BowlSts.Cfg.SoftMotionScalingParams.gearOutputTurnsLeft",
-                                },
-                                gearOutputTurnsRight: {
-                                    tag: "Machine_00254.BowlSts.Cfg.SoftMotionScalingParams.gearOutputTurnsRight",
-                                },
-                                incrementsLeft: {
-                                    tag: "Machine_00254.BowlSts.Cfg.SoftMotionScalingParams.incrementsLeft",
-                                },
-                                invertDir: {
-                                    tag: "Machine_00254.BowlSts.Cfg.SoftMotionScalingParams.invertDir",
-                                },
-                                motorsTurnsLeft: {
-                                    tag: "Machine_00254.BowlSts.Cfg.SoftMotionScalingParams.motorsTurnsLeft",
-                                },
-                                motorTurnsRight: {
-                                    tag: "Machine_00254.BowlSts.Cfg.SoftMotionScalingParams.motorTurnsRight",
-                                },
-                                unitsInApplicationRight: {
-                                    tag: "Machine_00254.BowlSts.Cfg.SoftMotionScalingParams.unitsInApplicationRight",
-                                },
-                            } as const,
-                        },
-                        SoftwareLimitNegative: {
-                            tag: "Machine_00254.BowlSts.Cfg.SoftwareLimitNegative",
-                        },
-                        SoftwareLimitPositive: {
-                            tag: "Machine_00254.BowlSts.Cfg.SoftwareLimitPositive",
-                        },
-                        Unit: {
-                            tag: "Machine_00254.BowlSts.Cfg.Unit",
-                        },
-                        updateScalingIsNeeded: {
-                            tag: "Machine_00254.BowlSts.Cfg.updateScalingIsNeeded",
-                        },
-                        ValidationSensor: {
-                            tag: "Machine_00254.BowlSts.Cfg.ValidationSensor",
-                        },
-                        VerificationSensorOffsetFromZero: {
-                            tag: "Machine_00254.BowlSts.Cfg.VerificationSensorOffsetFromZero",
-                        },
-                    } as const,
                 },
                 ConfiguredSoftLimitTravelRange: {
                     tag: "Machine_00254.BowlSts.ConfiguredSoftLimitTravelRange",
@@ -1021,9 +2627,6 @@ export const machineTags: MachineTagNode = {
                 },
                 DriveSwLimitsEnforcement: {
                     tag: "Machine_00254.BowlSts.DriveSwLimitsEnforcement",
-                },
-                DualAxisStopType: {
-                    tag: "Machine_00254.BowlSts.DualAxisStopType",
                 },
                 EtherCatComms_OK: {
                     tag: "Machine_00254.BowlSts.EtherCatComms_OK",
@@ -1636,9 +3239,6 @@ export const machineTags: MachineTagNode = {
                         },
                     ] as const,
                 },
-                PositionDifference: {
-                    tag: "Machine_00254.BowlSts.PositionDifference",
-                },
                 RailBrakes: {
                     tag: "Machine_00254.BowlSts.RailBrakes",
                     children: {
@@ -1661,12 +3261,6 @@ export const machineTags: MachineTagNode = {
                             tag: "Machine_00254.BowlSts.RailBrakes.RailBrake2_OPEN",
                         },
                     } as const,
-                },
-                RcControlMode: {
-                    tag: "Machine_00254.BowlSts.RcControlMode",
-                },
-                RcHomingState: {
-                    tag: "Machine_00254.BowlSts.RcHomingState",
                 },
                 RecordedPosition: {
                     tag: "Machine_00254.BowlSts.RecordedPosition",
@@ -1694,20 +3288,11 @@ export const machineTags: MachineTagNode = {
                 setAccel: {
                     tag: "Machine_00254.BowlSts.setAccel",
                 },
-                setJerk: {
-                    tag: "Machine_00254.BowlSts.setJerk",
-                },
                 setPosition: {
                     tag: "Machine_00254.BowlSts.setPosition",
                 },
-                setTorque: {
-                    tag: "Machine_00254.BowlSts.setTorque",
-                },
                 setVelocity: {
                     tag: "Machine_00254.BowlSts.setVelocity",
-                },
-                SkippingPositionCorrectionBeforeGearing: {
-                    tag: "Machine_00254.BowlSts.SkippingPositionCorrectionBeforeGearing",
                 },
                 SoftMotionErrorId: {
                     tag: "Machine_00254.BowlSts.SoftMotionErrorId",
@@ -1775,43 +3360,1805 @@ export const machineTags: MachineTagNode = {
                 },
             } as const,
         },
-        ConSts: {
-            tag: "Machine_00254.ConSts",
+        ConMeta: {
+            tag: "Machine_00254.ConMeta",
             children: {
-                CurrentClampPosition: {
-                    tag: "Machine_00254.ConSts.CurrentClampPosition",
+                HmiWriteTaskData: {
+                    tag: "Machine_00254.ConMeta.HmiWriteTaskData",
+                    children: {
+                        actionId: {
+                            tag: "Machine_00254.ConMeta.HmiWriteTaskData.actionId",
+                        },
+                        actionType: {
+                            tag: "Machine_00254.ConMeta.HmiWriteTaskData.actionType",
+                        },
+                        description: {
+                            tag: "Machine_00254.ConMeta.HmiWriteTaskData.description",
+                        },
+                        paramArray: {
+                            tag: "Machine_00254.ConMeta.HmiWriteTaskData.paramArray",
+                            items: [
+                                {
+                                    tag: "Machine_00254.ConMeta.HmiWriteTaskData.paramArray[0]",
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.HmiWriteTaskData.paramArray[1]",
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.HmiWriteTaskData.paramArray[2]",
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.HmiWriteTaskData.paramArray[3]",
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.HmiWriteTaskData.paramArray[4]",
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.HmiWriteTaskData.paramArray[5]",
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.HmiWriteTaskData.paramArray[6]",
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.HmiWriteTaskData.paramArray[7]",
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.HmiWriteTaskData.paramArray[8]",
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.HmiWriteTaskData.paramArray[9]",
+                                },
+                            ] as const,
+                        },
+                        state: {
+                            tag: "Machine_00254.ConMeta.HmiWriteTaskData.state",
+                        },
+                        targetId: {
+                            tag: "Machine_00254.ConMeta.HmiWriteTaskData.targetId",
+                        },
+                    } as const,
                 },
-                CutEndingClamp: {
-                    tag: "Machine_00254.ConSts.CutEndingClamp",
+                Methods: {
+                    tag: "Machine_00254.ConMeta.Methods",
                 },
-                CutEndingPosition: {
-                    tag: "Machine_00254.ConSts.CutEndingPosition",
+                MixingData: {
+                    tag: "Machine_00254.ConMeta.MixingData",
+                    children: {
+                        activeMixingStep: {
+                            tag: "Machine_00254.ConMeta.MixingData.activeMixingStep",
+                        },
+                        mixingSteps: {
+                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps",
+                            items: [
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[0]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[0].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[0].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[0].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[0].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[0].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[0].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[0].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[0].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[0].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[0].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[0].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[0].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[0].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[0].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[0].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[0].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[1]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[1].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[1].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[1].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[1].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[1].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[1].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[1].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[1].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[1].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[1].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[1].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[1].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[1].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[1].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[1].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[1].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[10]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[10].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[10].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[10].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[10].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[10].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[10].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[10].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[10].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[10].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[10].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[10].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[10].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[10].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[10].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[10].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[10].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[11]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[11].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[11].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[11].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[11].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[11].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[11].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[11].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[11].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[11].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[11].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[11].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[11].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[11].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[11].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[11].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[11].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[12]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[12].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[12].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[12].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[12].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[12].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[12].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[12].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[12].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[12].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[12].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[12].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[12].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[12].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[12].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[12].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[12].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[13]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[13].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[13].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[13].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[13].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[13].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[13].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[13].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[13].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[13].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[13].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[13].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[13].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[13].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[13].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[13].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[13].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[14]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[14].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[14].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[14].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[14].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[14].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[14].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[14].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[14].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[14].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[14].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[14].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[14].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[14].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[14].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[14].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[14].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[15]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[15].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[15].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[15].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[15].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[15].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[15].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[15].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[15].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[15].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[15].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[15].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[15].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[15].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[15].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[15].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[15].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[16]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[16].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[16].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[16].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[16].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[16].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[16].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[16].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[16].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[16].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[16].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[16].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[16].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[16].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[16].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[16].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[16].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[17]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[17].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[17].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[17].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[17].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[17].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[17].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[17].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[17].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[17].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[17].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[17].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[17].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[17].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[17].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[17].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[17].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[18]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[18].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[18].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[18].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[18].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[18].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[18].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[18].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[18].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[18].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[18].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[18].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[18].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[18].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[18].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[18].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[18].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[19]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[19].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[19].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[19].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[19].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[19].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[19].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[19].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[19].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[19].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[19].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[19].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[19].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[19].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[19].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[19].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[19].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[2]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[2].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[2].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[2].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[2].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[2].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[2].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[2].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[2].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[2].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[2].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[2].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[2].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[2].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[2].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[2].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[2].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[20]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[20].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[20].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[20].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[20].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[20].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[20].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[20].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[20].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[20].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[20].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[20].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[20].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[20].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[20].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[20].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[20].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[21]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[21].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[21].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[21].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[21].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[21].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[21].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[21].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[21].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[21].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[21].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[21].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[21].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[21].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[21].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[21].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[21].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[22]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[22].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[22].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[22].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[22].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[22].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[22].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[22].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[22].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[22].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[22].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[22].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[22].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[22].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[22].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[22].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[22].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[23]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[23].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[23].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[23].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[23].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[23].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[23].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[23].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[23].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[23].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[23].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[23].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[23].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[23].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[23].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[23].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[23].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[24]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[24].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[24].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[24].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[24].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[24].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[24].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[24].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[24].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[24].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[24].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[24].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[24].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[24].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[24].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[24].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[24].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[25]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[25].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[25].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[25].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[25].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[25].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[25].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[25].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[25].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[25].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[25].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[25].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[25].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[25].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[25].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[25].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[25].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[26]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[26].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[26].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[26].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[26].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[26].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[26].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[26].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[26].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[26].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[26].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[26].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[26].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[26].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[26].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[26].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[26].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[27]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[27].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[27].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[27].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[27].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[27].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[27].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[27].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[27].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[27].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[27].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[27].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[27].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[27].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[27].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[27].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[27].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[28]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[28].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[28].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[28].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[28].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[28].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[28].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[28].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[28].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[28].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[28].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[28].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[28].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[28].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[28].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[28].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[28].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[29]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[29].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[29].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[29].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[29].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[29].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[29].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[29].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[29].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[29].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[29].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[29].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[29].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[29].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[29].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[29].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[29].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[3]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[3].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[3].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[3].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[3].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[3].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[3].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[3].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[3].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[3].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[3].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[3].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[3].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[3].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[3].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[3].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[3].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[4]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[4].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[4].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[4].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[4].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[4].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[4].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[4].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[4].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[4].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[4].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[4].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[4].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[4].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[4].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[4].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[4].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[5]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[5].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[5].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[5].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[5].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[5].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[5].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[5].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[5].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[5].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[5].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[5].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[5].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[5].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[5].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[5].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[5].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[6]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[6].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[6].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[6].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[6].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[6].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[6].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[6].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[6].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[6].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[6].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[6].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[6].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[6].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[6].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[6].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[6].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[7]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[7].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[7].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[7].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[7].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[7].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[7].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[7].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[7].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[7].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[7].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[7].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[7].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[7].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[7].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[7].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[7].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[8]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[8].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[8].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[8].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[8].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[8].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[8].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[8].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[8].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[8].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[8].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[8].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[8].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[8].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[8].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[8].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[8].targetId",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[9]",
+                                    children: {
+                                        actionId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[9].actionId",
+                                        },
+                                        actionType: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[9].actionType",
+                                        },
+                                        description: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[9].description",
+                                        },
+                                        paramArray: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[9].paramArray",
+                                            items: [
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[9].paramArray[0]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[9].paramArray[1]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[9].paramArray[2]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[9].paramArray[3]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[9].paramArray[4]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[9].paramArray[5]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[9].paramArray[6]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[9].paramArray[7]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[9].paramArray[8]",
+                                                },
+                                                {
+                                                    tag: "Machine_00254.ConMeta.MixingData.mixingSteps[9].paramArray[9]",
+                                                },
+                                            ] as const,
+                                        },
+                                        state: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[9].state",
+                                        },
+                                        targetId: {
+                                            tag: "Machine_00254.ConMeta.MixingData.mixingSteps[9].targetId",
+                                        },
+                                    } as const,
+                                },
+                            ] as const,
+                        },
+                    } as const,
                 },
-                CutStartingClamp: {
-                    tag: "Machine_00254.ConSts.CutStartingClamp",
+                MixingDataUpdates: {
+                    tag: "Machine_00254.ConMeta.MixingDataUpdates",
                 },
-                CutStartingPosition: {
-                    tag: "Machine_00254.ConSts.CutStartingPosition",
+                Processes: {
+                    tag: "Machine_00254.ConMeta.Processes",
                 },
-                CuttingActive: {
-                    tag: "Machine_00254.ConSts.CuttingActive",
-                },
-                DustIsSettling: {
-                    tag: "Machine_00254.ConSts.DustIsSettling",
-                },
-                DustSettlingTimeRemainingSec: {
-                    tag: "Machine_00254.ConSts.DustSettlingTimeRemainingSec",
-                },
-                SawBladeCutCounter: {
-                    tag: "Machine_00254.ConSts.SawBladeCutCounter",
-                },
-                TargetCuttingFeedRateDisplay: {
-                    tag: "Machine_00254.ConSts.TargetCuttingFeedRateDisplay",
+                Tasks: {
+                    tag: "Machine_00254.ConMeta.Tasks",
                 },
             } as const,
         },
-        devicesIds_00225: {
-            tag: "Machine_00254.devicesIds_00225",
+        ConSts: {
+            tag: "Machine_00254.ConSts",
+            children: {
+                activeMode: {
+                    tag: "Machine_00254.ConSts.activeMode",
+                },
+            } as const,
+        },
+        devicesIds_00254: {
+            tag: "Machine_00254.devicesIds_00254",
+        },
+        DispCfg: {
+            tag: "Machine_00254.DispCfg",
+            children: {
+                PumpPowerBeakerWash_PERC: {
+                    tag: "Machine_00254.DispCfg.PumpPowerBeakerWash_PERC",
+                },
+                PumpPowerBowlSpray_PERC: {
+                    tag: "Machine_00254.DispCfg.PumpPowerBowlSpray_PERC",
+                },
+                PumpPowerPrime_PERC: {
+                    tag: "Machine_00254.DispCfg.PumpPowerPrime_PERC",
+                },
+                PumpPrechargeTime_ms: {
+                    tag: "Machine_00254.DispCfg.PumpPrechargeTime_ms",
+                },
+                PurgeDuration_ms: {
+                    tag: "Machine_00254.DispCfg.PurgeDuration_ms",
+                },
+            } as const,
+        },
+        DispMeta: {
+            tag: "Machine_00254.DispMeta",
+            children: {
+                Methods: {
+                    tag: "Machine_00254.DispMeta.Methods",
+                },
+                Tasks: {
+                    tag: "Machine_00254.DispMeta.Tasks",
+                },
+            } as const,
+        },
+        DispSts: {
+            tag: "Machine_00254.DispSts",
+            children: {
+                doseEllapsedTimeMs: {
+                    tag: "Machine_00254.DispSts.doseEllapsedTimeMs",
+                },
+                dosePrechargeTimeMs: {
+                    tag: "Machine_00254.DispSts.dosePrechargeTimeMs",
+                },
+                doseSetpointTimeMs: {
+                    tag: "Machine_00254.DispSts.doseSetpointTimeMs",
+                },
+                isPrimed: {
+                    tag: "Machine_00254.DispSts.isPrimed",
+                },
+                isSpraying: {
+                    tag: "Machine_00254.DispSts.isSpraying",
+                },
+                pumpPwrSetpoint_PERC: {
+                    tag: "Machine_00254.DispSts.pumpPwrSetpoint_PERC",
+                },
+            } as const,
         },
         EoatCfg: {
             tag: "Machine_00254.EoatCfg",
@@ -1877,6 +5224,45 @@ export const machineTags: MachineTagNode = {
                 },
                 StickyB: {
                     tag: "Machine_00254.EoatSts.StickyB",
+                },
+            } as const,
+        },
+        ExtruderCfg: {
+            tag: "Machine_00254.ExtruderCfg",
+            children: {
+                HeaterTemperatureTol_DegF: {
+                    tag: "Machine_00254.ExtruderCfg.HeaterTemperatureTol_DegF",
+                },
+            } as const,
+        },
+        ExtruderMeta: {
+            tag: "Machine_00254.ExtruderMeta",
+            children: {
+                Methods: {
+                    tag: "Machine_00254.ExtruderMeta.Methods",
+                },
+                Tasks: {
+                    tag: "Machine_00254.ExtruderMeta.Tasks",
+                },
+            } as const,
+        },
+        ExtruderSts: {
+            tag: "Machine_00254.ExtruderSts",
+            children: {
+                heaterIsAtTemp: {
+                    tag: "Machine_00254.ExtruderSts.heaterIsAtTemp",
+                },
+                heaterIsRunning: {
+                    tag: "Machine_00254.ExtruderSts.heaterIsRunning",
+                },
+                heaterSetpointTempDegF: {
+                    tag: "Machine_00254.ExtruderSts.heaterSetpointTempDegF",
+                },
+                heaterState: {
+                    tag: "Machine_00254.ExtruderSts.heaterState",
+                },
+                heaterStatusMsg: {
+                    tag: "Machine_00254.ExtruderSts.heaterStatusMsg",
                 },
             } as const,
         },
@@ -4834,6 +8220,14 @@ export const machineTags: MachineTagNode = {
                         },
                     } as const,
                 },
+                EXTRUDER: {
+                    tag: "Machine_00254.inputs.EXTRUDER",
+                    children: {
+                        HeaterTemp_degF: {
+                            tag: "Machine_00254.inputs.EXTRUDER.HeaterTemp_degF",
+                        },
+                    } as const,
+                },
                 GRIP: {
                     tag: "Machine_00254.inputs.GRIP",
                     children: {
@@ -5028,6 +8422,17 @@ export const machineTags: MachineTagNode = {
                         },
                     } as const,
                 },
+                SCREENER: {
+                    tag: "Machine_00254.inputs.SCREENER",
+                    children: {
+                        AccessDoorLocked: {
+                            tag: "Machine_00254.inputs.SCREENER.AccessDoorLocked",
+                        },
+                        PressureSwSCP: {
+                            tag: "Machine_00254.inputs.SCREENER.PressureSwSCP",
+                        },
+                    } as const,
+                },
                 SFTY: {
                     tag: "Machine_00254.inputs.SFTY",
                     children: {
@@ -5144,8 +8549,14 @@ export const machineTags: MachineTagNode = {
                 SYS: {
                     tag: "Machine_00254.inputs.SYS",
                     children: {
-                        placeholder: {
-                            tag: "Machine_00254.inputs.SYS.placeholder",
+                        CartProxSw1: {
+                            tag: "Machine_00254.inputs.SYS.CartProxSw1",
+                        },
+                        CartProxSw2: {
+                            tag: "Machine_00254.inputs.SYS.CartProxSw2",
+                        },
+                        PressureSwECP: {
+                            tag: "Machine_00254.inputs.SYS.PressureSwECP",
                         },
                     } as const,
                 },
@@ -5292,6 +8703,69 @@ export const machineTags: MachineTagNode = {
                 },
             } as const,
         },
+        MixerCfg: {
+            tag: "Machine_00254.MixerCfg",
+            children: {
+                BowlPositionAtBeakerDump_DEG: {
+                    tag: "Machine_00254.MixerCfg.BowlPositionAtBeakerDump_DEG",
+                },
+                BowlPositionAtBowlWashdown_DEG: {
+                    tag: "Machine_00254.MixerCfg.BowlPositionAtBowlWashdown_DEG",
+                },
+                PaddlePositionAtBeakerDump_DEG: {
+                    tag: "Machine_00254.MixerCfg.PaddlePositionAtBeakerDump_DEG",
+                },
+                PaddlePositionAtBowlWashdown_DEG: {
+                    tag: "Machine_00254.MixerCfg.PaddlePositionAtBowlWashdown_DEG",
+                },
+            } as const,
+        },
+        MixerMeta: {
+            tag: "Machine_00254.MixerMeta",
+            children: {
+                Methods: {
+                    tag: "Machine_00254.MixerMeta.Methods",
+                },
+                Processes: {
+                    tag: "Machine_00254.MixerMeta.Processes",
+                },
+                TargetPose: {
+                    tag: "Machine_00254.MixerMeta.TargetPose",
+                },
+                Tasks: {
+                    tag: "Machine_00254.MixerMeta.Tasks",
+                },
+            } as const,
+        },
+        MixerSts: {
+            tag: "Machine_00254.MixerSts",
+            children: {
+                inBeakerDumpPose: {
+                    tag: "Machine_00254.MixerSts.inBeakerDumpPose",
+                },
+                inBowlWashdownPosition: {
+                    tag: "Machine_00254.MixerSts.inBowlWashdownPosition",
+                },
+                isMixing: {
+                    tag: "Machine_00254.MixerSts.isMixing",
+                },
+                mixingElapsedTimeSec: {
+                    tag: "Machine_00254.MixerSts.mixingElapsedTimeSec",
+                },
+                mixingMode: {
+                    tag: "Machine_00254.MixerSts.mixingMode",
+                },
+                mixingSetpointTimeSec: {
+                    tag: "Machine_00254.MixerSts.mixingSetpointTimeSec",
+                },
+                paddleTorqueFiltered_PERC: {
+                    tag: "Machine_00254.MixerSts.paddleTorqueFiltered_PERC",
+                },
+                paddleTorqueSetpoint_PERC: {
+                    tag: "Machine_00254.MixerSts.paddleTorqueSetpoint_PERC",
+                },
+            } as const,
+        },
         outputs: {
             tag: "Machine_00254.outputs",
             children: {
@@ -5314,6 +8788,17 @@ export const machineTags: MachineTagNode = {
                         },
                     } as const,
                 },
+                DISP: {
+                    tag: "Machine_00254.outputs.DISP",
+                    children: {
+                        FlowValve_ON: {
+                            tag: "Machine_00254.outputs.DISP.FlowValve_ON",
+                        },
+                        PumpPwr_PERC: {
+                            tag: "Machine_00254.outputs.DISP.PumpPwr_PERC",
+                        },
+                    } as const,
+                },
                 EOAT: {
                     tag: "Machine_00254.outputs.EOAT",
                     children: {
@@ -5322,6 +8807,14 @@ export const machineTags: MachineTagNode = {
                         },
                         OutB: {
                             tag: "Machine_00254.outputs.EOAT.OutB",
+                        },
+                    } as const,
+                },
+                EXTRUDER: {
+                    tag: "Machine_00254.outputs.EXTRUDER",
+                    children: {
+                        Heater_ON: {
+                            tag: "Machine_00254.outputs.EXTRUDER.Heater_ON",
                         },
                     } as const,
                 },
@@ -5344,31 +8837,6 @@ export const machineTags: MachineTagNode = {
                         },
                         OutB: {
                             tag: "Machine_00254.outputs.LIFT.OutB",
-                        },
-                    } as const,
-                },
-                ROB: {
-                    tag: "Machine_00254.outputs.ROB",
-                    children: {
-                        LoadCell: {
-                            tag: "Machine_00254.outputs.ROB.LoadCell",
-                            children: {
-                                CalbrationNextStepReq: {
-                                    tag: "Machine_00254.outputs.ROB.LoadCell.CalbrationNextStepReq",
-                                },
-                                CalibrateReq: {
-                                    tag: "Machine_00254.outputs.ROB.LoadCell.CalibrateReq",
-                                },
-                                ReferenceWeight_g: {
-                                    tag: "Machine_00254.outputs.ROB.LoadCell.ReferenceWeight_g",
-                                },
-                                SampleReq: {
-                                    tag: "Machine_00254.outputs.ROB.LoadCell.SampleReq",
-                                },
-                                TareReq: {
-                                    tag: "Machine_00254.outputs.ROB.LoadCell.TareReq",
-                                },
-                            } as const,
                         },
                     } as const,
                 },
@@ -5672,247 +9140,8 @@ export const machineTags: MachineTagNode = {
                 atOperationalPositionMin: {
                     tag: "Machine_00254.PaddleSts.atOperationalPositionMin",
                 },
-                AxesPositionDifference_CORRECTABLE: {
-                    tag: "Machine_00254.PaddleSts.AxesPositionDifference_CORRECTABLE",
-                },
-                AxesPositionDifference_OK: {
-                    tag: "Machine_00254.PaddleSts.AxesPositionDifference_OK",
-                },
                 CalculatedStoppingPosition: {
                     tag: "Machine_00254.PaddleSts.CalculatedStoppingPosition",
-                },
-                Cfg: {
-                    tag: "Machine_00254.PaddleSts.Cfg",
-                    children: {
-                        AtPosTol: {
-                            tag: "Machine_00254.PaddleSts.Cfg.AtPosTol",
-                        },
-                        AutoPositionVerifyDuringReset: {
-                            tag: "Machine_00254.PaddleSts.Cfg.AutoPositionVerifyDuringReset",
-                        },
-                        AxesPositionToleranceForSkew: {
-                            tag: "Machine_00254.PaddleSts.Cfg.AxesPositionToleranceForSkew",
-                        },
-                        AxisType: {
-                            tag: "Machine_00254.PaddleSts.Cfg.AxisType",
-                        },
-                        DriveId: {
-                            tag: "Machine_00254.PaddleSts.Cfg.DriveId",
-                        },
-                        DriveType: {
-                            tag: "Machine_00254.PaddleSts.Cfg.DriveType",
-                        },
-                        GearingPositionTolerance: {
-                            tag: "Machine_00254.PaddleSts.Cfg.GearingPositionTolerance",
-                        },
-                        HardStopNegative: {
-                            tag: "Machine_00254.PaddleSts.Cfg.HardStopNegative",
-                        },
-                        HardStopPositive: {
-                            tag: "Machine_00254.PaddleSts.Cfg.HardStopPositive",
-                        },
-                        hasDynamicNegativeLimit: {
-                            tag: "Machine_00254.PaddleSts.Cfg.hasDynamicNegativeLimit",
-                        },
-                        hasDynamicPositiveLimit: {
-                            tag: "Machine_00254.PaddleSts.Cfg.hasDynamicPositiveLimit",
-                        },
-                        hasRailBrakes: {
-                            tag: "Machine_00254.PaddleSts.Cfg.hasRailBrakes",
-                        },
-                        HomingMethod: {
-                            tag: "Machine_00254.PaddleSts.Cfg.HomingMethod",
-                        },
-                        HomingToHardstopDir: {
-                            tag: "Machine_00254.PaddleSts.Cfg.HomingToHardstopDir",
-                        },
-                        IgnoreLimitSwitches: {
-                            tag: "Machine_00254.PaddleSts.Cfg.IgnoreLimitSwitches",
-                        },
-                        Ignores: {
-                            tag: "Machine_00254.PaddleSts.Cfg.Ignores",
-                            items: [
-                                {
-                                    tag: "Machine_00254.PaddleSts.Cfg.Ignores[0]",
-                                },
-                                {
-                                    tag: "Machine_00254.PaddleSts.Cfg.Ignores[1]",
-                                },
-                                {
-                                    tag: "Machine_00254.PaddleSts.Cfg.Ignores[2]",
-                                },
-                                {
-                                    tag: "Machine_00254.PaddleSts.Cfg.Ignores[3]",
-                                },
-                            ] as const,
-                        },
-                        IgnoreSoftwareLimits: {
-                            tag: "Machine_00254.PaddleSts.Cfg.IgnoreSoftwareLimits",
-                        },
-                        KeepMasteredStatusAtStartup: {
-                            tag: "Machine_00254.PaddleSts.Cfg.KeepMasteredStatusAtStartup",
-                        },
-                        MaxCurrentNormalOperation: {
-                            tag: "Machine_00254.PaddleSts.Cfg.MaxCurrentNormalOperation",
-                        },
-                        MaxCurrentWhileHomingToHardstop: {
-                            tag: "Machine_00254.PaddleSts.Cfg.MaxCurrentWhileHomingToHardstop",
-                        },
-                        MotionProfiles: {
-                            tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles",
-                            items: [
-                                {
-                                    tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[0]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[0].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[0].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[0].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[1]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[1].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[1].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[1].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[2]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[2].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[2].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[2].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[3]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[3].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[3].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[3].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[4]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[4].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[4].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.PaddleSts.Cfg.MotionProfiles[4].speed",
-                                        },
-                                    } as const,
-                                },
-                            ] as const,
-                        },
-                        OperationalPositionMax: {
-                            tag: "Machine_00254.PaddleSts.Cfg.OperationalPositionMax",
-                        },
-                        OperationalPositionMin: {
-                            tag: "Machine_00254.PaddleSts.Cfg.OperationalPositionMin",
-                        },
-                        PositionReferencingMethod: {
-                            tag: "Machine_00254.PaddleSts.Cfg.PositionReferencingMethod",
-                        },
-                        ScaleFactorUnitsPerEncoderCount: {
-                            tag: "Machine_00254.PaddleSts.Cfg.ScaleFactorUnitsPerEncoderCount",
-                        },
-                        SearchDistance: {
-                            tag: "Machine_00254.PaddleSts.Cfg.SearchDistance",
-                        },
-                        SensorPositions: {
-                            tag: "Machine_00254.PaddleSts.Cfg.SensorPositions",
-                            items: [
-                                {
-                                    tag: "Machine_00254.PaddleSts.Cfg.SensorPositions[0]",
-                                },
-                                {
-                                    tag: "Machine_00254.PaddleSts.Cfg.SensorPositions[1]",
-                                },
-                                {
-                                    tag: "Machine_00254.PaddleSts.Cfg.SensorPositions[2]",
-                                },
-                                {
-                                    tag: "Machine_00254.PaddleSts.Cfg.SensorPositions[3]",
-                                },
-                            ] as const,
-                        },
-                        ShippingPosition: {
-                            tag: "Machine_00254.PaddleSts.Cfg.ShippingPosition",
-                        },
-                        SoftMotionScalingParams: {
-                            tag: "Machine_00254.PaddleSts.Cfg.SoftMotionScalingParams",
-                            children: {
-                                gearOutputTurnsLeft: {
-                                    tag: "Machine_00254.PaddleSts.Cfg.SoftMotionScalingParams.gearOutputTurnsLeft",
-                                },
-                                gearOutputTurnsRight: {
-                                    tag: "Machine_00254.PaddleSts.Cfg.SoftMotionScalingParams.gearOutputTurnsRight",
-                                },
-                                incrementsLeft: {
-                                    tag: "Machine_00254.PaddleSts.Cfg.SoftMotionScalingParams.incrementsLeft",
-                                },
-                                invertDir: {
-                                    tag: "Machine_00254.PaddleSts.Cfg.SoftMotionScalingParams.invertDir",
-                                },
-                                motorsTurnsLeft: {
-                                    tag: "Machine_00254.PaddleSts.Cfg.SoftMotionScalingParams.motorsTurnsLeft",
-                                },
-                                motorTurnsRight: {
-                                    tag: "Machine_00254.PaddleSts.Cfg.SoftMotionScalingParams.motorTurnsRight",
-                                },
-                                unitsInApplicationRight: {
-                                    tag: "Machine_00254.PaddleSts.Cfg.SoftMotionScalingParams.unitsInApplicationRight",
-                                },
-                            } as const,
-                        },
-                        SoftwareLimitNegative: {
-                            tag: "Machine_00254.PaddleSts.Cfg.SoftwareLimitNegative",
-                        },
-                        SoftwareLimitPositive: {
-                            tag: "Machine_00254.PaddleSts.Cfg.SoftwareLimitPositive",
-                        },
-                        Unit: {
-                            tag: "Machine_00254.PaddleSts.Cfg.Unit",
-                        },
-                        updateScalingIsNeeded: {
-                            tag: "Machine_00254.PaddleSts.Cfg.updateScalingIsNeeded",
-                        },
-                        ValidationSensor: {
-                            tag: "Machine_00254.PaddleSts.Cfg.ValidationSensor",
-                        },
-                        VerificationSensorOffsetFromZero: {
-                            tag: "Machine_00254.PaddleSts.Cfg.VerificationSensorOffsetFromZero",
-                        },
-                    } as const,
                 },
                 ConfiguredSoftLimitTravelRange: {
                     tag: "Machine_00254.PaddleSts.ConfiguredSoftLimitTravelRange",
@@ -5937,9 +9166,6 @@ export const machineTags: MachineTagNode = {
                 },
                 DriveSwLimitsEnforcement: {
                     tag: "Machine_00254.PaddleSts.DriveSwLimitsEnforcement",
-                },
-                DualAxisStopType: {
-                    tag: "Machine_00254.PaddleSts.DualAxisStopType",
                 },
                 EtherCatComms_OK: {
                     tag: "Machine_00254.PaddleSts.EtherCatComms_OK",
@@ -6552,9 +9778,6 @@ export const machineTags: MachineTagNode = {
                         },
                     ] as const,
                 },
-                PositionDifference: {
-                    tag: "Machine_00254.PaddleSts.PositionDifference",
-                },
                 RailBrakes: {
                     tag: "Machine_00254.PaddleSts.RailBrakes",
                     children: {
@@ -6577,12 +9800,6 @@ export const machineTags: MachineTagNode = {
                             tag: "Machine_00254.PaddleSts.RailBrakes.RailBrake2_OPEN",
                         },
                     } as const,
-                },
-                RcControlMode: {
-                    tag: "Machine_00254.PaddleSts.RcControlMode",
-                },
-                RcHomingState: {
-                    tag: "Machine_00254.PaddleSts.RcHomingState",
                 },
                 RecordedPosition: {
                     tag: "Machine_00254.PaddleSts.RecordedPosition",
@@ -6610,20 +9827,11 @@ export const machineTags: MachineTagNode = {
                 setAccel: {
                     tag: "Machine_00254.PaddleSts.setAccel",
                 },
-                setJerk: {
-                    tag: "Machine_00254.PaddleSts.setJerk",
-                },
                 setPosition: {
                     tag: "Machine_00254.PaddleSts.setPosition",
                 },
-                setTorque: {
-                    tag: "Machine_00254.PaddleSts.setTorque",
-                },
                 setVelocity: {
                     tag: "Machine_00254.PaddleSts.setVelocity",
-                },
-                SkippingPositionCorrectionBeforeGearing: {
-                    tag: "Machine_00254.PaddleSts.SkippingPositionCorrectionBeforeGearing",
                 },
                 SoftMotionErrorId: {
                     tag: "Machine_00254.PaddleSts.SoftMotionErrorId",
@@ -6686,30 +9894,6 @@ export const machineTags: MachineTagNode = {
         PdmSts: {
             tag: "Machine_00254.PdmSts",
             children: {
-                AllClampsAreEmpty: {
-                    tag: "Machine_00254.PdmSts.AllClampsAreEmpty",
-                },
-                AllLoadedPartsAreRaw: {
-                    tag: "Machine_00254.PdmSts.AllLoadedPartsAreRaw",
-                },
-                AllLoadedPartsAreRawOrCut: {
-                    tag: "Machine_00254.PdmSts.AllLoadedPartsAreRawOrCut",
-                },
-                FirstClampId: {
-                    tag: "Machine_00254.PdmSts.FirstClampId",
-                },
-                LastClampId: {
-                    tag: "Machine_00254.PdmSts.LastClampId",
-                },
-                LowestPartStatus: {
-                    tag: "Machine_00254.PdmSts.LowestPartStatus",
-                },
-                MaxAllowedPartsToCut: {
-                    tag: "Machine_00254.PdmSts.MaxAllowedPartsToCut",
-                },
-                NumPartsToCut: {
-                    tag: "Machine_00254.PdmSts.NumPartsToCut",
-                },
                 Parts: {
                     tag: "Machine_00254.PdmSts.Parts",
                     items: [
@@ -6731,29 +9915,17 @@ export const machineTags: MachineTagNode = {
                                 Validation: {
                                     tag: "Machine_00254.PdmSts.Parts[0].Validation",
                                     children: {
-                                        LinerWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[0].Validation.LinerWeight_g",
+                                        actualAcetoneDose_mL: {
+                                            tag: "Machine_00254.PdmSts.Parts[0].Validation.actualAcetoneDose_mL",
                                         },
-                                        PostWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[0].Validation.PostWeight_g",
+                                        materialQty_g: {
+                                            tag: "Machine_00254.PdmSts.Parts[0].Validation.materialQty_g",
                                         },
-                                        PreWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[0].Validation.PreWeight_g",
+                                        materialType: {
+                                            tag: "Machine_00254.PdmSts.Parts[0].Validation.materialType",
                                         },
-                                        SerialNumber: {
-                                            tag: "Machine_00254.PdmSts.Parts[0].Validation.SerialNumber",
-                                        },
-                                        StatusMsg: {
-                                            tag: "Machine_00254.PdmSts.Parts[0].Validation.StatusMsg",
-                                        },
-                                        TimestampVision_sec: {
-                                            tag: "Machine_00254.PdmSts.Parts[0].Validation.TimestampVision_sec",
-                                        },
-                                        VisionSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[0].Validation.VisionSts",
-                                        },
-                                        WeightSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[0].Validation.WeightSts",
+                                        refillCount: {
+                                            tag: "Machine_00254.PdmSts.Parts[0].Validation.refillCount",
                                         },
                                     } as const,
                                 },
@@ -6777,29 +9949,17 @@ export const machineTags: MachineTagNode = {
                                 Validation: {
                                     tag: "Machine_00254.PdmSts.Parts[1].Validation",
                                     children: {
-                                        LinerWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[1].Validation.LinerWeight_g",
+                                        actualAcetoneDose_mL: {
+                                            tag: "Machine_00254.PdmSts.Parts[1].Validation.actualAcetoneDose_mL",
                                         },
-                                        PostWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[1].Validation.PostWeight_g",
+                                        materialQty_g: {
+                                            tag: "Machine_00254.PdmSts.Parts[1].Validation.materialQty_g",
                                         },
-                                        PreWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[1].Validation.PreWeight_g",
+                                        materialType: {
+                                            tag: "Machine_00254.PdmSts.Parts[1].Validation.materialType",
                                         },
-                                        SerialNumber: {
-                                            tag: "Machine_00254.PdmSts.Parts[1].Validation.SerialNumber",
-                                        },
-                                        StatusMsg: {
-                                            tag: "Machine_00254.PdmSts.Parts[1].Validation.StatusMsg",
-                                        },
-                                        TimestampVision_sec: {
-                                            tag: "Machine_00254.PdmSts.Parts[1].Validation.TimestampVision_sec",
-                                        },
-                                        VisionSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[1].Validation.VisionSts",
-                                        },
-                                        WeightSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[1].Validation.WeightSts",
+                                        refillCount: {
+                                            tag: "Machine_00254.PdmSts.Parts[1].Validation.refillCount",
                                         },
                                     } as const,
                                 },
@@ -6823,29 +9983,17 @@ export const machineTags: MachineTagNode = {
                                 Validation: {
                                     tag: "Machine_00254.PdmSts.Parts[10].Validation",
                                     children: {
-                                        LinerWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[10].Validation.LinerWeight_g",
+                                        actualAcetoneDose_mL: {
+                                            tag: "Machine_00254.PdmSts.Parts[10].Validation.actualAcetoneDose_mL",
                                         },
-                                        PostWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[10].Validation.PostWeight_g",
+                                        materialQty_g: {
+                                            tag: "Machine_00254.PdmSts.Parts[10].Validation.materialQty_g",
                                         },
-                                        PreWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[10].Validation.PreWeight_g",
+                                        materialType: {
+                                            tag: "Machine_00254.PdmSts.Parts[10].Validation.materialType",
                                         },
-                                        SerialNumber: {
-                                            tag: "Machine_00254.PdmSts.Parts[10].Validation.SerialNumber",
-                                        },
-                                        StatusMsg: {
-                                            tag: "Machine_00254.PdmSts.Parts[10].Validation.StatusMsg",
-                                        },
-                                        TimestampVision_sec: {
-                                            tag: "Machine_00254.PdmSts.Parts[10].Validation.TimestampVision_sec",
-                                        },
-                                        VisionSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[10].Validation.VisionSts",
-                                        },
-                                        WeightSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[10].Validation.WeightSts",
+                                        refillCount: {
+                                            tag: "Machine_00254.PdmSts.Parts[10].Validation.refillCount",
                                         },
                                     } as const,
                                 },
@@ -6869,29 +10017,17 @@ export const machineTags: MachineTagNode = {
                                 Validation: {
                                     tag: "Machine_00254.PdmSts.Parts[2].Validation",
                                     children: {
-                                        LinerWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[2].Validation.LinerWeight_g",
+                                        actualAcetoneDose_mL: {
+                                            tag: "Machine_00254.PdmSts.Parts[2].Validation.actualAcetoneDose_mL",
                                         },
-                                        PostWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[2].Validation.PostWeight_g",
+                                        materialQty_g: {
+                                            tag: "Machine_00254.PdmSts.Parts[2].Validation.materialQty_g",
                                         },
-                                        PreWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[2].Validation.PreWeight_g",
+                                        materialType: {
+                                            tag: "Machine_00254.PdmSts.Parts[2].Validation.materialType",
                                         },
-                                        SerialNumber: {
-                                            tag: "Machine_00254.PdmSts.Parts[2].Validation.SerialNumber",
-                                        },
-                                        StatusMsg: {
-                                            tag: "Machine_00254.PdmSts.Parts[2].Validation.StatusMsg",
-                                        },
-                                        TimestampVision_sec: {
-                                            tag: "Machine_00254.PdmSts.Parts[2].Validation.TimestampVision_sec",
-                                        },
-                                        VisionSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[2].Validation.VisionSts",
-                                        },
-                                        WeightSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[2].Validation.WeightSts",
+                                        refillCount: {
+                                            tag: "Machine_00254.PdmSts.Parts[2].Validation.refillCount",
                                         },
                                     } as const,
                                 },
@@ -6915,29 +10051,17 @@ export const machineTags: MachineTagNode = {
                                 Validation: {
                                     tag: "Machine_00254.PdmSts.Parts[3].Validation",
                                     children: {
-                                        LinerWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[3].Validation.LinerWeight_g",
+                                        actualAcetoneDose_mL: {
+                                            tag: "Machine_00254.PdmSts.Parts[3].Validation.actualAcetoneDose_mL",
                                         },
-                                        PostWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[3].Validation.PostWeight_g",
+                                        materialQty_g: {
+                                            tag: "Machine_00254.PdmSts.Parts[3].Validation.materialQty_g",
                                         },
-                                        PreWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[3].Validation.PreWeight_g",
+                                        materialType: {
+                                            tag: "Machine_00254.PdmSts.Parts[3].Validation.materialType",
                                         },
-                                        SerialNumber: {
-                                            tag: "Machine_00254.PdmSts.Parts[3].Validation.SerialNumber",
-                                        },
-                                        StatusMsg: {
-                                            tag: "Machine_00254.PdmSts.Parts[3].Validation.StatusMsg",
-                                        },
-                                        TimestampVision_sec: {
-                                            tag: "Machine_00254.PdmSts.Parts[3].Validation.TimestampVision_sec",
-                                        },
-                                        VisionSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[3].Validation.VisionSts",
-                                        },
-                                        WeightSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[3].Validation.WeightSts",
+                                        refillCount: {
+                                            tag: "Machine_00254.PdmSts.Parts[3].Validation.refillCount",
                                         },
                                     } as const,
                                 },
@@ -6961,29 +10085,17 @@ export const machineTags: MachineTagNode = {
                                 Validation: {
                                     tag: "Machine_00254.PdmSts.Parts[4].Validation",
                                     children: {
-                                        LinerWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[4].Validation.LinerWeight_g",
+                                        actualAcetoneDose_mL: {
+                                            tag: "Machine_00254.PdmSts.Parts[4].Validation.actualAcetoneDose_mL",
                                         },
-                                        PostWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[4].Validation.PostWeight_g",
+                                        materialQty_g: {
+                                            tag: "Machine_00254.PdmSts.Parts[4].Validation.materialQty_g",
                                         },
-                                        PreWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[4].Validation.PreWeight_g",
+                                        materialType: {
+                                            tag: "Machine_00254.PdmSts.Parts[4].Validation.materialType",
                                         },
-                                        SerialNumber: {
-                                            tag: "Machine_00254.PdmSts.Parts[4].Validation.SerialNumber",
-                                        },
-                                        StatusMsg: {
-                                            tag: "Machine_00254.PdmSts.Parts[4].Validation.StatusMsg",
-                                        },
-                                        TimestampVision_sec: {
-                                            tag: "Machine_00254.PdmSts.Parts[4].Validation.TimestampVision_sec",
-                                        },
-                                        VisionSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[4].Validation.VisionSts",
-                                        },
-                                        WeightSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[4].Validation.WeightSts",
+                                        refillCount: {
+                                            tag: "Machine_00254.PdmSts.Parts[4].Validation.refillCount",
                                         },
                                     } as const,
                                 },
@@ -7007,29 +10119,17 @@ export const machineTags: MachineTagNode = {
                                 Validation: {
                                     tag: "Machine_00254.PdmSts.Parts[5].Validation",
                                     children: {
-                                        LinerWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[5].Validation.LinerWeight_g",
+                                        actualAcetoneDose_mL: {
+                                            tag: "Machine_00254.PdmSts.Parts[5].Validation.actualAcetoneDose_mL",
                                         },
-                                        PostWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[5].Validation.PostWeight_g",
+                                        materialQty_g: {
+                                            tag: "Machine_00254.PdmSts.Parts[5].Validation.materialQty_g",
                                         },
-                                        PreWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[5].Validation.PreWeight_g",
+                                        materialType: {
+                                            tag: "Machine_00254.PdmSts.Parts[5].Validation.materialType",
                                         },
-                                        SerialNumber: {
-                                            tag: "Machine_00254.PdmSts.Parts[5].Validation.SerialNumber",
-                                        },
-                                        StatusMsg: {
-                                            tag: "Machine_00254.PdmSts.Parts[5].Validation.StatusMsg",
-                                        },
-                                        TimestampVision_sec: {
-                                            tag: "Machine_00254.PdmSts.Parts[5].Validation.TimestampVision_sec",
-                                        },
-                                        VisionSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[5].Validation.VisionSts",
-                                        },
-                                        WeightSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[5].Validation.WeightSts",
+                                        refillCount: {
+                                            tag: "Machine_00254.PdmSts.Parts[5].Validation.refillCount",
                                         },
                                     } as const,
                                 },
@@ -7053,29 +10153,17 @@ export const machineTags: MachineTagNode = {
                                 Validation: {
                                     tag: "Machine_00254.PdmSts.Parts[6].Validation",
                                     children: {
-                                        LinerWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[6].Validation.LinerWeight_g",
+                                        actualAcetoneDose_mL: {
+                                            tag: "Machine_00254.PdmSts.Parts[6].Validation.actualAcetoneDose_mL",
                                         },
-                                        PostWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[6].Validation.PostWeight_g",
+                                        materialQty_g: {
+                                            tag: "Machine_00254.PdmSts.Parts[6].Validation.materialQty_g",
                                         },
-                                        PreWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[6].Validation.PreWeight_g",
+                                        materialType: {
+                                            tag: "Machine_00254.PdmSts.Parts[6].Validation.materialType",
                                         },
-                                        SerialNumber: {
-                                            tag: "Machine_00254.PdmSts.Parts[6].Validation.SerialNumber",
-                                        },
-                                        StatusMsg: {
-                                            tag: "Machine_00254.PdmSts.Parts[6].Validation.StatusMsg",
-                                        },
-                                        TimestampVision_sec: {
-                                            tag: "Machine_00254.PdmSts.Parts[6].Validation.TimestampVision_sec",
-                                        },
-                                        VisionSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[6].Validation.VisionSts",
-                                        },
-                                        WeightSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[6].Validation.WeightSts",
+                                        refillCount: {
+                                            tag: "Machine_00254.PdmSts.Parts[6].Validation.refillCount",
                                         },
                                     } as const,
                                 },
@@ -7099,29 +10187,17 @@ export const machineTags: MachineTagNode = {
                                 Validation: {
                                     tag: "Machine_00254.PdmSts.Parts[7].Validation",
                                     children: {
-                                        LinerWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[7].Validation.LinerWeight_g",
+                                        actualAcetoneDose_mL: {
+                                            tag: "Machine_00254.PdmSts.Parts[7].Validation.actualAcetoneDose_mL",
                                         },
-                                        PostWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[7].Validation.PostWeight_g",
+                                        materialQty_g: {
+                                            tag: "Machine_00254.PdmSts.Parts[7].Validation.materialQty_g",
                                         },
-                                        PreWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[7].Validation.PreWeight_g",
+                                        materialType: {
+                                            tag: "Machine_00254.PdmSts.Parts[7].Validation.materialType",
                                         },
-                                        SerialNumber: {
-                                            tag: "Machine_00254.PdmSts.Parts[7].Validation.SerialNumber",
-                                        },
-                                        StatusMsg: {
-                                            tag: "Machine_00254.PdmSts.Parts[7].Validation.StatusMsg",
-                                        },
-                                        TimestampVision_sec: {
-                                            tag: "Machine_00254.PdmSts.Parts[7].Validation.TimestampVision_sec",
-                                        },
-                                        VisionSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[7].Validation.VisionSts",
-                                        },
-                                        WeightSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[7].Validation.WeightSts",
+                                        refillCount: {
+                                            tag: "Machine_00254.PdmSts.Parts[7].Validation.refillCount",
                                         },
                                     } as const,
                                 },
@@ -7145,29 +10221,17 @@ export const machineTags: MachineTagNode = {
                                 Validation: {
                                     tag: "Machine_00254.PdmSts.Parts[8].Validation",
                                     children: {
-                                        LinerWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[8].Validation.LinerWeight_g",
+                                        actualAcetoneDose_mL: {
+                                            tag: "Machine_00254.PdmSts.Parts[8].Validation.actualAcetoneDose_mL",
                                         },
-                                        PostWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[8].Validation.PostWeight_g",
+                                        materialQty_g: {
+                                            tag: "Machine_00254.PdmSts.Parts[8].Validation.materialQty_g",
                                         },
-                                        PreWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[8].Validation.PreWeight_g",
+                                        materialType: {
+                                            tag: "Machine_00254.PdmSts.Parts[8].Validation.materialType",
                                         },
-                                        SerialNumber: {
-                                            tag: "Machine_00254.PdmSts.Parts[8].Validation.SerialNumber",
-                                        },
-                                        StatusMsg: {
-                                            tag: "Machine_00254.PdmSts.Parts[8].Validation.StatusMsg",
-                                        },
-                                        TimestampVision_sec: {
-                                            tag: "Machine_00254.PdmSts.Parts[8].Validation.TimestampVision_sec",
-                                        },
-                                        VisionSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[8].Validation.VisionSts",
-                                        },
-                                        WeightSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[8].Validation.WeightSts",
+                                        refillCount: {
+                                            tag: "Machine_00254.PdmSts.Parts[8].Validation.refillCount",
                                         },
                                     } as const,
                                 },
@@ -7191,35 +10255,26 @@ export const machineTags: MachineTagNode = {
                                 Validation: {
                                     tag: "Machine_00254.PdmSts.Parts[9].Validation",
                                     children: {
-                                        LinerWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[9].Validation.LinerWeight_g",
+                                        actualAcetoneDose_mL: {
+                                            tag: "Machine_00254.PdmSts.Parts[9].Validation.actualAcetoneDose_mL",
                                         },
-                                        PostWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[9].Validation.PostWeight_g",
+                                        materialQty_g: {
+                                            tag: "Machine_00254.PdmSts.Parts[9].Validation.materialQty_g",
                                         },
-                                        PreWeight_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[9].Validation.PreWeight_g",
+                                        materialType: {
+                                            tag: "Machine_00254.PdmSts.Parts[9].Validation.materialType",
                                         },
-                                        SerialNumber: {
-                                            tag: "Machine_00254.PdmSts.Parts[9].Validation.SerialNumber",
-                                        },
-                                        StatusMsg: {
-                                            tag: "Machine_00254.PdmSts.Parts[9].Validation.StatusMsg",
-                                        },
-                                        TimestampVision_sec: {
-                                            tag: "Machine_00254.PdmSts.Parts[9].Validation.TimestampVision_sec",
-                                        },
-                                        VisionSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[9].Validation.VisionSts",
-                                        },
-                                        WeightSts: {
-                                            tag: "Machine_00254.PdmSts.Parts[9].Validation.WeightSts",
+                                        refillCount: {
+                                            tag: "Machine_00254.PdmSts.Parts[9].Validation.refillCount",
                                         },
                                     } as const,
                                 },
                             } as const,
                         },
                     ] as const,
+                },
+                RobotIsEmpty: {
+                    tag: "Machine_00254.PdmSts.RobotIsEmpty",
                 },
             } as const,
         },
@@ -7492,247 +10547,8 @@ export const machineTags: MachineTagNode = {
                 atOperationalPositionMin: {
                     tag: "Machine_00254.Piston_bSts.atOperationalPositionMin",
                 },
-                AxesPositionDifference_CORRECTABLE: {
-                    tag: "Machine_00254.Piston_bSts.AxesPositionDifference_CORRECTABLE",
-                },
-                AxesPositionDifference_OK: {
-                    tag: "Machine_00254.Piston_bSts.AxesPositionDifference_OK",
-                },
                 CalculatedStoppingPosition: {
                     tag: "Machine_00254.Piston_bSts.CalculatedStoppingPosition",
-                },
-                Cfg: {
-                    tag: "Machine_00254.Piston_bSts.Cfg",
-                    children: {
-                        AtPosTol: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.AtPosTol",
-                        },
-                        AutoPositionVerifyDuringReset: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.AutoPositionVerifyDuringReset",
-                        },
-                        AxesPositionToleranceForSkew: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.AxesPositionToleranceForSkew",
-                        },
-                        AxisType: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.AxisType",
-                        },
-                        DriveId: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.DriveId",
-                        },
-                        DriveType: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.DriveType",
-                        },
-                        GearingPositionTolerance: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.GearingPositionTolerance",
-                        },
-                        HardStopNegative: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.HardStopNegative",
-                        },
-                        HardStopPositive: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.HardStopPositive",
-                        },
-                        hasDynamicNegativeLimit: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.hasDynamicNegativeLimit",
-                        },
-                        hasDynamicPositiveLimit: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.hasDynamicPositiveLimit",
-                        },
-                        hasRailBrakes: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.hasRailBrakes",
-                        },
-                        HomingMethod: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.HomingMethod",
-                        },
-                        HomingToHardstopDir: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.HomingToHardstopDir",
-                        },
-                        IgnoreLimitSwitches: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.IgnoreLimitSwitches",
-                        },
-                        Ignores: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.Ignores",
-                            items: [
-                                {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.Ignores[0]",
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.Ignores[1]",
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.Ignores[2]",
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.Ignores[3]",
-                                },
-                            ] as const,
-                        },
-                        IgnoreSoftwareLimits: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.IgnoreSoftwareLimits",
-                        },
-                        KeepMasteredStatusAtStartup: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.KeepMasteredStatusAtStartup",
-                        },
-                        MaxCurrentNormalOperation: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.MaxCurrentNormalOperation",
-                        },
-                        MaxCurrentWhileHomingToHardstop: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.MaxCurrentWhileHomingToHardstop",
-                        },
-                        MotionProfiles: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles",
-                            items: [
-                                {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[0]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[0].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[0].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[0].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[1]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[1].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[1].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[1].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[2]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[2].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[2].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[2].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[3]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[3].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[3].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[3].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[4]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[4].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[4].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.Piston_bSts.Cfg.MotionProfiles[4].speed",
-                                        },
-                                    } as const,
-                                },
-                            ] as const,
-                        },
-                        OperationalPositionMax: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.OperationalPositionMax",
-                        },
-                        OperationalPositionMin: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.OperationalPositionMin",
-                        },
-                        PositionReferencingMethod: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.PositionReferencingMethod",
-                        },
-                        ScaleFactorUnitsPerEncoderCount: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.ScaleFactorUnitsPerEncoderCount",
-                        },
-                        SearchDistance: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.SearchDistance",
-                        },
-                        SensorPositions: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.SensorPositions",
-                            items: [
-                                {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.SensorPositions[0]",
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.SensorPositions[1]",
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.SensorPositions[2]",
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.SensorPositions[3]",
-                                },
-                            ] as const,
-                        },
-                        ShippingPosition: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.ShippingPosition",
-                        },
-                        SoftMotionScalingParams: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.SoftMotionScalingParams",
-                            children: {
-                                gearOutputTurnsLeft: {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.SoftMotionScalingParams.gearOutputTurnsLeft",
-                                },
-                                gearOutputTurnsRight: {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.SoftMotionScalingParams.gearOutputTurnsRight",
-                                },
-                                incrementsLeft: {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.SoftMotionScalingParams.incrementsLeft",
-                                },
-                                invertDir: {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.SoftMotionScalingParams.invertDir",
-                                },
-                                motorsTurnsLeft: {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.SoftMotionScalingParams.motorsTurnsLeft",
-                                },
-                                motorTurnsRight: {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.SoftMotionScalingParams.motorTurnsRight",
-                                },
-                                unitsInApplicationRight: {
-                                    tag: "Machine_00254.Piston_bSts.Cfg.SoftMotionScalingParams.unitsInApplicationRight",
-                                },
-                            } as const,
-                        },
-                        SoftwareLimitNegative: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.SoftwareLimitNegative",
-                        },
-                        SoftwareLimitPositive: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.SoftwareLimitPositive",
-                        },
-                        Unit: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.Unit",
-                        },
-                        updateScalingIsNeeded: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.updateScalingIsNeeded",
-                        },
-                        ValidationSensor: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.ValidationSensor",
-                        },
-                        VerificationSensorOffsetFromZero: {
-                            tag: "Machine_00254.Piston_bSts.Cfg.VerificationSensorOffsetFromZero",
-                        },
-                    } as const,
                 },
                 ConfiguredSoftLimitTravelRange: {
                     tag: "Machine_00254.Piston_bSts.ConfiguredSoftLimitTravelRange",
@@ -7757,9 +10573,6 @@ export const machineTags: MachineTagNode = {
                 },
                 DriveSwLimitsEnforcement: {
                     tag: "Machine_00254.Piston_bSts.DriveSwLimitsEnforcement",
-                },
-                DualAxisStopType: {
-                    tag: "Machine_00254.Piston_bSts.DualAxisStopType",
                 },
                 EtherCatComms_OK: {
                     tag: "Machine_00254.Piston_bSts.EtherCatComms_OK",
@@ -8372,9 +11185,6 @@ export const machineTags: MachineTagNode = {
                         },
                     ] as const,
                 },
-                PositionDifference: {
-                    tag: "Machine_00254.Piston_bSts.PositionDifference",
-                },
                 RailBrakes: {
                     tag: "Machine_00254.Piston_bSts.RailBrakes",
                     children: {
@@ -8397,12 +11207,6 @@ export const machineTags: MachineTagNode = {
                             tag: "Machine_00254.Piston_bSts.RailBrakes.RailBrake2_OPEN",
                         },
                     } as const,
-                },
-                RcControlMode: {
-                    tag: "Machine_00254.Piston_bSts.RcControlMode",
-                },
-                RcHomingState: {
-                    tag: "Machine_00254.Piston_bSts.RcHomingState",
                 },
                 RecordedPosition: {
                     tag: "Machine_00254.Piston_bSts.RecordedPosition",
@@ -8430,20 +11234,11 @@ export const machineTags: MachineTagNode = {
                 setAccel: {
                     tag: "Machine_00254.Piston_bSts.setAccel",
                 },
-                setJerk: {
-                    tag: "Machine_00254.Piston_bSts.setJerk",
-                },
                 setPosition: {
                     tag: "Machine_00254.Piston_bSts.setPosition",
                 },
-                setTorque: {
-                    tag: "Machine_00254.Piston_bSts.setTorque",
-                },
                 setVelocity: {
                     tag: "Machine_00254.Piston_bSts.setVelocity",
-                },
-                SkippingPositionCorrectionBeforeGearing: {
-                    tag: "Machine_00254.Piston_bSts.SkippingPositionCorrectionBeforeGearing",
                 },
                 SoftMotionErrorId: {
                     tag: "Machine_00254.Piston_bSts.SoftMotionErrorId",
@@ -8772,247 +11567,8 @@ export const machineTags: MachineTagNode = {
                 atOperationalPositionMin: {
                     tag: "Machine_00254.Piston_tSts.atOperationalPositionMin",
                 },
-                AxesPositionDifference_CORRECTABLE: {
-                    tag: "Machine_00254.Piston_tSts.AxesPositionDifference_CORRECTABLE",
-                },
-                AxesPositionDifference_OK: {
-                    tag: "Machine_00254.Piston_tSts.AxesPositionDifference_OK",
-                },
                 CalculatedStoppingPosition: {
                     tag: "Machine_00254.Piston_tSts.CalculatedStoppingPosition",
-                },
-                Cfg: {
-                    tag: "Machine_00254.Piston_tSts.Cfg",
-                    children: {
-                        AtPosTol: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.AtPosTol",
-                        },
-                        AutoPositionVerifyDuringReset: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.AutoPositionVerifyDuringReset",
-                        },
-                        AxesPositionToleranceForSkew: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.AxesPositionToleranceForSkew",
-                        },
-                        AxisType: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.AxisType",
-                        },
-                        DriveId: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.DriveId",
-                        },
-                        DriveType: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.DriveType",
-                        },
-                        GearingPositionTolerance: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.GearingPositionTolerance",
-                        },
-                        HardStopNegative: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.HardStopNegative",
-                        },
-                        HardStopPositive: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.HardStopPositive",
-                        },
-                        hasDynamicNegativeLimit: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.hasDynamicNegativeLimit",
-                        },
-                        hasDynamicPositiveLimit: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.hasDynamicPositiveLimit",
-                        },
-                        hasRailBrakes: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.hasRailBrakes",
-                        },
-                        HomingMethod: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.HomingMethod",
-                        },
-                        HomingToHardstopDir: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.HomingToHardstopDir",
-                        },
-                        IgnoreLimitSwitches: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.IgnoreLimitSwitches",
-                        },
-                        Ignores: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.Ignores",
-                            items: [
-                                {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.Ignores[0]",
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.Ignores[1]",
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.Ignores[2]",
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.Ignores[3]",
-                                },
-                            ] as const,
-                        },
-                        IgnoreSoftwareLimits: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.IgnoreSoftwareLimits",
-                        },
-                        KeepMasteredStatusAtStartup: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.KeepMasteredStatusAtStartup",
-                        },
-                        MaxCurrentNormalOperation: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.MaxCurrentNormalOperation",
-                        },
-                        MaxCurrentWhileHomingToHardstop: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.MaxCurrentWhileHomingToHardstop",
-                        },
-                        MotionProfiles: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles",
-                            items: [
-                                {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[0]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[0].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[0].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[0].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[1]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[1].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[1].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[1].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[2]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[2].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[2].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[2].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[3]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[3].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[3].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[3].speed",
-                                        },
-                                    } as const,
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[4]",
-                                    children: {
-                                        acceleration: {
-                                            tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[4].acceleration",
-                                        },
-                                        jerk: {
-                                            tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[4].jerk",
-                                        },
-                                        speed: {
-                                            tag: "Machine_00254.Piston_tSts.Cfg.MotionProfiles[4].speed",
-                                        },
-                                    } as const,
-                                },
-                            ] as const,
-                        },
-                        OperationalPositionMax: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.OperationalPositionMax",
-                        },
-                        OperationalPositionMin: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.OperationalPositionMin",
-                        },
-                        PositionReferencingMethod: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.PositionReferencingMethod",
-                        },
-                        ScaleFactorUnitsPerEncoderCount: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.ScaleFactorUnitsPerEncoderCount",
-                        },
-                        SearchDistance: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.SearchDistance",
-                        },
-                        SensorPositions: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.SensorPositions",
-                            items: [
-                                {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.SensorPositions[0]",
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.SensorPositions[1]",
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.SensorPositions[2]",
-                                },
-                                {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.SensorPositions[3]",
-                                },
-                            ] as const,
-                        },
-                        ShippingPosition: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.ShippingPosition",
-                        },
-                        SoftMotionScalingParams: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.SoftMotionScalingParams",
-                            children: {
-                                gearOutputTurnsLeft: {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.SoftMotionScalingParams.gearOutputTurnsLeft",
-                                },
-                                gearOutputTurnsRight: {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.SoftMotionScalingParams.gearOutputTurnsRight",
-                                },
-                                incrementsLeft: {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.SoftMotionScalingParams.incrementsLeft",
-                                },
-                                invertDir: {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.SoftMotionScalingParams.invertDir",
-                                },
-                                motorsTurnsLeft: {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.SoftMotionScalingParams.motorsTurnsLeft",
-                                },
-                                motorTurnsRight: {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.SoftMotionScalingParams.motorTurnsRight",
-                                },
-                                unitsInApplicationRight: {
-                                    tag: "Machine_00254.Piston_tSts.Cfg.SoftMotionScalingParams.unitsInApplicationRight",
-                                },
-                            } as const,
-                        },
-                        SoftwareLimitNegative: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.SoftwareLimitNegative",
-                        },
-                        SoftwareLimitPositive: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.SoftwareLimitPositive",
-                        },
-                        Unit: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.Unit",
-                        },
-                        updateScalingIsNeeded: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.updateScalingIsNeeded",
-                        },
-                        ValidationSensor: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.ValidationSensor",
-                        },
-                        VerificationSensorOffsetFromZero: {
-                            tag: "Machine_00254.Piston_tSts.Cfg.VerificationSensorOffsetFromZero",
-                        },
-                    } as const,
                 },
                 ConfiguredSoftLimitTravelRange: {
                     tag: "Machine_00254.Piston_tSts.ConfiguredSoftLimitTravelRange",
@@ -9037,9 +11593,6 @@ export const machineTags: MachineTagNode = {
                 },
                 DriveSwLimitsEnforcement: {
                     tag: "Machine_00254.Piston_tSts.DriveSwLimitsEnforcement",
-                },
-                DualAxisStopType: {
-                    tag: "Machine_00254.Piston_tSts.DualAxisStopType",
                 },
                 EtherCatComms_OK: {
                     tag: "Machine_00254.Piston_tSts.EtherCatComms_OK",
@@ -9652,9 +12205,6 @@ export const machineTags: MachineTagNode = {
                         },
                     ] as const,
                 },
-                PositionDifference: {
-                    tag: "Machine_00254.Piston_tSts.PositionDifference",
-                },
                 RailBrakes: {
                     tag: "Machine_00254.Piston_tSts.RailBrakes",
                     children: {
@@ -9677,12 +12227,6 @@ export const machineTags: MachineTagNode = {
                             tag: "Machine_00254.Piston_tSts.RailBrakes.RailBrake2_OPEN",
                         },
                     } as const,
-                },
-                RcControlMode: {
-                    tag: "Machine_00254.Piston_tSts.RcControlMode",
-                },
-                RcHomingState: {
-                    tag: "Machine_00254.Piston_tSts.RcHomingState",
                 },
                 RecordedPosition: {
                     tag: "Machine_00254.Piston_tSts.RecordedPosition",
@@ -9710,20 +12254,11 @@ export const machineTags: MachineTagNode = {
                 setAccel: {
                     tag: "Machine_00254.Piston_tSts.setAccel",
                 },
-                setJerk: {
-                    tag: "Machine_00254.Piston_tSts.setJerk",
-                },
                 setPosition: {
                     tag: "Machine_00254.Piston_tSts.setPosition",
                 },
-                setTorque: {
-                    tag: "Machine_00254.Piston_tSts.setTorque",
-                },
                 setVelocity: {
                     tag: "Machine_00254.Piston_tSts.setVelocity",
-                },
-                SkippingPositionCorrectionBeforeGearing: {
-                    tag: "Machine_00254.Piston_tSts.SkippingPositionCorrectionBeforeGearing",
                 },
                 SoftMotionErrorId: {
                     tag: "Machine_00254.Piston_tSts.SoftMotionErrorId",
@@ -9780,239 +12315,6 @@ export const machineTags: MachineTagNode = {
                 },
                 TravelLimitPositive: {
                     tag: "Machine_00254.Piston_tSts.TravelLimitPositive",
-                },
-            } as const,
-        },
-        RecipeStore: {
-            tag: "Machine_00254.RecipeStore",
-            children: {
-                NumRecipes: {
-                    tag: "Machine_00254.RecipeStore.NumRecipes",
-                },
-                Recipes: {
-                    tag: "Machine_00254.RecipeStore.Recipes",
-                    items: [
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[0]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[0].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[0].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[1]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[1].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[1].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[10]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[10].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[10].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[11]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[11].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[11].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[12]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[12].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[12].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[13]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[13].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[13].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[14]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[14].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[14].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[15]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[15].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[15].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[16]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[16].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[16].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[17]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[17].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[17].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[18]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[18].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[18].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[19]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[19].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[19].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[2]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[2].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[2].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[3]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[3].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[3].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[4]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[4].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[4].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[5]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[5].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[5].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[6]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[6].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[6].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[7]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[7].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[7].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[8]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[8].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[8].index",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.RecipeStore.Recipes[9]",
-                            children: {
-                                dbId: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[9].dbId",
-                                },
-                                index: {
-                                    tag: "Machine_00254.RecipeStore.Recipes[9].index",
-                                },
-                            } as const,
-                        },
-                    ] as const,
                 },
             } as const,
         },
@@ -10235,22 +12537,31 @@ export const machineTags: MachineTagNode = {
                 ApplicatorSqueegeeMidlineOffset: {
                     tag: "Machine_00254.RobMeta.ApplicatorSqueegeeMidlineOffset",
                 },
+                Methods: {
+                    tag: "Machine_00254.RobMeta.Methods",
+                },
+                Tasks: {
+                    tag: "Machine_00254.RobMeta.Tasks",
+                },
             } as const,
         },
         RobSts: {
             tag: "Machine_00254.RobSts",
             children: {
+                ActiveMethod: {
+                    tag: "Machine_00254.RobSts.ActiveMethod",
+                },
+                ActiveProcess: {
+                    tag: "Machine_00254.RobSts.ActiveProcess",
+                },
+                ActiveTask: {
+                    tag: "Machine_00254.RobSts.ActiveTask",
+                },
                 ActiveToolDeviceId: {
                     tag: "Machine_00254.RobSts.ActiveToolDeviceId",
                 },
                 ActiveToolId: {
                     tag: "Machine_00254.RobSts.ActiveToolId",
-                },
-                ActualApplicatorZPositionRFB: {
-                    tag: "Machine_00254.RobSts.ActualApplicatorZPositionRFB",
-                },
-                ActualApplicatorZVelocityRFB: {
-                    tag: "Machine_00254.RobSts.ActualApplicatorZVelocityRFB",
                 },
                 ActualPosition: {
                     tag: "Machine_00254.RobSts.ActualPosition",
@@ -10281,23 +12592,11 @@ export const machineTags: MachineTagNode = {
                         },
                     } as const,
                 },
-                ActualRobotZPositionRFB: {
-                    tag: "Machine_00254.RobSts.ActualRobotZPositionRFB",
-                },
                 ActualWaypoint: {
                     tag: "Machine_00254.RobSts.ActualWaypoint",
                 },
                 ActualZone: {
                     tag: "Machine_00254.RobSts.ActualZone",
-                },
-                ApplicatorHasBeenPrimed: {
-                    tag: "Machine_00254.RobSts.ApplicatorHasBeenPrimed",
-                },
-                ApplicatorIsDirty: {
-                    tag: "Machine_00254.RobSts.ApplicatorIsDirty",
-                },
-                ApplyLinerStartSetpointMovesReq: {
-                    tag: "Machine_00254.RobSts.ApplyLinerStartSetpointMovesReq",
                 },
                 AutoRecoveryNeeded: {
                     tag: "Machine_00254.RobSts.AutoRecoveryNeeded",
@@ -10305,85 +12604,366 @@ export const machineTags: MachineTagNode = {
                 AutoRecoveryOk: {
                     tag: "Machine_00254.RobSts.AutoRecoveryOk",
                 },
-                CameraIsRecording: {
-                    tag: "Machine_00254.RobSts.CameraIsRecording",
-                },
-                GripperIsCalibrated: {
-                    tag: "Machine_00254.RobSts.GripperIsCalibrated",
-                },
-                LastCrossedApplyLinerSetpointId: {
-                    tag: "Machine_00254.RobSts.LastCrossedApplyLinerSetpointId",
-                },
-                LastRecordedLoadCellValue_g: {
-                    tag: "Machine_00254.RobSts.LastRecordedLoadCellValue_g",
-                },
-                LoadCellCurrentValue_g: {
-                    tag: "Machine_00254.RobSts.LoadCellCurrentValue_g",
-                },
-                LoadCellSts: {
-                    tag: "Machine_00254.RobSts.LoadCellSts",
-                    children: {
-                        CalibOffset: {
-                            tag: "Machine_00254.RobSts.LoadCellSts.CalibOffset",
-                        },
-                        CalibScaleFactor: {
-                            tag: "Machine_00254.RobSts.LoadCellSts.CalibScaleFactor",
-                        },
-                        CurrentValue: {
-                            tag: "Machine_00254.RobSts.LoadCellSts.CurrentValue",
-                        },
-                        RawValue: {
-                            tag: "Machine_00254.RobSts.LoadCellSts.RawValue",
-                        },
-                        SampledStdDev: {
-                            tag: "Machine_00254.RobSts.LoadCellSts.SampledStdDev",
-                        },
-                        SampledValue: {
-                            tag: "Machine_00254.RobSts.LoadCellSts.SampledValue",
-                        },
-                        SampledValueRaw: {
-                            tag: "Machine_00254.RobSts.LoadCellSts.SampledValueRaw",
-                        },
-                        State: {
-                            tag: "Machine_00254.RobSts.LoadCellSts.State",
-                        },
-                        StatusMsg: {
-                            tag: "Machine_00254.RobSts.LoadCellSts.StatusMsg",
-                        },
-                        TareOffset: {
-                            tag: "Machine_00254.RobSts.LoadCellSts.TareOffset",
-                        },
-                        Unit: {
-                            tag: "Machine_00254.RobSts.LoadCellSts.Unit",
-                        },
-                    } as const,
-                },
-                MoveToNextSetpointOK: {
-                    tag: "Machine_00254.RobSts.MoveToNextSetpointOK",
-                },
-                SqueegeeCalibrationOffset: {
-                    tag: "Machine_00254.RobSts.SqueegeeCalibrationOffset",
-                },
-                SqueegeeIsCalibrated: {
-                    tag: "Machine_00254.RobSts.SqueegeeIsCalibrated",
-                },
-                SqueegeeIsHomed: {
-                    tag: "Machine_00254.RobSts.SqueegeeIsHomed",
+                SyringeIsHomed: {
+                    tag: "Machine_00254.RobSts.SyringeIsHomed",
                 },
                 TargetWaypoint: {
                     tag: "Machine_00254.RobSts.TargetWaypoint",
                 },
-                UnclampPartDone: {
-                    tag: "Machine_00254.RobSts.UnclampPartDone",
+            } as const,
+        },
+        ScreenerCfg: {
+            tag: "Machine_00254.ScreenerCfg",
+            children: {
+                ActionButtons: {
+                    tag: "Machine_00254.ScreenerCfg.ActionButtons",
+                    items: [
+                        {
+                            tag: "Machine_00254.ScreenerCfg.ActionButtons[0]",
+                            children: {
+                                ActionId: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[0].ActionId",
+                                },
+                                ActionType: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[0].ActionType",
+                                },
+                                Color: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[0].Color",
+                                },
+                                isExpertOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[0].isExpertOnly",
+                                },
+                                isManualOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[0].isManualOnly",
+                                },
+                                Label: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[0].Label",
+                                },
+                                Param0: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[0].Param0",
+                                },
+                                Param1: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[0].Param1",
+                                },
+                                Param2: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[0].Param2",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ScreenerCfg.ActionButtons[1]",
+                            children: {
+                                ActionId: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[1].ActionId",
+                                },
+                                ActionType: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[1].ActionType",
+                                },
+                                Color: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[1].Color",
+                                },
+                                isExpertOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[1].isExpertOnly",
+                                },
+                                isManualOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[1].isManualOnly",
+                                },
+                                Label: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[1].Label",
+                                },
+                                Param0: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[1].Param0",
+                                },
+                                Param1: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[1].Param1",
+                                },
+                                Param2: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[1].Param2",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ScreenerCfg.ActionButtons[2]",
+                            children: {
+                                ActionId: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[2].ActionId",
+                                },
+                                ActionType: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[2].ActionType",
+                                },
+                                Color: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[2].Color",
+                                },
+                                isExpertOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[2].isExpertOnly",
+                                },
+                                isManualOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[2].isManualOnly",
+                                },
+                                Label: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[2].Label",
+                                },
+                                Param0: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[2].Param0",
+                                },
+                                Param1: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[2].Param1",
+                                },
+                                Param2: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[2].Param2",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ScreenerCfg.ActionButtons[3]",
+                            children: {
+                                ActionId: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[3].ActionId",
+                                },
+                                ActionType: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[3].ActionType",
+                                },
+                                Color: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[3].Color",
+                                },
+                                isExpertOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[3].isExpertOnly",
+                                },
+                                isManualOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[3].isManualOnly",
+                                },
+                                Label: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[3].Label",
+                                },
+                                Param0: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[3].Param0",
+                                },
+                                Param1: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[3].Param1",
+                                },
+                                Param2: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[3].Param2",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ScreenerCfg.ActionButtons[4]",
+                            children: {
+                                ActionId: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[4].ActionId",
+                                },
+                                ActionType: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[4].ActionType",
+                                },
+                                Color: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[4].Color",
+                                },
+                                isExpertOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[4].isExpertOnly",
+                                },
+                                isManualOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[4].isManualOnly",
+                                },
+                                Label: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[4].Label",
+                                },
+                                Param0: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[4].Param0",
+                                },
+                                Param1: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[4].Param1",
+                                },
+                                Param2: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[4].Param2",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ScreenerCfg.ActionButtons[5]",
+                            children: {
+                                ActionId: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[5].ActionId",
+                                },
+                                ActionType: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[5].ActionType",
+                                },
+                                Color: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[5].Color",
+                                },
+                                isExpertOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[5].isExpertOnly",
+                                },
+                                isManualOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[5].isManualOnly",
+                                },
+                                Label: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[5].Label",
+                                },
+                                Param0: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[5].Param0",
+                                },
+                                Param1: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[5].Param1",
+                                },
+                                Param2: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[5].Param2",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ScreenerCfg.ActionButtons[6]",
+                            children: {
+                                ActionId: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[6].ActionId",
+                                },
+                                ActionType: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[6].ActionType",
+                                },
+                                Color: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[6].Color",
+                                },
+                                isExpertOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[6].isExpertOnly",
+                                },
+                                isManualOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[6].isManualOnly",
+                                },
+                                Label: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[6].Label",
+                                },
+                                Param0: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[6].Param0",
+                                },
+                                Param1: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[6].Param1",
+                                },
+                                Param2: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[6].Param2",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ScreenerCfg.ActionButtons[7]",
+                            children: {
+                                ActionId: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[7].ActionId",
+                                },
+                                ActionType: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[7].ActionType",
+                                },
+                                Color: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[7].Color",
+                                },
+                                isExpertOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[7].isExpertOnly",
+                                },
+                                isManualOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[7].isManualOnly",
+                                },
+                                Label: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[7].Label",
+                                },
+                                Param0: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[7].Param0",
+                                },
+                                Param1: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[7].Param1",
+                                },
+                                Param2: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[7].Param2",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ScreenerCfg.ActionButtons[8]",
+                            children: {
+                                ActionId: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[8].ActionId",
+                                },
+                                ActionType: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[8].ActionType",
+                                },
+                                Color: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[8].Color",
+                                },
+                                isExpertOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[8].isExpertOnly",
+                                },
+                                isManualOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[8].isManualOnly",
+                                },
+                                Label: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[8].Label",
+                                },
+                                Param0: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[8].Param0",
+                                },
+                                Param1: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[8].Param1",
+                                },
+                                Param2: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[8].Param2",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.ScreenerCfg.ActionButtons[9]",
+                            children: {
+                                ActionId: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[9].ActionId",
+                                },
+                                ActionType: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[9].ActionType",
+                                },
+                                Color: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[9].Color",
+                                },
+                                isExpertOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[9].isExpertOnly",
+                                },
+                                isManualOnly: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[9].isManualOnly",
+                                },
+                                Label: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[9].Label",
+                                },
+                                Param0: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[9].Param0",
+                                },
+                                Param1: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[9].Param1",
+                                },
+                                Param2: {
+                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[9].Param2",
+                                },
+                            } as const,
+                        },
+                    ] as const,
                 },
-                VisionIsCalibrated: {
-                    tag: "Machine_00254.RobSts.VisionIsCalibrated",
+            } as const,
+        },
+        ScreenerMeta: {
+            tag: "Machine_00254.ScreenerMeta",
+            children: {
+                placeholder: {
+                    tag: "Machine_00254.ScreenerMeta.placeholder",
                 },
-                WeighTubeTareDone: {
-                    tag: "Machine_00254.RobSts.WeighTubeTareDone",
+            } as const,
+        },
+        ScreenerSts: {
+            tag: "Machine_00254.ScreenerSts",
+            children: {
+                bleedOffsetPosition: {
+                    tag: "Machine_00254.ScreenerSts.bleedOffsetPosition",
                 },
-                WeighTubeWeighDone: {
-                    tag: "Machine_00254.RobSts.WeighTubeWeighDone",
+                inLoadingPose: {
+                    tag: "Machine_00254.ScreenerSts.inLoadingPose",
+                },
+                lastMotorPostionDuringTransfer: {
+                    tag: "Machine_00254.ScreenerSts.lastMotorPostionDuringTransfer",
+                },
+                screenState: {
+                    tag: "Machine_00254.ScreenerSts.screenState",
                 },
             } as const,
         },
@@ -10675,12 +13255,6 @@ export const machineTags: MachineTagNode = {
                 atOperationalPositionMin: {
                     tag: "Machine_00254.SyringeSts.atOperationalPositionMin",
                 },
-                AxesPositionDifference_CORRECTABLE: {
-                    tag: "Machine_00254.SyringeSts.AxesPositionDifference_CORRECTABLE",
-                },
-                AxesPositionDifference_OK: {
-                    tag: "Machine_00254.SyringeSts.AxesPositionDifference_OK",
-                },
                 CalculatedStoppingPosition: {
                     tag: "Machine_00254.SyringeSts.CalculatedStoppingPosition",
                 },
@@ -10707,9 +13281,6 @@ export const machineTags: MachineTagNode = {
                 },
                 DriveSwLimitsEnforcement: {
                     tag: "Machine_00254.SyringeSts.DriveSwLimitsEnforcement",
-                },
-                DualAxisStopType: {
-                    tag: "Machine_00254.SyringeSts.DualAxisStopType",
                 },
                 EtherCatComms_OK: {
                     tag: "Machine_00254.SyringeSts.EtherCatComms_OK",
@@ -11210,6 +13781,9 @@ export const machineTags: MachineTagNode = {
                         },
                     } as const,
                 },
+                isAtJoggingVelocity: {
+                    tag: "Machine_00254.SyringeSts.isAtJoggingVelocity",
+                },
                 isAtPosAndStandstill: {
                     tag: "Machine_00254.SyringeSts.isAtPosAndStandstill",
                 },
@@ -11319,9 +13893,6 @@ export const machineTags: MachineTagNode = {
                         },
                     ] as const,
                 },
-                PositionDifference: {
-                    tag: "Machine_00254.SyringeSts.PositionDifference",
-                },
                 RailBrakes: {
                     tag: "Machine_00254.SyringeSts.RailBrakes",
                     children: {
@@ -11371,20 +13942,11 @@ export const machineTags: MachineTagNode = {
                 setAccel: {
                     tag: "Machine_00254.SyringeSts.setAccel",
                 },
-                setJerk: {
-                    tag: "Machine_00254.SyringeSts.setJerk",
-                },
                 setPosition: {
                     tag: "Machine_00254.SyringeSts.setPosition",
                 },
-                setTorque: {
-                    tag: "Machine_00254.SyringeSts.setTorque",
-                },
                 setVelocity: {
                     tag: "Machine_00254.SyringeSts.setVelocity",
-                },
-                SkippingPositionCorrectionBeforeGearing: {
-                    tag: "Machine_00254.SyringeSts.SkippingPositionCorrectionBeforeGearing",
                 },
                 SoftMotionErrorId: {
                     tag: "Machine_00254.SyringeSts.SoftMotionErrorId",
@@ -14374,6 +16936,66 @@ export const machineTags: MachineTagNode = {
                                 },
                             } as const,
                         },
+                        {
+                            tag: "Machine_00254.VisSts.CameraStates[2]",
+                            children: {
+                                isConnected: {
+                                    tag: "Machine_00254.VisSts.CameraStates[2].isConnected",
+                                },
+                                isPluggedIn: {
+                                    tag: "Machine_00254.VisSts.CameraStates[2].isPluggedIn",
+                                },
+                                isStreaming: {
+                                    tag: "Machine_00254.VisSts.CameraStates[2].isStreaming",
+                                },
+                                recordingState: {
+                                    tag: "Machine_00254.VisSts.CameraStates[2].recordingState",
+                                },
+                                videoDeviceNodeString: {
+                                    tag: "Machine_00254.VisSts.CameraStates[2].videoDeviceNodeString",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.VisSts.CameraStates[3]",
+                            children: {
+                                isConnected: {
+                                    tag: "Machine_00254.VisSts.CameraStates[3].isConnected",
+                                },
+                                isPluggedIn: {
+                                    tag: "Machine_00254.VisSts.CameraStates[3].isPluggedIn",
+                                },
+                                isStreaming: {
+                                    tag: "Machine_00254.VisSts.CameraStates[3].isStreaming",
+                                },
+                                recordingState: {
+                                    tag: "Machine_00254.VisSts.CameraStates[3].recordingState",
+                                },
+                                videoDeviceNodeString: {
+                                    tag: "Machine_00254.VisSts.CameraStates[3].videoDeviceNodeString",
+                                },
+                            } as const,
+                        },
+                        {
+                            tag: "Machine_00254.VisSts.CameraStates[4]",
+                            children: {
+                                isConnected: {
+                                    tag: "Machine_00254.VisSts.CameraStates[4].isConnected",
+                                },
+                                isPluggedIn: {
+                                    tag: "Machine_00254.VisSts.CameraStates[4].isPluggedIn",
+                                },
+                                isStreaming: {
+                                    tag: "Machine_00254.VisSts.CameraStates[4].isStreaming",
+                                },
+                                recordingState: {
+                                    tag: "Machine_00254.VisSts.CameraStates[4].recordingState",
+                                },
+                                videoDeviceNodeString: {
+                                    tag: "Machine_00254.VisSts.CameraStates[4].videoDeviceNodeString",
+                                },
+                            } as const,
+                        },
                     ] as const,
                 },
                 Cfg: {
@@ -14391,8 +17013,14 @@ export const machineTags: MachineTagNode = {
                                 {
                                     tag: "Machine_00254.VisSts.Cfg.cameraCfgs[0]",
                                     children: {
+                                        hwPort: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[0].hwPort",
+                                        },
                                         id: {
                                             tag: "Machine_00254.VisSts.Cfg.cameraCfgs[0].id",
+                                        },
+                                        name: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[0].name",
                                         },
                                         serialNumber: {
                                             tag: "Machine_00254.VisSts.Cfg.cameraCfgs[0].serialNumber",
@@ -14405,8 +17033,14 @@ export const machineTags: MachineTagNode = {
                                 {
                                     tag: "Machine_00254.VisSts.Cfg.cameraCfgs[1]",
                                     children: {
+                                        hwPort: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[1].hwPort",
+                                        },
                                         id: {
                                             tag: "Machine_00254.VisSts.Cfg.cameraCfgs[1].id",
+                                        },
+                                        name: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[1].name",
                                         },
                                         serialNumber: {
                                             tag: "Machine_00254.VisSts.Cfg.cameraCfgs[1].serialNumber",
@@ -14416,10 +17050,85 @@ export const machineTags: MachineTagNode = {
                                         },
                                     } as const,
                                 },
+                                {
+                                    tag: "Machine_00254.VisSts.Cfg.cameraCfgs[2]",
+                                    children: {
+                                        hwPort: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[2].hwPort",
+                                        },
+                                        id: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[2].id",
+                                        },
+                                        name: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[2].name",
+                                        },
+                                        serialNumber: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[2].serialNumber",
+                                        },
+                                        streamingPort: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[2].streamingPort",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.VisSts.Cfg.cameraCfgs[3]",
+                                    children: {
+                                        hwPort: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[3].hwPort",
+                                        },
+                                        id: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[3].id",
+                                        },
+                                        name: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[3].name",
+                                        },
+                                        serialNumber: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[3].serialNumber",
+                                        },
+                                        streamingPort: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[3].streamingPort",
+                                        },
+                                    } as const,
+                                },
+                                {
+                                    tag: "Machine_00254.VisSts.Cfg.cameraCfgs[4]",
+                                    children: {
+                                        hwPort: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[4].hwPort",
+                                        },
+                                        id: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[4].id",
+                                        },
+                                        name: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[4].name",
+                                        },
+                                        serialNumber: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[4].serialNumber",
+                                        },
+                                        streamingPort: {
+                                            tag: "Machine_00254.VisSts.Cfg.cameraCfgs[4].streamingPort",
+                                        },
+                                    } as const,
+                                },
                             ] as const,
+                        },
+                        connectionSearchType: {
+                            tag: "Machine_00254.VisSts.Cfg.connectionSearchType",
+                        },
+                        deviceId: {
+                            tag: "Machine_00254.VisSts.Cfg.deviceId",
+                        },
+                        disconnectOthersOnConnectRequest: {
+                            tag: "Machine_00254.VisSts.Cfg.disconnectOthersOnConnectRequest",
+                        },
+                        fps: {
+                            tag: "Machine_00254.VisSts.Cfg.fps",
                         },
                         numCameras: {
                             tag: "Machine_00254.VisSts.Cfg.numCameras",
+                        },
+                        visionDeviceTopicPath: {
+                            tag: "Machine_00254.VisSts.Cfg.visionDeviceTopicPath",
                         },
                     } as const,
                 },

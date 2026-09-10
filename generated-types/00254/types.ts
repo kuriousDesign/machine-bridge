@@ -5,7 +5,7 @@
 export const machineTypeSource = {
     "controllerName": "CODESYS Control for Linux SL",
     "endpoint": "opc.tcp://127.0.0.1:4840",
-    "generatedAt": "2026-07-21T20:33:01.429Z",
+    "generatedAt": "2026-09-04T20:42:08.525Z",
     "rootNodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00254",
     "rootTag": "Machine_00254"
 } as const;
@@ -18,6 +18,7 @@ export interface RctrlCfg {
     atLinearPosTol: number;
     atRotationalPosTol: number;
     controllerType: RctrlControllerTypes;
+    distanceToHomeThreshold: number;
     linearUnit: string;
     rotationalUnit: string;
     toolFrames: Array<string>;
@@ -79,14 +80,14 @@ export interface AbbInputsV2 {
 }
 export interface AbbDataOutputsV2 {
     actionId: number;
+    actionParam0: number;
+    actionParam1: number;
+    actionParam2: number;
+    actionParam3: number;
     actionType: number;
     currentPartState: number;
     dryCycle: boolean;
     heartbeatPlc: number;
-    param0: number;
-    param1: number;
-    param2: number;
-    param3: number;
     partPresentBits: number;
     senderId: number;
     syncIdDone: number;
@@ -136,9 +137,42 @@ export interface RctrlSts {
     targetPosition: RobPositionData;
     targetWaypoint: number;
 }
+export interface RecipeDataBeaker {
+    fixturePosition: number;
+    materialQty_g: number;
+    materialQty_mL: number;
+    materialType: string;
+    numRefills: number;
+    pouringTimeSec: number;
+}
+export enum ActionTypes {
+    NONE = 0,
+    CMD = 1,
+    TASK = 2,
+    PROCESS = 3,
+    EXEC_METHOD = 4,
+    SCRIPT = 5,
+}
+export interface TaskData {
+    actionId: number;
+    actionType: ActionTypes;
+    description: string;
+    paramArray: Array<number>;
+    state: number;
+    targetId: number;
+}
 export interface RecipeData {
+    batchAmount_PERC: number;
+    beakers: Array<RecipeDataBeaker>;
     dbId: string;
     index: number;
+    mixingTasks: Array<TaskData>;
+    name: string;
+    robotSpeed_mmPerSec: number;
+    sprayerArcRadiusFromBowlCenterline_mm: number;
+    sprayerTipHeightFromBowlBottom_mm: number;
+    syringeSpeed_mmPerSec: number;
+    updatedOn: string;
 }
 export enum TwoPosDeviceOutputModes {
     MAINTAINED = 0,
@@ -253,12 +287,6 @@ export enum AxisLimitEnforcements {
     ENFORCED = 1,
     UNENFORCED = 2,
 }
-export enum DualAxisStopTypes {
-    NONE = 0,
-    NORMAL = 1,
-    SLAVE_FAULT = 2,
-    MASTER_FAULT = 3,
-}
 export interface AxisInterlockCfgData {
     description: string;
     direction: number;
@@ -294,20 +322,6 @@ export interface RailBrakeInputs {
     railBrake2_CLOSED: boolean;
     railBrake2_ERROR: boolean;
     railBrake2_OPEN: boolean;
-}
-export enum enumRcAxisMode {
-    NONE = 0,
-    STREAMING = 1,
-    WAYPOINT = 2,
-    TORQUEADMIT = 3,
-    WAYPOINT_RELATIVE = 4,
-    HOMING = 5,
-}
-export enum enumRcAxisHomingState {
-    NONE = 0,
-    NOT_HOMED = 1,
-    HOMING = 2,
-    HOMED = 3,
 }
 export enum SM3ErrorSMCERROR {
     SMC_NO_ERROR = 0,
@@ -814,10 +828,7 @@ export interface AxisNonSoftMotionSts {
     atHomePosition: boolean;
     atOperationalPositionMax: boolean;
     atOperationalPositionMin: boolean;
-    axesPositionDifference_CORRECTABLE: boolean;
-    axesPositionDifference_OK: boolean;
     calculatedStoppingPosition: number;
-    cfg: AxisCfg;
     configuredSoftLimitTravelRange: number;
     driveHasError: boolean;
     driveHwLimitsEnforcement: AxisLimitEnforcements;
@@ -826,7 +837,6 @@ export interface AxisNonSoftMotionSts {
     driveStatusMsg: string;
     driveStoppedMotor: boolean;
     driveSwLimitsEnforcement: AxisLimitEnforcements;
-    dualAxisStopType: DualAxisStopTypes;
     etherCatComms_OK: boolean;
     homeOffsetFromZero: number;
     ignoringRailBrakes: boolean;
@@ -845,19 +855,13 @@ export interface AxisNonSoftMotionSts {
     isTorquing: boolean;
     mutingSwAndHwLimitsWhileHoming: boolean;
     permissives: Array<AxisPermissiveStsData>;
-    positionDifference: number;
     railBrakes: RailBrakeInputs;
-    rcControlMode: enumRcAxisMode;
-    rcHomingState: enumRcAxisHomingState;
     recordedPosition: number;
     restrictedToSlow: boolean;
     sensors: Array<boolean>;
     setAccel: number;
-    setJerk: number;
     setPosition: number;
-    setTorque: number;
     setVelocity: number;
-    skippingPositionCorrectionBeforeGearing: boolean;
     softMotionErrorId: SM3ErrorSMCERROR;
     softMotionHasError: boolean;
     targetControllerMode: number;
@@ -877,23 +881,64 @@ export interface AxisNonSoftMotionSts {
 export interface ConCfg {
     placeholder: boolean;
 }
+export enum ConMethods {
+    NONE = 0,
+    UPDATE_PART = 1,
+    TRANSFER_PART = 2,
+    CHANGE_PRIORITY = 3,
+    CLEAR_ALL_PARTS = 4,
+    WRITE_ALL_DEFAULT_RECIPES = 8,
+    UPDATE_PART_VISION_STS = 9,
+    MANUAL_MODE = 10,
+    INITIALIZE_FIXTURE_PART_DATA = 12,
+    UPDATE_MIXING_DATA = 13,
+}
+export interface ConMixingData {
+    activeMixingStep: number;
+    mixingSteps: Array<TaskData>;
+}
+export enum MixingDataUpdates {
+    NONE = 0,
+    INCREASE_INDEX_BY_1 = 1,
+    ADD_STEP = 2,
+    RESTART_MIXING = 9,
+}
+export enum ConProcesses {
+    NONE = 0,
+    CHANGE_JOB = 1,
+    MIXING = 2,
+}
+export enum ConTasks {
+    NONE = 0,
+    MOVE_FIXTURES_TO_LOADING = 1,
+    ADD_BEAKER = 100,
+    RUN_MIXER = 101,
+    WASH_BOWL_THEN_SCRAPE = 102,
+    ADD_ACETONE = 103,
+    REFILL_BEAKER = 104,
+}
+export interface ConMeta {
+    hmiWriteTaskData: TaskData;
+    methods: ConMethods;
+    mixingData: ConMixingData;
+    mixingDataUpdates: MixingDataUpdates;
+    processes: ConProcesses;
+    tasks: ConTasks;
+}
+export enum ConModes {
+    NONE = 0,
+    MIXING = 1,
+    SCREENING = 2,
+    EXTRUDING = 3,
+}
 export interface ConSts {
-    currentClampPosition: number;
-    cutEndingClamp: number;
-    cutEndingPosition: number;
-    cutStartingClamp: number;
-    cutStartingPosition: number;
-    cuttingActive: boolean;
-    dustIsSettling: boolean;
-    dustSettlingTimeRemainingSec: number;
-    sawBladeCutCounter: number;
-    targetCuttingFeedRateDisplay: string;
+    activeMode: ConModes;
 }
 export enum DeviceIds {
-    MIXER = 7,
     SCREENER = 8,
     EXTRUDER = 9,
-    COGNEX = 11,
+    MIXER = 11,
+    COGNEX = 12,
     PADDLE = 14,
     BOWL = 15,
     LIFT = 16,
@@ -906,18 +951,61 @@ export enum DeviceIds {
     DISP = 23,
     SYRINGE = 24,
 }
+export interface DispCfg {
+    pumpPowerBeakerWash_PERC: number;
+    pumpPowerBowlSpray_PERC: number;
+    pumpPowerPrime_PERC: number;
+    pumpPrechargeTime_ms: number;
+    purgeDuration_ms: number;
+}
+export enum DispMethods {
+    NONE = 0,
+    METHOD_NAME_1 = 1,
+    METHOD_NAME_2 = 2,
+}
+export enum DispTasks {
+    NONE = 0,
+    SPRAY_DOSE = 1,
+    PURGE_LINE = 2,
+}
+export interface DispMeta {
+    methods: DispMethods;
+    tasks: DispTasks;
+}
+export interface DispSts {
+    doseEllapsedTimeMs: number;
+    dosePrechargeTimeMs: number;
+    doseSetpointTimeMs: number;
+    isPrimed: boolean;
+    isSpraying: boolean;
+    pumpPwrSetpoint_PERC: number;
+}
+export interface ExtruderCfg {
+    heaterTemperatureTol_degF: number;
+}
+export enum ExtruderMethods {
+    NONE = 0,
+    START_HEATER = 1,
+    STOP_HEATER = 2,
+}
+export enum ExtruderTasks {
+    NONE = 0,
+    START_HEATER = 1,
+}
+export interface ExtruderMeta {
+    methods: ExtruderMethods;
+    tasks: ExtruderTasks;
+}
+export interface ExtruderSts {
+    heaterIsAtTemp: boolean;
+    heaterIsRunning: boolean;
+    heaterSetpointTempDegF: number;
+    heaterState: number;
+    heaterStatusMsg: string;
+}
 export interface HmiCfg {
     hasMultipleKiosks: boolean;
     startingScreen: string;
-}
-export enum ActionTypes {
-    MISSION = 0,
-    CMD = 1,
-    TASK = 2,
-    PROCESS = 3,
-    EXEC_METHOD = 4,
-    SCRIPT = 5,
-    COUNT = 6,
 }
 export interface DeviceActionRequestData {
     actionId: number;
@@ -1211,11 +1299,18 @@ export interface AxisInputs {
     brakes: RailBrakeInputs;
     sensors: Array<boolean>;
 }
+export interface ExtruderInputs {
+    heaterTemp_degF: number;
+}
 export interface RobInputs {
     beakersPresent: Array<boolean>;
     dispenserTool_PRESENT: boolean;
     extruderTool_PRESENT: boolean;
     gripperTool_PRESENT: boolean;
+}
+export interface ScreenerInputs {
+    accessDoorLocked: boolean;
+    pressureSwSCP: boolean;
 }
 export interface SftyInputs {
     cartSw1: boolean;
@@ -1241,18 +1336,22 @@ export interface SftyInputs {
     safetyControllerStatusMsg: string;
 }
 export interface SysInputs {
-    placeholder: boolean;
+    cartProxSw1: boolean;
+    cartProxSw2: boolean;
+    pressureSwECP: boolean;
 }
 export interface inputs {
     BLEED: TwoPosInputs;
     BOWL: AxisInputs;
     EOAT: TwoPosInputs;
+    EXTRUDER: ExtruderInputs;
     GRIP: TwoPosInputs;
     LIFT: TwoPosInputs;
     PADDLE: AxisInputs;
     PISTON_B: AxisInputs;
     PISTON_T: AxisInputs;
     ROB: RobInputs;
+    SCREENER: ScreenerInputs;
     SFTY: SftyInputs;
     SYRINGE: AxisInputs;
     SYS: SysInputs;
@@ -1282,6 +1381,53 @@ export interface JobData {
     workInstruction: string;
     workOrderId: string;
 }
+export interface MixerCfg {
+    bowlPositionAtBeakerDump_DEG: number;
+    bowlPositionAtBowlWashdown_DEG: number;
+    paddlePositionAtBeakerDump_DEG: number;
+    paddlePositionAtBowlWashdown_DEG: number;
+}
+export enum MixerMethods {
+    NONE = 0,
+    ADD_MIXING_TIME = 1,
+}
+export enum MixerProcesses {
+    NONE = 0,
+    PROCESS_NAME_1 = 1,
+    PROCESS_NAME_2 = 2,
+}
+export enum MixerPoses {
+    NONE = 0,
+    BEAKER_DUMP = 1,
+    BOWL_WASHDOWN = 2,
+}
+export enum MixerTasks {
+    NONE = 0,
+    MOVE_TO_POSE = 1,
+    MIX = 2,
+}
+export interface MixerMeta {
+    methods: MixerMethods;
+    processes: MixerProcesses;
+    targetPose: MixerPoses;
+    tasks: MixerTasks;
+}
+export enum MixingModes {
+    NONE = 0,
+    TIMED = 1,
+    TORQUE_UNLIMITED_TIME = 10,
+    TORQUE_LIMITED_TIME = 11,
+}
+export interface MixerSts {
+    inBeakerDumpPose: boolean;
+    inBowlWashdownPosition: boolean;
+    isMixing: boolean;
+    mixingElapsedTimeSec: number;
+    mixingMode: MixingModes;
+    mixingSetpointTimeSec: number;
+    paddleTorqueFiltered_PERC: number;
+    paddleTorqueSetpoint_PERC: number;
+}
 export interface TwoPosOutputs {
     outA: boolean;
     outB: boolean;
@@ -1289,15 +1435,12 @@ export interface TwoPosOutputs {
 export interface ConOutputs_00225 {
     timerStartRelay: boolean;
 }
-export interface StrainGaugeInputs {
-    calbrationNextStepReq: boolean;
-    calibrateReq: boolean;
-    referenceWeight_g: number;
-    sampleReq: boolean;
-    tareReq: boolean;
+export interface DispOutputs {
+    flowValve_ON: boolean;
+    pumpPwr_PERC: number;
 }
-export interface RobOutputs {
-    loadCell: StrainGaugeInputs;
+export interface ExtruderOutputs {
+    heater_ON: boolean;
 }
 export interface SftyOutputs {
     bypassCartInputs: boolean;
@@ -1312,65 +1455,52 @@ export interface SftyOutputs {
 export interface outputs {
     BLEED: TwoPosOutputs;
     CON: ConOutputs_00225;
+    DISP: DispOutputs;
     EOAT: TwoPosOutputs;
+    EXTRUDER: ExtruderOutputs;
     GRIP: TwoPosOutputs;
     LIFT: TwoPosOutputs;
-    ROB: RobOutputs;
     SFTY: SftyOutputs;
 }
-export enum PartStates_00225 {
-    EMPTY = 0,
-    UNVALIDATEDRAW = 10,
-    RAW = 20,
-    CUTTING = 31,
-    CUT = 40,
-    SCRAPPED = 900,
-    FAILED = 911,
-    PASSED = 1000,
-}
-export enum PartValidationStates {
+export enum PartLocationIds {
     NONE = 0,
-    SCRAPPED_GENERIC = 1,
-    SCRAPPED_LINER_APPLICATION_STARTED_BUT_NOT_FINISHED = 101,
-    SCRAPPED_LINER_BRUSHING_STARTED_BUT_NOT_FINISHED = 102,
-    SCRAPPED_FAILED_WEIGHT_TOO_LIGHT = 701,
-    SCRAPPED_FAILED_WEIGHT_TOO_HEAVY = 702,
-    SCRAPPED_FAILED_IMAGE_REVIEW_GENERAL = 800,
-    SCRAPPED_FAILED_IMAGE_REVIEW_GAPS_IN_SMEAR = 801,
-    SCRAPPED_FAILED_IMAGE_REVIEW_BUBBLES = 802,
-    PASSED = 1000,
+    FIXTURE_P1 = 1,
+    FIXTURE_P2 = 2,
+    FIXTURE_P3 = 3,
+    FIXTURE_P4 = 4,
+    FIXTURE_P5 = 5,
+    FIXTURE_P6 = 6,
+    ROBOT_GRIPPER = 7,
+    LOST = 8,
+}
+export enum PartStates {
+    NONE = 0,
+    FULL = 20,
+    STARTED_DRY_DUMPING = 21,
+    DRY_DUMPED = 30,
+    STARTED_WASHING = 31,
+    WASHED = 40,
+    STARTED_WET_DUMPING = 41,
+    WET_DUMPED = 50,
+    FAILED = 911,
+    DONE = 1000,
 }
 export interface PartValidationData {
-    linerWeight_g: number;
-    postWeight_g: number;
-    preWeight_g: number;
-    serialNumber: string;
-    statusMsg: string;
-    timestampVision_sec: number;
-    visionSts: PartValidationStates;
-    weightSts: PartValidationStates;
+    actualAcetoneDose_mL: number;
+    materialQty_g: number;
+    materialType: string;
+    refillCount: number;
 }
 export interface PartData {
-    fixtureLocationWhenLoaded: number;
+    fixtureLocationWhenLoaded: PartLocationIds;
     inFixture: boolean;
     loadedBadSensor: boolean;
-    processSts: PartStates_00225;
+    processSts: PartStates;
     validation: PartValidationData;
 }
 export interface PartDataStatus {
-    allClampsAreEmpty: boolean;
-    allLoadedPartsAreRaw: boolean;
-    allLoadedPartsAreRawOrCut: boolean;
-    firstClampId: number;
-    lastClampId: number;
-    lowestPartStatus: PartStates_00225;
-    maxAllowedPartsToCut: number;
-    numPartsToCut: number;
     parts: Array<PartData>;
-}
-export interface RecipeStore {
-    numRecipes: number;
-    recipes: Array<RecipeData>;
+    robotIsEmpty: boolean;
 }
 export interface RobCfg {
     placeholder: boolean;
@@ -1382,52 +1512,115 @@ export interface AdjustedSetpoint {
     robotZOffset: number;
     stepperSpeed: number;
 }
+export enum RobMethods {
+    NONE = 0,
+    SET_SQUEEGEE_CALIBRATION_DATA = 1,
+    SET_APPLICATOR_PRIMED_STATUS = 2,
+    LOAD_FACTORY_GRIPPER_CALIBRATION = 3,
+}
+export enum RobTasks {
+    NONE = 0,
+    RETRIEVE_TOOL = 1,
+    RETURN_TOOL = 2,
+    PICK_BEAKER = 3,
+    GOTO_WAYPOINT = 4,
+    POUR_BEAKER = 5,
+    SPRAY_BOWL = 6,
+    EXTRUDE_PLATE = 7,
+    PLACE_BEAKER = 8,
+    AUTO_RECOVER = 9,
+    WASH_BEAKER = 10,
+    PRIME_DISPENSER = 11,
+}
 export interface RobMeta {
     adjustedSetpoints: Array<AdjustedSetpoint>;
     applicatorSqueegeeMidlineOffset: number;
+    methods: RobMethods;
+    tasks: RobTasks;
 }
-export interface StrainGaugeSts {
-    calibOffset: number;
-    calibScaleFactor: number;
-    currentValue: number;
-    rawValue: number;
-    sampledStdDev: number;
-    sampledValue: number;
-    sampledValueRaw: number;
-    state: number;
-    statusMsg: string;
-    tareOffset: number;
-    unit: string;
+export enum RobProcesses {
+    NONE = 0,
+    CALIBRATE_SQUEEGEE = 1,
+}
+export enum RobTools {
+    NONE = 0,
+    TEACH_TIP = 1,
+    GRIPPER = 2,
+    DISPENSER = 3,
+    EXTRUDER = 4,
+}
+export enum RobZones {
+    UNKNOWN = 0,
+    HOME = 1,
+    FIXTURE_ZONE = 1000,
+    TOOL_STATION_ZONE = 2000,
+    MIXER_ZONE = 3000,
+    EXTRUSION_PLATE_ZONE = 4000,
+}
+export enum RobWaypoints {
+    NONE = 0,
+    HOME = 1,
+    FIXTURE_PERCH = 1000,
+    TOOL_PERCH = 2000,
+    MIXER_GRIPPER_PERCH = 3000,
+    MIXER_APPROACH = 3100,
+    MIXER_POUR = 3200,
+    MIXER_SPRAYER_PERCH = 4000,
+    MIXER_SPRAY = 4100,
+    EXTRUSION_PLATE_PERCH = 5000,
 }
 export interface RobSts {
-    activeToolDeviceId: number;
-    activeToolId: number;
-    actualApplicatorZPositionRFB: number;
-    actualApplicatorZVelocityRFB: number;
+    activeMethod: RobMethods;
+    activeProcess: RobProcesses;
+    activeTask: RobTasks;
+    activeToolDeviceId: DeviceIds;
+    activeToolId: RobTools;
     actualPosition: RobPositionData;
-    actualRobotZPositionRFB: number;
     actualWaypoint: number;
-    actualZone: number;
-    applicatorHasBeenPrimed: boolean;
-    applicatorIsDirty: boolean;
-    applyLinerStartSetpointMovesReq: boolean;
+    actualZone: RobZones;
     autoRecoveryNeeded: boolean;
     autoRecoveryOk: boolean;
-    cameraIsRecording: boolean;
-    gripperIsCalibrated: boolean;
-    lastCrossedApplyLinerSetpointId: number;
-    lastRecordedLoadCellValue_g: number;
-    loadCellCurrentValue_g: number;
-    loadCellSts: StrainGaugeSts;
-    moveToNextSetpointOK: boolean;
-    squeegeeCalibrationOffset: number;
-    squeegeeIsCalibrated: boolean;
-    squeegeeIsHomed: boolean;
-    targetWaypoint: number;
-    unclampPartDone: boolean;
-    visionIsCalibrated: boolean;
-    weighTubeTareDone: boolean;
-    weighTubeWeighDone: boolean;
+    syringeIsHomed: boolean;
+    targetWaypoint: RobWaypoints;
+}
+export interface ActionButton {
+    actionId: number;
+    actionType: ActionTypes;
+    color: string;
+    isExpertOnly: boolean;
+    isManualOnly: boolean;
+    label: string;
+    param0: number;
+    param1: number;
+    param2: number;
+}
+export interface ScreenerCfg {
+    actionButtons: Array<ActionButton>;
+}
+export interface ScreenerMeta {
+    placeholder: boolean;
+}
+export enum ScreenStates {
+    NONE = 0,
+    READY_FOR_LOADING = 10,
+    LOADED = 20,
+    STARTED_TRANSFERING_DOWN_1 = 21,
+    TRANSFERED_DOWN_1 = 30,
+    STARTED_BLEED_1 = 101,
+    BLED_1 = 110,
+    STARTED_TRANSFERING_UP_1 = 111,
+    TRANSFERED_UP_1 = 120,
+    STARTED_TRANSFERING_DOWN_2 = 121,
+    TRANSFERED_DOWN_2 = 130,
+    STARTED_BLEED_2 = 201,
+    BLED_2 = 210,
+    READY_FOR_UNLOADING = 1000,
+}
+export interface ScreenerSts {
+    bleedOffsetPosition: number;
+    inLoadingPose: boolean;
+    lastMotorPostionDuringTransfer: number;
+    screenState: ScreenStates;
 }
 export interface SftyCfg {
     numOfDoors: number;
@@ -1436,95 +1629,21 @@ export interface SftySts {
     controllerHasError: boolean;
     controllerIsRunning: boolean;
 }
-export interface AxisSimpleSts {
-    activeStreamType: number;
-    actualAcceleration: number;
-    actualControllerMode: number;
-    actualCurrent: number;
-    actualMasterAxisDevId: number;
-    actualPosition: number;
-    actualTorque: number;
-    actualVelocity: number;
-    atHomePosition: boolean;
-    atOperationalPositionMax: boolean;
-    atOperationalPositionMin: boolean;
-    axesPositionDifference_CORRECTABLE: boolean;
-    axesPositionDifference_OK: boolean;
-    calculatedStoppingPosition: number;
-    configuredSoftLimitTravelRange: number;
-    driveHasError: boolean;
-    driveHwLimitsEnforcement: AxisLimitEnforcements;
-    driveIsStoppingMotor: boolean;
-    driveState: number;
-    driveStatusMsg: string;
-    driveStoppedMotor: boolean;
-    driveSwLimitsEnforcement: AxisLimitEnforcements;
-    dualAxisStopType: DualAxisStopTypes;
-    etherCatComms_OK: boolean;
-    homeOffsetFromZero: number;
-    ignoringRailBrakes: boolean;
-    interlocks: AxisInterlocks;
-    isAtPosAndStandstill: boolean;
-    isEnabled: boolean;
-    isGeared: boolean;
-    isHomed: boolean;
-    isHoming: boolean;
-    isJogging: boolean;
-    isMastered: boolean;
-    isMoving: boolean;
-    isStandstill: boolean;
-    isStreaming: boolean;
-    isTorquing: boolean;
-    mutingSwAndHwLimitsWhileHoming: boolean;
-    permissives: Array<AxisPermissiveStsData>;
-    positionDifference: number;
-    railBrakes: RailBrakeInputs;
-    recordedPosition: number;
-    restrictedToSlow: boolean;
-    sensors: Array<boolean>;
-    setAccel: number;
-    setJerk: number;
-    setPosition: number;
-    setTorque: number;
-    setVelocity: number;
-    skippingPositionCorrectionBeforeGearing: boolean;
-    softMotionErrorId: SM3ErrorSMCERROR;
-    softMotionHasError: boolean;
-    targetControllerMode: number;
-    targetDir: number;
-    targetEncoderSetpoint: number;
-    targetMasterAxisDevId: number;
-    targetMaxCurrent: number;
-    targetMotionProfileData: AxisMotionProfileData;
-    targetMotionProfileId: number;
-    targetPosition: number;
-    targetSetpoint: number;
-    targetTorque: number;
-    targetVelocity: number;
-    travelLimitNegative: number;
-    travelLimitPositive: number;
-}
 export interface SysCfg {
     placeholder: boolean;
 }
 export interface SysSts {
     placeholder: boolean;
 }
-export interface TaskData {
-    actionId: number;
-    actionType: ActionTypes;
-    description: string;
-    paramArray: Array<number>;
-    state: number;
-    targetId: number;
-}
-export enum Priorities_00225 {
+export enum Priorities {
     NONE = 0,
     ACTIVATE_RECIPE = 3,
     ENTER_JOB_DATA = 6,
     LOAD_PARTS = 10,
     ENTER_BATCH_DATA = 11,
-    START_CUT = 20,
+    MIX = 20,
+    SCREEN = 30,
+    EXTRUDE = 40,
     SAVE_BATCH_DATA = 80,
     UNLOAD_PARTS = 85,
     DONE = 1000,
@@ -1533,7 +1652,7 @@ export interface TaskQueue {
     activeTaskIndex: number;
     taskCnt: number;
     taskList: Array<TaskData>;
-    topPriority: Priorities_00225;
+    topPriority: Priorities;
 }
 export interface UdpInterfaceCfg {
     last3DigitsOfIpcIpAddr: number;
@@ -1567,7 +1686,9 @@ export interface CameraStatus {
     videoDeviceNodeString: string;
 }
 export interface CameraCfg {
+    hwPort: string;
     id: number;
+    name: string;
     serialNumber: string;
     streamingPort: number;
 }
@@ -1575,7 +1696,12 @@ export interface VisCfg {
     autoConnect: boolean;
     autoStream: boolean;
     cameraCfgs: Array<CameraCfg>;
+    connectionSearchType: string;
+    deviceId: number;
+    disconnectOthersOnConnectRequest: boolean;
+    fps: number;
     numCameras: number;
+    visionDeviceTopicPath: string;
 }
 export interface IExtServiceInputs {
     activeTaskId: number;
@@ -1623,10 +1749,17 @@ export type Machine = {
     bowlCfg: AxisCfg;
     bowlSts: AxisNonSoftMotionSts;
     conCfg: ConCfg;
+    conMeta: ConMeta;
     conSts: ConSts;
-    devicesIds_00225: DeviceIds;
+    devicesIds_00254: DeviceIds;
+    dispCfg: DispCfg;
+    dispMeta: DispMeta;
+    dispSts: DispSts;
     eoatCfg: TwoPosCfg;
     eoatSts: TwoPosSts;
+    extruderCfg: ExtruderCfg;
+    extruderMeta: ExtruderMeta;
+    extruderSts: ExtruderSts;
     gripCfg: TwoPosCfg;
     gripSts: TwoPosSts;
     hmiCfg: HmiCfg;
@@ -1635,6 +1768,9 @@ export type Machine = {
     job: JobData;
     liftCfg: TwoPosCfg;
     liftSts: TwoPosSts;
+    mixerCfg: MixerCfg;
+    mixerMeta: MixerMeta;
+    mixerSts: MixerSts;
     outputs: outputs;
     paddleCfg: AxisCfg;
     paddleSts: AxisNonSoftMotionSts;
@@ -1643,14 +1779,16 @@ export type Machine = {
     piston_bSts: AxisNonSoftMotionSts;
     piston_tCfg: AxisCfg;
     piston_tSts: AxisNonSoftMotionSts;
-    recipeStore: RecipeStore;
     robCfg: RobCfg;
     robMeta: RobMeta;
     robSts: RobSts;
+    screenerCfg: ScreenerCfg;
+    screenerMeta: ScreenerMeta;
+    screenerSts: ScreenerSts;
     sftyCfg: SftyCfg;
     sftySts: SftySts;
     syringeCfg: AxisCfg;
-    syringeSts: AxisSimpleSts;
+    syringeSts: AxisNonSoftMotionSts;
     sysCfg: SysCfg;
     sysSts: SysSts;
     taskQueue: TaskQueue;
@@ -1670,10 +1808,17 @@ export type MachineTypeRoot = {
     bowlCfg: AxisCfg;
     bowlSts: AxisNonSoftMotionSts;
     conCfg: ConCfg;
+    conMeta: ConMeta;
     conSts: ConSts;
-    devicesIds_00225: DeviceIds;
+    devicesIds_00254: DeviceIds;
+    dispCfg: DispCfg;
+    dispMeta: DispMeta;
+    dispSts: DispSts;
     eoatCfg: TwoPosCfg;
     eoatSts: TwoPosSts;
+    extruderCfg: ExtruderCfg;
+    extruderMeta: ExtruderMeta;
+    extruderSts: ExtruderSts;
     gripCfg: TwoPosCfg;
     gripSts: TwoPosSts;
     hmiCfg: HmiCfg;
@@ -1682,6 +1827,9 @@ export type MachineTypeRoot = {
     job: JobData;
     liftCfg: TwoPosCfg;
     liftSts: TwoPosSts;
+    mixerCfg: MixerCfg;
+    mixerMeta: MixerMeta;
+    mixerSts: MixerSts;
     outputs: outputs;
     paddleCfg: AxisCfg;
     paddleSts: AxisNonSoftMotionSts;
@@ -1690,14 +1838,16 @@ export type MachineTypeRoot = {
     piston_bSts: AxisNonSoftMotionSts;
     piston_tCfg: AxisCfg;
     piston_tSts: AxisNonSoftMotionSts;
-    recipeStore: RecipeStore;
     robCfg: RobCfg;
     robMeta: RobMeta;
     robSts: RobSts;
+    screenerCfg: ScreenerCfg;
+    screenerMeta: ScreenerMeta;
+    screenerSts: ScreenerSts;
     sftyCfg: SftyCfg;
     sftySts: SftySts;
     syringeCfg: AxisCfg;
-    syringeSts: AxisSimpleSts;
+    syringeSts: AxisNonSoftMotionSts;
     sysCfg: SysCfg;
     sysSts: SysSts;
     taskQueue: TaskQueue;

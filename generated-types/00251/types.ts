@@ -5,7 +5,7 @@
 export const machineTypeSource = {
     "controllerName": "CODESYS Control for Linux SL",
     "endpoint": "opc.tcp://127.0.0.1:4840",
-    "generatedAt": "2026-07-22T22:03:52.645Z",
+    "generatedAt": "2026-09-14T15:07:00.643Z",
     "rootNodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00251",
     "rootTag": "Machine_00251"
 } as const;

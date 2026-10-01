@@ -5,7 +5,7 @@
 export const machineTypeSource = {
     "controllerName": "CODESYS Control for Linux SL",
     "endpoint": "opc.tcp://127.0.0.1:4840",
-    "generatedAt": "2026-09-04T20:42:08.525Z",
+    "generatedAt": "2026-10-01T16:32:46.351Z",
     "rootNodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00254",
     "rootTag": "Machine_00254"
 } as const;
@@ -58,7 +58,7 @@ export interface AbbDataInputsV2 {
     tcpRotP: number;
     tcpRotR: number;
     tcpRotW: number;
-    tcPSpeed: number;
+    tcpSpeed: number;
     toolControlReq: number;
     uniqueActionActiveId: number;
     uniquePlcReqId: number;
@@ -109,8 +109,28 @@ export interface AbbControllerInterfaceV2 {
     i: AbbInputsV2;
     o: AbbOutputsV2;
 }
+export enum RctrlMethods {
+    NONE = 0,
+    JOG = 1,
+    MOVE_ABS = 2,
+    SET_TOOL = 3,
+    UNSAFE_MOVE_TO_WAYPOINT = 4,
+    BUMP_MOVE = 5,
+}
+export enum RctrlProcesses {
+    NONE = 0,
+}
+export enum RctrlTasks {
+    NONE = 0,
+    UNSAFE_MOVE_TO_WAYPOINT = 1,
+    PASSTHROUGH_TASK = 2,
+    GOTO_WAYPOINT = 4,
+}
 export interface AbbMeta {
     iController: AbbControllerInterfaceV2;
+    methods: RctrlMethods;
+    processes: RctrlProcesses;
+    tasks: RctrlTasks;
 }
 export interface RobPositionData {
     pdeg: number;
@@ -137,6 +157,19 @@ export interface RctrlSts {
     targetPosition: RobPositionData;
     targetWaypoint: number;
 }
+export interface RecipeExtrudingData {
+    dbId: string;
+    dieDiameter_in: number;
+    heaterTempSetpoint_degF: number;
+    lineLength_in: number;
+    lineSpacing_in: number;
+    mandrelDiameter_in: number;
+    name: string;
+    numLines: number;
+    robotSpeed_mmPerSec: number;
+    syringeSpeed_mmPerSec: number;
+    updatedOn: string;
+}
 export interface RecipeDataBeaker {
     fixturePosition: number;
     materialQty_g: number;
@@ -161,18 +194,18 @@ export interface TaskData {
     state: number;
     targetId: number;
 }
-export interface RecipeData {
-    batchAmount_PERC: number;
+export interface RecipeMixingData {
     beakers: Array<RecipeDataBeaker>;
     dbId: string;
     index: number;
     mixingTasks: Array<TaskData>;
     name: string;
-    robotSpeed_mmPerSec: number;
     sprayerArcRadiusFromBowlCenterline_mm: number;
-    sprayerTipHeightFromBowlBottom_mm: number;
-    syringeSpeed_mmPerSec: number;
     updatedOn: string;
+}
+export interface RecipeData {
+    extruding: RecipeExtrudingData;
+    mixing: RecipeMixingData;
 }
 export enum TwoPosDeviceOutputModes {
     MAINTAINED = 0,
@@ -199,10 +232,12 @@ export interface TwoPosCfg {
     outputMode: TwoPosDeviceOutputModes;
     sensorMode: TwoPosDeviceSensorModes;
     solPwrNotOnEstopCircuit: boolean;
+    useCustomAirSupply: boolean;
     valveType: TwoPosValveTypes;
 }
 export interface TwoPosSts {
     actualPosition: number;
+    airSupplyOK: boolean;
     atPosA: boolean;
     atPosB: boolean;
     overrideA: boolean;
@@ -907,6 +942,8 @@ export enum ConProcesses {
     NONE = 0,
     CHANGE_JOB = 1,
     MIXING = 2,
+    SCREENING = 3,
+    EXTRUDING = 4,
 }
 export enum ConTasks {
     NONE = 0,
@@ -918,6 +955,7 @@ export enum ConTasks {
     REFILL_BEAKER = 104,
 }
 export interface ConMeta {
+    extrudingData: RecipeExtrudingData;
     hmiWriteTaskData: TaskData;
     methods: ConMethods;
     mixingData: ConMixingData;
@@ -931,8 +969,20 @@ export enum ConModes {
     SCREENING = 2,
     EXTRUDING = 3,
 }
+export enum ExtrudeStates {
+    NONE = 0,
+    READY_FOR_LOADING = 10,
+    SYRINGE_LOADED = 20,
+    READY_FOR_EXTRUDING = 100,
+    STARTED_EXTRUDING = 101,
+    EXTRUDED = 110,
+    SYRINGE_EMPTY = 600,
+    READY_FOR_UNLOADING = 7000,
+}
 export interface ConSts {
     activeMode: ConModes;
+    ellapsedMixerTimeSec: number;
+    extrudeState: ExtrudeStates;
 }
 export enum DeviceIds {
     SCREENER = 8,
@@ -982,6 +1032,29 @@ export interface DispSts {
 }
 export interface ExtruderCfg {
     heaterTemperatureTol_degF: number;
+    syringeSpeedPrime_mmPerSesc: number;
+}
+export interface CognexDataInputs {
+    acqCount: number;
+    actualSlackAngle: number;
+    heartbeatCognex: number;
+    lightBarPresent: number;
+    noddleThickness: number;
+    noodleCount: number;
+    processingTimeMs: number;
+    slackIsValid: number;
+}
+export interface CognexDataOutputs {
+    activeLineNumber: number;
+    heartbeatPLC: number;
+    robotLinePositionMm: number;
+    robotSpeed: number;
+    slackControllerState: number;
+    targetMode: number;
+}
+export interface ICognexData {
+    i: CognexDataInputs;
+    o: CognexDataOutputs;
 }
 export enum ExtruderMethods {
     NONE = 0,
@@ -993,6 +1066,7 @@ export enum ExtruderTasks {
     START_HEATER = 1,
 }
 export interface ExtruderMeta {
+    iCognexData: ICognexData;
     methods: ExtruderMethods;
     tasks: ExtruderTasks;
 }
@@ -1002,6 +1076,7 @@ export interface ExtruderSts {
     heaterSetpointTempDegF: number;
     heaterState: number;
     heaterStatusMsg: string;
+    newVisionResult: boolean;
 }
 export interface HmiCfg {
     hasMultipleKiosks: boolean;
@@ -1304,9 +1379,8 @@ export interface ExtruderInputs {
 }
 export interface RobInputs {
     beakersPresent: Array<boolean>;
-    dispenserTool_PRESENT: boolean;
-    extruderTool_PRESENT: boolean;
-    gripperTool_PRESENT: boolean;
+    dispenser_PRESENT: boolean;
+    gripperOrExtruderTool_PRESENT: boolean;
 }
 export interface ScreenerInputs {
     accessDoorLocked: boolean;
@@ -1389,7 +1463,7 @@ export interface MixerCfg {
 }
 export enum MixerMethods {
     NONE = 0,
-    ADD_MIXING_TIME = 1,
+    MODIFY_MIXING = 1,
 }
 export enum MixerProcesses {
     NONE = 0,
@@ -1425,6 +1499,7 @@ export interface MixerSts {
     mixingElapsedTimeSec: number;
     mixingMode: MixingModes;
     mixingSetpointTimeSec: number;
+    mixingTimeLeftSec: number;
     paddleTorqueFiltered_PERC: number;
     paddleTorqueSetpoint_PERC: number;
 }
@@ -1441,6 +1516,9 @@ export interface DispOutputs {
 }
 export interface ExtruderOutputs {
     heater_ON: boolean;
+}
+export interface ScreenerOutputs {
+    positiveAir_ON: boolean;
 }
 export interface SftyOutputs {
     bypassCartInputs: boolean;
@@ -1460,6 +1538,7 @@ export interface outputs {
     EXTRUDER: ExtruderOutputs;
     GRIP: TwoPosOutputs;
     LIFT: TwoPosOutputs;
+    SCREENER: ScreenerOutputs;
     SFTY: SftyOutputs;
 }
 export enum PartLocationIds {
@@ -1503,20 +1582,25 @@ export interface PartDataStatus {
     robotIsEmpty: boolean;
 }
 export interface RobCfg {
-    placeholder: boolean;
-}
-export interface AdjustedSetpoint {
-    moveTimeSec: number;
-    robotMoveTimeSec: number;
-    robotVelocity: number;
-    robotZOffset: number;
-    stepperSpeed: number;
+    maxRobotExtrudeSpeed_mmPerSec: number;
+    minRobotExtrudeSpeed_mmPerSec: number;
+    prePurgeTime_ms: number;
 }
 export enum RobMethods {
     NONE = 0,
-    SET_SQUEEGEE_CALIBRATION_DATA = 1,
+    UPDATE_SLACK_CONTROLLER = 1,
     SET_APPLICATOR_PRIMED_STATUS = 2,
     LOAD_FACTORY_GRIPPER_CALIBRATION = 3,
+}
+export enum RobProcesses {
+    NONE = 0,
+    CALIBRATE_SQUEEGEE = 1,
+}
+export enum SlackControllers {
+    NONE = 0,
+    PI = 1,
+    PID = 2,
+    SMITH = 3,
 }
 export enum RobTasks {
     NONE = 0,
@@ -1533,14 +1617,17 @@ export enum RobTasks {
     PRIME_DISPENSER = 11,
 }
 export interface RobMeta {
-    adjustedSetpoints: Array<AdjustedSetpoint>;
-    applicatorSqueegeeMidlineOffset: number;
+    lineDoses_mlPerMeter: Array<number>;
     methods: RobMethods;
+    processes: RobProcesses;
+    robotSpeedAtLineEnd: Array<number>;
+    slackController_kd: number;
+    slackController_ki: number;
+    slackController_kp: number;
+    slackController_modelGain: number;
+    slackController_type: SlackControllers;
     tasks: RobTasks;
-}
-export enum RobProcesses {
-    NONE = 0,
-    CALIBRATE_SQUEEGEE = 1,
+    useSlackController: boolean;
 }
 export enum RobTools {
     NONE = 0,
@@ -1570,17 +1657,30 @@ export enum RobWaypoints {
     EXTRUSION_PLATE_PERCH = 5000,
 }
 export interface RobSts {
-    activeMethod: RobMethods;
-    activeProcess: RobProcesses;
-    activeTask: RobTasks;
     activeToolDeviceId: DeviceIds;
     activeToolId: RobTools;
     actualPosition: RobPositionData;
+    actualRobotLine: number;
+    actualRobotLinePosition_mm: number;
+    actualRobotLineSpeed_mmPerSec: number;
+    actualSlackAngle: number;
     actualWaypoint: number;
     actualZone: RobZones;
     autoRecoveryNeeded: boolean;
     autoRecoveryOk: boolean;
+    extruderIsPrimed: boolean;
+    extruderRemainingMaterial_PERC: number;
+    extrudeState: ExtrudeStates;
+    lastLineDosage_mlPerMeter: number;
+    modulatedRobotSpeed_mmPerSec: number;
+    newVisionResult: boolean;
+    nominalRobotSpeed_mmPerSec: number;
+    rawSlackAngle: number;
+    slackControllerIntegralTerm: number;
+    slackControllerState: number;
+    slackError: number;
     syringeIsHomed: boolean;
+    targetSlackAngle: number;
     targetWaypoint: RobWaypoints;
 }
 export interface ActionButton {
@@ -1597,8 +1697,25 @@ export interface ActionButton {
 export interface ScreenerCfg {
     actionButtons: Array<ActionButton>;
 }
+export enum ScreenerMethods {
+    NONE = 0,
+    UPDATE_STATE = 1,
+}
+export enum ScreenerProcesses {
+    NONE = 0,
+    PROCESS_NAME_1 = 1,
+    PROCESS_NAME_2 = 2,
+}
+export enum ScreenerTasks {
+    NONE = 0,
+    PREP_FOR_LOAD = 1,
+    BLEED = 2,
+    TRANSFER = 3,
+}
 export interface ScreenerMeta {
-    placeholder: boolean;
+    methods: ScreenerMethods;
+    processes: ScreenerProcesses;
+    tasks: ScreenerTasks;
 }
 export enum ScreenStates {
     NONE = 0,
@@ -1619,6 +1736,7 @@ export enum ScreenStates {
 export interface ScreenerSts {
     bleedOffsetPosition: number;
     inLoadingPose: boolean;
+    isBleeding: boolean;
     lastMotorPostionDuringTransfer: number;
     screenState: ScreenStates;
 }

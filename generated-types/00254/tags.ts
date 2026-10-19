@@ -3401,8 +3401,8 @@ export const machineTags: MachineTagNode = {
         ConCfg: {
             tag: "Machine_00254.ConCfg",
             children: {
-                placeholder: {
-                    tag: "Machine_00254.ConCfg.placeholder",
+                ExperimentExtrudePlateNumLines: {
+                    tag: "Machine_00254.ConCfg.ExperimentExtrudePlateNumLines",
                 },
             } as const,
         },
@@ -5174,6 +5174,9 @@ export const machineTags: MachineTagNode = {
                 Processes: {
                     tag: "Machine_00254.ConMeta.Processes",
                 },
+                TargetExtrudePlateType: {
+                    tag: "Machine_00254.ConMeta.TargetExtrudePlateType",
+                },
                 Tasks: {
                     tag: "Machine_00254.ConMeta.Tasks",
                 },
@@ -5185,11 +5188,26 @@ export const machineTags: MachineTagNode = {
                 activeMode: {
                     tag: "Machine_00254.ConSts.activeMode",
                 },
+                allBeakerSensorsAreOff: {
+                    tag: "Machine_00254.ConSts.allBeakerSensorsAreOff",
+                },
+                allowMixingModifications: {
+                    tag: "Machine_00254.ConSts.allowMixingModifications",
+                },
                 ellapsedMixerTimeSec: {
                     tag: "Machine_00254.ConSts.ellapsedMixerTimeSec",
                 },
+                extruderStartingOffset: {
+                    tag: "Machine_00254.ConSts.extruderStartingOffset",
+                },
                 extrudeState: {
                     tag: "Machine_00254.ConSts.extrudeState",
+                },
+                mixerInLoadingPose: {
+                    tag: "Machine_00254.ConSts.mixerInLoadingPose",
+                },
+                mixState: {
+                    tag: "Machine_00254.ConSts.mixState",
                 },
             } as const,
         },
@@ -8587,8 +8605,8 @@ export const machineTags: MachineTagNode = {
                 SCREENER: {
                     tag: "Machine_00254.inputs.SCREENER",
                     children: {
-                        AccessDoorLocked: {
-                            tag: "Machine_00254.inputs.SCREENER.AccessDoorLocked",
+                        ClampsAreLocked: {
+                            tag: "Machine_00254.inputs.SCREENER.ClampsAreLocked",
                         },
                         PressureSwSCP: {
                             tag: "Machine_00254.inputs.SCREENER.PressureSwSCP",
@@ -8893,6 +8911,9 @@ export const machineTags: MachineTagNode = {
             children: {
                 Methods: {
                     tag: "Machine_00254.MixerMeta.Methods",
+                },
+                MixingModifications: {
+                    tag: "Machine_00254.MixerMeta.MixingModifications",
                 },
                 Processes: {
                     tag: "Machine_00254.MixerMeta.Processes",
@@ -10139,40 +10160,6 @@ export const machineTags: MachineTagNode = {
                                         },
                                         refillCount: {
                                             tag: "Machine_00254.PdmSts.Parts[1].Validation.refillCount",
-                                        },
-                                    } as const,
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.PdmSts.Parts[10]",
-                            children: {
-                                FixtureLocationWhenLoaded: {
-                                    tag: "Machine_00254.PdmSts.Parts[10].FixtureLocationWhenLoaded",
-                                },
-                                InFixture: {
-                                    tag: "Machine_00254.PdmSts.Parts[10].InFixture",
-                                },
-                                LoadedBadSensor: {
-                                    tag: "Machine_00254.PdmSts.Parts[10].LoadedBadSensor",
-                                },
-                                ProcessSts: {
-                                    tag: "Machine_00254.PdmSts.Parts[10].ProcessSts",
-                                },
-                                Validation: {
-                                    tag: "Machine_00254.PdmSts.Parts[10].Validation",
-                                    children: {
-                                        actualAcetoneDose_mL: {
-                                            tag: "Machine_00254.PdmSts.Parts[10].Validation.actualAcetoneDose_mL",
-                                        },
-                                        materialQty_g: {
-                                            tag: "Machine_00254.PdmSts.Parts[10].Validation.materialQty_g",
-                                        },
-                                        materialType: {
-                                            tag: "Machine_00254.PdmSts.Parts[10].Validation.materialType",
-                                        },
-                                        refillCount: {
-                                            tag: "Machine_00254.PdmSts.Parts[10].Validation.refillCount",
                                         },
                                     } as const,
                                 },
@@ -12500,6 +12487,9 @@ export const machineTags: MachineTagNode = {
         RobCfg: {
             tag: "Machine_00254.RobCfg",
             children: {
+                DelayDistanceNewLineBeginMm: {
+                    tag: "Machine_00254.RobCfg.DelayDistanceNewLineBeginMm",
+                },
                 MaxRobotExtrudeSpeed_mmPerSec: {
                     tag: "Machine_00254.RobCfg.MaxRobotExtrudeSpeed_mmPerSec",
                 },
@@ -12508,6 +12498,9 @@ export const machineTags: MachineTagNode = {
                 },
                 prePurgeTime_ms: {
                     tag: "Machine_00254.RobCfg.prePurgeTime_ms",
+                },
+                ScreenerToSyringeOffset_mm: {
+                    tag: "Machine_00254.RobCfg.ScreenerToSyringeOffset_mm",
                 },
             } as const,
         },
@@ -12915,6 +12908,9 @@ export const machineTags: MachineTagNode = {
                 AutoRecoveryOk: {
                     tag: "Machine_00254.RobSts.AutoRecoveryOk",
                 },
+                ExtruderIsEmpty: {
+                    tag: "Machine_00254.RobSts.ExtruderIsEmpty",
+                },
                 ExtruderIsPrimed: {
                     tag: "Machine_00254.RobSts.ExtruderIsPrimed",
                 },
@@ -12962,330 +12958,11 @@ export const machineTags: MachineTagNode = {
         ScreenerCfg: {
             tag: "Machine_00254.ScreenerCfg",
             children: {
-                ActionButtons: {
-                    tag: "Machine_00254.ScreenerCfg.ActionButtons",
-                    items: [
-                        {
-                            tag: "Machine_00254.ScreenerCfg.ActionButtons[0]",
-                            children: {
-                                ActionId: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[0].ActionId",
-                                },
-                                ActionType: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[0].ActionType",
-                                },
-                                Color: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[0].Color",
-                                },
-                                isExpertOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[0].isExpertOnly",
-                                },
-                                isManualOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[0].isManualOnly",
-                                },
-                                Label: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[0].Label",
-                                },
-                                Param0: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[0].Param0",
-                                },
-                                Param1: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[0].Param1",
-                                },
-                                Param2: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[0].Param2",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.ScreenerCfg.ActionButtons[1]",
-                            children: {
-                                ActionId: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[1].ActionId",
-                                },
-                                ActionType: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[1].ActionType",
-                                },
-                                Color: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[1].Color",
-                                },
-                                isExpertOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[1].isExpertOnly",
-                                },
-                                isManualOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[1].isManualOnly",
-                                },
-                                Label: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[1].Label",
-                                },
-                                Param0: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[1].Param0",
-                                },
-                                Param1: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[1].Param1",
-                                },
-                                Param2: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[1].Param2",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.ScreenerCfg.ActionButtons[2]",
-                            children: {
-                                ActionId: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[2].ActionId",
-                                },
-                                ActionType: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[2].ActionType",
-                                },
-                                Color: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[2].Color",
-                                },
-                                isExpertOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[2].isExpertOnly",
-                                },
-                                isManualOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[2].isManualOnly",
-                                },
-                                Label: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[2].Label",
-                                },
-                                Param0: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[2].Param0",
-                                },
-                                Param1: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[2].Param1",
-                                },
-                                Param2: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[2].Param2",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.ScreenerCfg.ActionButtons[3]",
-                            children: {
-                                ActionId: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[3].ActionId",
-                                },
-                                ActionType: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[3].ActionType",
-                                },
-                                Color: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[3].Color",
-                                },
-                                isExpertOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[3].isExpertOnly",
-                                },
-                                isManualOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[3].isManualOnly",
-                                },
-                                Label: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[3].Label",
-                                },
-                                Param0: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[3].Param0",
-                                },
-                                Param1: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[3].Param1",
-                                },
-                                Param2: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[3].Param2",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.ScreenerCfg.ActionButtons[4]",
-                            children: {
-                                ActionId: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[4].ActionId",
-                                },
-                                ActionType: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[4].ActionType",
-                                },
-                                Color: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[4].Color",
-                                },
-                                isExpertOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[4].isExpertOnly",
-                                },
-                                isManualOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[4].isManualOnly",
-                                },
-                                Label: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[4].Label",
-                                },
-                                Param0: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[4].Param0",
-                                },
-                                Param1: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[4].Param1",
-                                },
-                                Param2: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[4].Param2",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.ScreenerCfg.ActionButtons[5]",
-                            children: {
-                                ActionId: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[5].ActionId",
-                                },
-                                ActionType: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[5].ActionType",
-                                },
-                                Color: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[5].Color",
-                                },
-                                isExpertOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[5].isExpertOnly",
-                                },
-                                isManualOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[5].isManualOnly",
-                                },
-                                Label: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[5].Label",
-                                },
-                                Param0: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[5].Param0",
-                                },
-                                Param1: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[5].Param1",
-                                },
-                                Param2: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[5].Param2",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.ScreenerCfg.ActionButtons[6]",
-                            children: {
-                                ActionId: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[6].ActionId",
-                                },
-                                ActionType: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[6].ActionType",
-                                },
-                                Color: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[6].Color",
-                                },
-                                isExpertOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[6].isExpertOnly",
-                                },
-                                isManualOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[6].isManualOnly",
-                                },
-                                Label: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[6].Label",
-                                },
-                                Param0: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[6].Param0",
-                                },
-                                Param1: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[6].Param1",
-                                },
-                                Param2: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[6].Param2",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.ScreenerCfg.ActionButtons[7]",
-                            children: {
-                                ActionId: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[7].ActionId",
-                                },
-                                ActionType: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[7].ActionType",
-                                },
-                                Color: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[7].Color",
-                                },
-                                isExpertOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[7].isExpertOnly",
-                                },
-                                isManualOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[7].isManualOnly",
-                                },
-                                Label: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[7].Label",
-                                },
-                                Param0: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[7].Param0",
-                                },
-                                Param1: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[7].Param1",
-                                },
-                                Param2: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[7].Param2",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.ScreenerCfg.ActionButtons[8]",
-                            children: {
-                                ActionId: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[8].ActionId",
-                                },
-                                ActionType: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[8].ActionType",
-                                },
-                                Color: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[8].Color",
-                                },
-                                isExpertOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[8].isExpertOnly",
-                                },
-                                isManualOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[8].isManualOnly",
-                                },
-                                Label: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[8].Label",
-                                },
-                                Param0: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[8].Param0",
-                                },
-                                Param1: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[8].Param1",
-                                },
-                                Param2: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[8].Param2",
-                                },
-                            } as const,
-                        },
-                        {
-                            tag: "Machine_00254.ScreenerCfg.ActionButtons[9]",
-                            children: {
-                                ActionId: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[9].ActionId",
-                                },
-                                ActionType: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[9].ActionType",
-                                },
-                                Color: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[9].Color",
-                                },
-                                isExpertOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[9].isExpertOnly",
-                                },
-                                isManualOnly: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[9].isManualOnly",
-                                },
-                                Label: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[9].Label",
-                                },
-                                Param0: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[9].Param0",
-                                },
-                                Param1: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[9].Param1",
-                                },
-                                Param2: {
-                                    tag: "Machine_00254.ScreenerCfg.ActionButtons[9].Param2",
-                                },
-                            } as const,
-                        },
-                    ] as const,
+                PistonBleedSpeed_inPerSec: {
+                    tag: "Machine_00254.ScreenerCfg.PistonBleedSpeed_inPerSec",
+                },
+                PistonTransferSpeed_inPerSec: {
+                    tag: "Machine_00254.ScreenerCfg.PistonTransferSpeed_inPerSec",
                 },
             } as const,
         },
@@ -13306,8 +12983,11 @@ export const machineTags: MachineTagNode = {
         ScreenerSts: {
             tag: "Machine_00254.ScreenerSts",
             children: {
-                bleedOffsetPosition: {
-                    tag: "Machine_00254.ScreenerSts.bleedOffsetPosition",
+                bleedOffsetPosition_IN: {
+                    tag: "Machine_00254.ScreenerSts.bleedOffsetPosition_IN",
+                },
+                bottomPistonHeadPosition: {
+                    tag: "Machine_00254.ScreenerSts.bottomPistonHeadPosition",
                 },
                 inLoadingPose: {
                     tag: "Machine_00254.ScreenerSts.inLoadingPose",
@@ -13320,6 +13000,9 @@ export const machineTags: MachineTagNode = {
                 },
                 screenState: {
                     tag: "Machine_00254.ScreenerSts.screenState",
+                },
+                topPistonHeadPosition: {
+                    tag: "Machine_00254.ScreenerSts.topPistonHeadPosition",
                 },
             } as const,
         },

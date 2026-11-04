@@ -9,7 +9,7 @@ Generate or refresh a machine folder with:
 
 `npm run generate-types -- <machineId>`
 
-When a machine id is provided, the generator writes only that machine's artifacts into its subfolder.
+When a machine id is provided, the generated type schema combines the shared `Machine` root with `Machine_<id>`. The tag artifact keeps the machine-specific root and exposes `Machine` as an additional root, so tag iteration includes both trees.
 
 Example:
 

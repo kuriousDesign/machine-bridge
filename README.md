@@ -2,6 +2,10 @@
 run npm install to install all packages and dependencies
 run npm run dev to launch local server
 
+## Generate Machine Types
+
+Run `npm run generate-types -- 00225` to generate the artifacts for `Machine_00225`. For machine-ID runs, the generator combines the `Machine` and `Machine_<id>` schemas and includes both roots in the generated tag list.
+
 ## SDK Source Switching
 
 This repo can use either the local workspace SDK or a published npm version.

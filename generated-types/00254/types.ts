@@ -5,7 +5,7 @@
 export const machineTypeSource = {
     "controllerName": "CODESYS Control for Linux SL",
     "endpoint": "opc.tcp://127.0.0.1:4840",
-    "generatedAt": "2026-10-19T21:59:49.149Z",
+    "generatedAt": "2026-11-03T16:42:52.597Z",
     "rootNodeId": "ns=4;s=|var|CODESYS Control for Linux SL.Application.Machine_00254",
     "rootTag": "Machine_00254"
 } as const;
@@ -84,6 +84,12 @@ export interface AbbDataOutputsV2 {
     actionParam1: number;
     actionParam2: number;
     actionParam3: number;
+    actionParam4: number;
+    actionParam5: number;
+    actionParam6: number;
+    actionParam7: number;
+    actionParam8: number;
+    actionParam9: number;
     actionType: number;
     currentPartState: number;
     dryCycle: boolean;
@@ -167,6 +173,10 @@ export interface RecipeExtrudingData {
     name: string;
     numLines: number;
     robotSpeed_mmPerSec: number;
+    slackControllerParams: Array<number>;
+    snapLineAngle_deg: number;
+    snapLineLength_mm: number;
+    snapLineSpeed_mmPerSec: number;
     syringeSpeed_mmPerSec: number;
     updatedOn: string;
 }
@@ -1009,6 +1019,26 @@ export interface AxisNonSoftMotionSts {
     travelLimitNegative: number;
     travelLimitPositive: number;
 }
+export enum CellTypes {
+    UNKNOWN = 0,
+    APOLLO_00251_TUBELINER = 101,
+    APOLLO_00225_SAW = 102,
+    APOLLO_00254_TLX = 103,
+}
+export enum SoftwareModes {
+    DEV = 0,
+    PRODUCTION = 1,
+}
+export interface MachineCfg {
+    allowAnonymousControl: boolean;
+    cellType: CellTypes;
+    deviceIsBypassed: Array<boolean>;
+    ethernetAdapterList: Array<number>;
+    firmwareVersion: string;
+    machineId: string;
+    numRegisteredDevices: number;
+    softwareMode: SoftwareModes;
+}
 export interface ConCfg {
     experimentExtrudePlateNumLines: number;
 }
@@ -1089,6 +1119,7 @@ export enum MixStates {
     DONE = 1000,
 }
 export interface ConSts {
+    activeExtrudePlateNumber: number;
     activeMode: ConModes;
     allBeakerSensorsAreOff: boolean;
     allowMixingModifications: boolean;
@@ -1098,103 +1129,36 @@ export interface ConSts {
     mixerInLoadingPose: boolean;
     mixState: MixStates;
 }
-export enum DeviceIds {
-    SCREENER = 8,
-    EXTRUDER = 9,
-    MIXER = 11,
-    COGNEX = 12,
-    PADDLE = 14,
-    BOWL = 15,
-    LIFT = 16,
-    PISTON_T = 17,
-    PISTON_B = 18,
-    BLEED = 19,
-    ABB = 20,
-    EOAT = 21,
-    GRIP = 22,
-    DISP = 23,
-    SYRINGE = 24,
+export interface DebugLogData {
+    id: number;
+    msg: string;
+    timeStamp: bigint | number;
 }
-export interface DispCfg {
-    pumpPowerBeakerWash_PERC: number;
-    pumpPowerBowlSpray_PERC: number;
-    pumpPowerPrime_PERC: number;
-    pumpPrechargeTime_ms: number;
-    purgeDuration_ms: number;
+export interface DeviceLogData {
+    lastIndex: number;
+    list: Array<DebugLogData>;
 }
-export enum DispMethods {
-    NONE = 0,
-    METHOD_NAME_1 = 1,
-    METHOD_NAME_2 = 2,
+export interface ActionButton {
+    actionId: number;
+    actionType: ActionTypes;
+    color: string;
+    isExpertOnly: boolean;
+    isManualOnly: boolean;
+    label: string;
+    param0: number;
+    param1: number;
+    param2: number;
 }
-export enum DispTasks {
-    NONE = 0,
-    SPRAY_DOSE = 1,
-    PURGE_LINE = 2,
+export interface ActionInfo {
+    id: number;
+    name: string;
+    paramTypeList: string;
 }
-export interface DispMeta {
-    methods: DispMethods;
-    tasks: DispTasks;
-}
-export interface DispSts {
-    doseEllapsedTimeMs: number;
-    dosePrechargeTimeMs: number;
-    doseSetpointTimeMs: number;
-    isPrimed: boolean;
-    isSpraying: boolean;
-    pumpPwrSetpoint_PERC: number;
-}
-export interface ExtruderCfg {
-    heaterTemperatureTol_degF: number;
-    syringeSpeedPrime_mmPerSesc: number;
-}
-export interface CognexDataInputs {
-    acqCount: number;
-    actualSlackAngle: number;
-    heartbeatCognex: number;
-    lightBarPresent: number;
-    noddleThickness: number;
-    noodleCount: number;
-    processingTimeMs: number;
-    slackIsValid: number;
-}
-export interface CognexDataOutputs {
-    activeLineNumber: number;
-    heartbeatPLC: number;
-    robotLinePositionMm: number;
-    robotSpeed: number;
-    slackControllerState: number;
-    targetMode: number;
-}
-export interface ICognexData {
-    i: CognexDataInputs;
-    o: CognexDataOutputs;
-}
-export enum ExtruderMethods {
-    NONE = 0,
-    START_HEATER = 1,
-    STOP_HEATER = 2,
-}
-export enum ExtruderTasks {
-    NONE = 0,
-    START_HEATER = 1,
-}
-export interface ExtruderMeta {
-    iCognexData: ICognexData;
-    methods: ExtruderMethods;
-    tasks: ExtruderTasks;
-}
-export interface ExtruderSts {
-    heaterIsAtTemp: boolean;
-    heaterIsRunning: boolean;
-    heaterSetpointTempDegF: number;
-    heaterState: number;
-    heaterStatusMsg: string;
-    newVisionResult: boolean;
-}
-export interface HmiCfg {
-    hasMultipleKiosks: boolean;
-    startingScreen: string;
+export interface DeviceRegisteredActions {
+    actionButtons: Array<ActionButton>;
+    actionList: Array<ActionInfo>;
+    actionType: number;
+    id: number;
 }
 export interface DeviceActionRequestData {
     actionId: number;
@@ -1425,6 +1389,123 @@ export interface Device {
     udp: UdpData;
     warnings: DeviceFaultData;
 }
+export enum DeviceIds {
+    SCREENER = 8,
+    EXTRUDER = 9,
+    MIXER = 11,
+    COGNEX = 12,
+    PADDLE = 14,
+    BOWL = 15,
+    LIFT = 16,
+    PISTON_T = 17,
+    PISTON_B = 18,
+    BLEED = 19,
+    ABB = 20,
+    EOAT = 21,
+    GRIP = 22,
+    DISP = 23,
+    SYRINGE = 24,
+}
+export interface DispCfg {
+    pumpPowerBeakerWash_PERC: number;
+    pumpPowerBowlSpray_PERC: number;
+    pumpPowerPrime_PERC: number;
+    pumpPrechargeTime_ms: number;
+    purgeDuration_ms: number;
+}
+export enum DispMethods {
+    NONE = 0,
+    METHOD_NAME_1 = 1,
+    METHOD_NAME_2 = 2,
+}
+export enum DispTasks {
+    NONE = 0,
+    SPRAY_DOSE = 1,
+    PURGE_LINE = 2,
+}
+export interface DispMeta {
+    methods: DispMethods;
+    tasks: DispTasks;
+}
+export interface DispSts {
+    doseEllapsedTimeMs: number;
+    dosePrechargeTimeMs: number;
+    doseSetpointTimeMs: number;
+    isPrimed: boolean;
+    isSpraying: boolean;
+    pumpPwrSetpoint_PERC: number;
+}
+export interface SystemFaultData {
+    list: Array<FaultData>;
+    present: boolean;
+}
+export interface ExtruderCfg {
+    heaterTemperatureTol_degF: number;
+    syringeSpeedPrime_mmPerSesc: number;
+}
+export interface CognexDataInputs {
+    acqCount: number;
+    actualSlackAngle: number;
+    heartbeatCognex: number;
+    lightBarPresent: number;
+    noddleThickness: number;
+    noodleCount: number;
+    processingTimeMs: number;
+    slackIsValid: number;
+}
+export interface CognexDataOutputs {
+    activeLineNumber: number;
+    heartbeatPLC: number;
+    nozzleCenterpointAngle: number;
+    nozzleCenterpointX: number;
+    nozzleCenterpointy: number;
+    robotLinePositionMm: number;
+    robotSpeed: number;
+    slackControllerState: number;
+    targetMode: number;
+}
+export interface ICognexData {
+    i: CognexDataInputs;
+    o: CognexDataOutputs;
+}
+export enum ExtruderMethods {
+    NONE = 0,
+    START_HEATER = 1,
+    STOP_HEATER = 2,
+    SET_COGNEX_NOZZLE_CENTERPOINT = 3,
+}
+export enum ExtruderTasks {
+    NONE = 0,
+    START_HEATER = 1,
+}
+export interface ExtruderMeta {
+    iCognexData: ICognexData;
+    methods: ExtruderMethods;
+    nozzleCenterpointAngle: number;
+    nozzleCenterpointX: number;
+    nozzleCenterpointY: number;
+    tasks: ExtruderTasks;
+}
+export interface ExtruderSts {
+    actualSlackAngle: number;
+    cognexHasHeartbeat: boolean;
+    filteredSlackAngle: number;
+    heaterIsAtTemp: boolean;
+    heaterIsRunning: boolean;
+    heaterSetpointTempDegF: number;
+    heaterState: number;
+    heaterStatusMsg: string;
+    newVisionResult: boolean;
+    slackAngleDerivative: number;
+    slackDerivativeIsStable: boolean;
+    slackFilterIsStable: boolean;
+    slackIsValid: boolean;
+    syringeIsRunning: boolean;
+}
+export interface HmiCfg {
+    hasMultipleKiosks: boolean;
+    startingScreen: string;
+}
 export interface ComponentAnimation {
     accentColor: number;
     backgroundColor: number;
@@ -1545,12 +1626,10 @@ export interface inputs {
     SYS: SysInputs;
 }
 export interface JobData {
-    activeBatchNumber: number;
     activeRecipeIndex: number;
-    assemblyName: string;
-    assemblyNumber: string;
     batchId: string;
     batchSts: number;
+    dbId: string;
     goodCnt: number;
     jobCompleted: boolean;
     jobEndTime: string;
@@ -1558,7 +1637,6 @@ export interface JobData {
     jobStartTime: string;
     lotId: string;
     lotQty: number;
-    operationNumber: string;
     operatorId: string;
     salesOrderId: string;
     scrapCnt: number;
@@ -1566,8 +1644,17 @@ export interface JobData {
     setupEndTime: string;
     setupStartTime: string;
     tubeTypeString: string;
-    workInstruction: string;
     workOrderId: string;
+}
+export interface LogRecordData {
+    lastIndex: number;
+    list: Array<DebugLogData>;
+}
+export interface MachineRetainParameters {
+    cellType: number;
+    location: string;
+    machineSerialNumber: string;
+    safetyControllerSerialNumber: string;
 }
 export interface MixerCfg {
     bowlPositionAtBeakerDump_DEG: number;
@@ -1701,12 +1788,18 @@ export interface PartDataStatus {
     parts: Array<PartData>;
     robotIsEmpty: boolean;
 }
+export interface DeviceInput {
+    id: number;
+    name: string;
+    parentId: number;
+}
 export interface RobCfg {
     delayDistanceNewLineBeginMm: number;
     maxRobotExtrudeSpeed_mmPerSec: number;
     minRobotExtrudeSpeed_mmPerSec: number;
     prePurgeTime_ms: number;
     screenerToSyringeOffset_mm: number;
+    syringeRetractDistancePostPlate_mm: number;
 }
 export enum RobMethods {
     NONE = 0,
@@ -1720,9 +1813,7 @@ export enum RobProcesses {
 }
 export enum SlackControllers {
     NONE = 0,
-    PI = 1,
     PID = 2,
-    SMITH = 3,
 }
 export enum RobTasks {
     NONE = 0,
@@ -1744,11 +1835,8 @@ export interface RobMeta {
     methods: RobMethods;
     processes: RobProcesses;
     robotSpeedAtLineEnd: Array<number>;
-    slackController_kd: number;
-    slackController_ki: number;
-    slackController_kp: number;
-    slackController_modelGain: number;
-    slackController_type: SlackControllers;
+    slackControllerParams: Array<number>;
+    slackControllers: SlackControllers;
     tasks: RobTasks;
     useSlackController: boolean;
 }
@@ -1786,6 +1874,7 @@ export interface RobSts {
     actualRobotLine: number;
     actualRobotLinePosition_mm: number;
     actualRobotLineSpeed_mmPerSec: number;
+    actualRobotLineTime_sec: number;
     actualSlackAngle: number;
     actualWaypoint: number;
     actualZone: RobZones;
@@ -1795,15 +1884,22 @@ export interface RobSts {
     extruderIsPrimed: boolean;
     extruderRemainingMaterial_PERC: number;
     extrudeState: ExtrudeStates;
+    filteredSlackAngle: number;
+    filteredSlackAngleIsStable: boolean;
     lastLineDosage_mlPerMeter: number;
+    lineIsActive: boolean;
     modulatedRobotSpeed_mmPerSec: number;
-    newVisionResult: boolean;
     nominalRobotSpeed_mmPerSec: number;
-    rawSlackAngle: number;
+    numRobotLines: number;
+    slackAngleDerivativeIsStable: boolean;
+    slackControllerDerivativeTerm: number;
     slackControllerIntegralTerm: number;
+    slackControllerProportionalTerm: number;
     slackControllerState: number;
     slackError: number;
+    slackErrorVelocity: number;
     syringeIsHomed: boolean;
+    syringePlateStartPosition: number;
     targetSlackAngle: number;
     targetWaypoint: RobWaypoints;
 }
@@ -1857,6 +1953,19 @@ export interface ScreenerSts {
     screenState: ScreenStates;
     topPistonHeadPosition: number;
 }
+export interface SettingsAllUsers {
+    placeholderBool: boolean;
+}
+export interface SettingsExpert {
+    autoLogoutTime: number;
+    dryCycle: boolean;
+    expertStaysLoggedIn: boolean;
+    overridesEnabled: boolean;
+}
+export interface Settings {
+    allUsers: SettingsAllUsers;
+    expert: SettingsExpert;
+}
 export interface SftyCfg {
     numOfDoors: number;
 }
@@ -1866,6 +1975,43 @@ export interface SftySts {
 }
 export interface SysCfg {
     placeholder: boolean;
+}
+export interface DeviceHmiInputs {
+    cancel_REQ: boolean;
+    confirm_REQ: boolean;
+    inputIsNewThisScan: boolean;
+    valueInt: number;
+    valueReal: number;
+}
+export interface DeviceCmdReqBits {
+    autoMode_REQ: boolean;
+    clear_REQ: boolean;
+    kill_REQ: boolean;
+    manualMode_REQ: boolean;
+    pause_REQ: boolean;
+    reset_REQ: boolean;
+    start_REQ: boolean;
+    stop_REQ: boolean;
+    unPause_REQ: boolean;
+}
+export interface StateEngine {
+    cycleTime: Date | string;
+    cycleTimeMs: number;
+    errorCode: number;
+    firstScan: boolean;
+    goToNextStep: boolean;
+    ignoreStepTimeout: boolean;
+    nextStepNum: number;
+    resetStepTime: boolean;
+    stepMode: boolean;
+    stepTime: Date | string;
+    stepTimedOut: boolean;
+    stepTimeout: Date | string;
+    warningCode: number;
+}
+export interface FaultCodeData {
+    code: number;
+    deviceId: number;
 }
 export interface SysSts {
     placeholder: boolean;
@@ -1904,6 +2050,40 @@ export interface UdpCfg {
 export interface UdpSts {
     incomingDataIsRecent: boolean;
     udpPeerIsRunning: boolean;
+}
+export enum Users {
+    NONE = 0,
+    OPERATOR = 1,
+    EXPERT = 2,
+    ADMIN = 3,
+}
+export interface UserData {
+    activeUser: Users;
+    dbId: string;
+    login_REQ: boolean;
+    logout_REQ: boolean;
+    password: string;
+    timeLeftBeforeAutoLogout_MIN: number;
+    username: string;
+}
+export interface UtilityData {
+    always_OFF: boolean;
+    always_ON: boolean;
+    currentSysTime: bigint | number;
+    currentTimeMs: bigint | number;
+    firstScan: boolean;
+    flash_1SEC: boolean;
+    flash_250MSEC: boolean;
+    flash_2SEC: boolean;
+    flash_500MSEC: boolean;
+    flash_50MSEC: boolean;
+    flash_5SEC: boolean;
+    oneShot_1SEC: boolean;
+    oneShot_50MSEC: boolean;
+    runningTimeSec: bigint | number;
+    startupTimeBeyond15Sec: boolean;
+    startupTimeBeyond30Sec: boolean;
+    startupTimeBeyondOneMinute: boolean;
 }
 export interface ExtServiceCfg {
     triggerErrorIfLostHeartbeat: boolean;
@@ -1979,33 +2159,55 @@ export type Machine = {
     abbMeta: AbbMeta;
     abbSts: RctrlSts;
     activeRecipe: RecipeData;
+    activeUserId: number;
     bleedCfg: TwoPosCfg;
     bleedSts: TwoPosSts;
     bowlCfg: AxisCfg;
     bowlSts: AxisNonSoftMotionSts;
+    cfg: MachineCfg;
+    clearFltsCmd: boolean;
     conCfg: ConCfg;
     conMeta: ConMeta;
     conSts: ConSts;
+    currentTimeMs: bigint | number;
+    dateAndTime: Date | string;
+    dateAndTimeString: string;
+    deviceLogs: Array<DeviceLogData>;
+    deviceRegisteredActions: DeviceRegisteredActions;
+    devices: Array<Device>;
     devicesIds_00254: DeviceIds;
     dispCfg: DispCfg;
     dispMeta: DispMeta;
     dispSts: DispSts;
     eoatCfg: TwoPosCfg;
     eoatSts: TwoPosSts;
+    errors: SystemFaultData;
+    estopCircuit_OK: boolean;
+    estopCircuitDelayed_OK: boolean;
+    ethercatMaster_OK: boolean;
+    ethercatSlaves_OK: boolean;
     extruderCfg: ExtruderCfg;
     extruderMeta: ExtruderMeta;
     extruderSts: ExtruderSts;
+    fenceCircuit_OK: boolean;
     gripCfg: TwoPosCfg;
     gripSts: TwoPosSts;
+    guardDoors_LOCKED: boolean;
+    heartbeatHMI: number;
+    heartbeatPLC: number;
     hmiCfg: HmiCfg;
     hmiSts: HmiSts;
     inputs: inputs;
     job: JobData;
     liftCfg: TwoPosCfg;
     liftSts: TwoPosSts;
+    machineLog: LogRecordData;
+    machineRetainParameters: MachineRetainParameters;
+    manualMode: boolean;
     mixerCfg: MixerCfg;
     mixerMeta: MixerMeta;
     mixerSts: MixerSts;
+    networkHealth_OK: boolean;
     outputs: outputs;
     paddleCfg: AxisCfg;
     paddleSts: AxisNonSoftMotionSts;
@@ -2014,57 +2216,227 @@ export type Machine = {
     piston_bSts: AxisNonSoftMotionSts;
     piston_tCfg: AxisCfg;
     piston_tSts: AxisNonSoftMotionSts;
+    registeredDevices: Array<DeviceRegistration>;
+    registeredInputs: Array<DeviceInput>;
+    resetEthercat_REQ: boolean;
     robCfg: RobCfg;
     robMeta: RobMeta;
     robSts: RobSts;
     screenerCfg: ScreenerCfg;
     screenerMeta: ScreenerMeta;
     screenerSts: ScreenerSts;
+    settings: Settings;
     sftyCfg: SftyCfg;
     sftySts: SftySts;
+    supplyAir_OK: boolean;
+    syncClockDone: boolean;
+    syncClockReq: boolean;
+    syncClockTime: bigint | number;
     syringeCfg: AxisCfg;
     syringeSts: AxisNonSoftMotionSts;
     sysCfg: SysCfg;
+    sysFb: {
+        _actionRequestCtr: number;
+        _childrenDeclared: boolean;
+        _claimedDevices: Array<number>;
+        _clearingActive: boolean;
+        _clearingActiveTimeMs: bigint | number;
+        _configured: boolean;
+        _deviceCount: number;
+        _doNotReturnToCallingStep: boolean;
+        _heartbeatUpdated: boolean;
+        _hmiInputs: DeviceHmiInputs;
+        _hmiStopRequested: boolean;
+        _holdMethodActiveFor250ms: boolean;
+        _lastLogTimeMs: bigint | number;
+        _lastStepUsedForStepDesc: number;
+        _lastTimeApiOpcuaReqHmi: bigint | number;
+        _lastTimeApiOpcuaReqOrch: bigint | number;
+        _lastTimeExecMethod: bigint | number;
+        _logId: number;
+        _paramArray: Array<number>;
+        _prevActiveIdNotZero: boolean;
+        _preventAutoKillOfProcessDueToErrorOrInstantKill: boolean;
+        _preventAutoKillOfScriptDueToErrorOrInstantKill: boolean;
+        _prevExecMethodId: number;
+        _prevReceivedActionId: Array<number>;
+        _prevReceivedCmdId: number;
+        _prevReceivedTaskId: number;
+        _prevScriptActiveIdNotZero: boolean;
+        _prevState: number;
+        _prevTaskActiveIdNotZero: boolean;
+        _processIsFinishedTimeMs: bigint | number;
+        _processSkipReturnToStepThatCalled: boolean;
+        _processStepStartTime: bigint | number;
+        _registered: boolean;
+        _requestedExecMethodId: number;
+        _requestExecMethod: boolean;
+        _requestProcess: boolean;
+        _requestTask: boolean;
+        _scriptData: ProcessData;
+        _scriptIsFinishedTimeMs: bigint | number;
+        _scriptStepStartTime: bigint | number;
+        _sysIsConfigured: boolean;
+        _taskActiveStartTime: bigint | number;
+        _taskIsFinishedTimeMs: bigint | number;
+        _taskStepStartTime: bigint | number;
+        _uniqueActionRequestId: number;
+        _useCustomInstantKillLogic: boolean;
+        cfg: SysCfg;
+        CLEARING_DURATION_MS: number;
+        cmd: DeviceCmdReqBits;
+        dev: Device;
+        deviceStateEngineFB: {
+            _lastStepUsedForDescription: number;
+            cmd: DeviceCmdReqBits;
+            dev: Device;
+            eng: StateEngine;
+            errorCode: number;
+            firstPowerUpScan: boolean;
+            ignoreStepTimeout: boolean;
+            instantKillActive: boolean;
+            resetStepTime: boolean;
+            runTimeoutTimer: boolean;
+            stepTimeout: Date | string;
+            stopwatchON: boolean;
+            timeRecorded: boolean;
+            TON_0: {
+                ET: Date | string;
+                IN: boolean;
+                PT: Date | string;
+                q: boolean;
+            };
+            toNstepTime: {
+                ET: Date | string;
+                IN: boolean;
+                PT: Date | string;
+                q: boolean;
+            };
+            toNstopwatch: {
+                ET: Date | string;
+                IN: boolean;
+                PT: Date | string;
+                q: boolean;
+            };
+        };
+        eng: StateEngine;
+        faultMonitorFB: {
+            devError: FaultCodeData;
+            dontDropErrorPresent: boolean;
+            dontDropWarningPresent: boolean;
+            i: number;
+            j: number;
+            k: number;
+            m: number;
+            sMessage: string;
+        };
+        id: number;
+        mnemonic: string;
+        msgString: string;
+        opcuaDeviceid: DeviceIds;
+        parentId: number;
+        rtrig: Array<{
+            CLK: boolean;
+            q: boolean;
+        }>;
+        stoppingComplete: boolean;
+        sts: SysSts;
+        sysCfgFb: {
+            cfgError: boolean;
+            configured: boolean;
+            deviceCnt: number;
+            diMyResult: number;
+            dummyBOOL: boolean;
+            i: number;
+            pApplication: unknown;
+            RETAIN_SAVE_FILEPATH: string;
+            retainsVarsSaved: boolean;
+        };
+        tempBool: boolean;
+        tempDint: number;
+        toNclearFlts: {
+            ET: Date | string;
+            IN: boolean;
+            PT: Date | string;
+            q: boolean;
+        };
+        utilitiesFb: {
+            firstScan: boolean;
+            i: number;
+            startupTimeMs: bigint | number;
+            toNs: Array<{
+                ET: Date | string;
+                IN: boolean;
+                PT: Date | string;
+                q: boolean;
+            }>;
+        };
+    };
     sysSts: SysSts;
     taskQueue: TaskQueue;
     udpCfg: UdpCfg;
     udpSts: UdpSts;
+    user: UserData;
+    utilities: UtilityData;
     visCfg: ExtServiceCfg;
     visMeta: VisMeta;
     visSts: VisSts;
+    warnings: SystemFaultData;
 };
 export type MachineTypeRoot = {
     abbCfg: RctrlCfg;
     abbMeta: AbbMeta;
     abbSts: RctrlSts;
     activeRecipe: RecipeData;
+    activeUserId: number;
     bleedCfg: TwoPosCfg;
     bleedSts: TwoPosSts;
     bowlCfg: AxisCfg;
     bowlSts: AxisNonSoftMotionSts;
+    cfg: MachineCfg;
+    clearFltsCmd: boolean;
     conCfg: ConCfg;
     conMeta: ConMeta;
     conSts: ConSts;
+    currentTimeMs: bigint | number;
+    dateAndTime: Date | string;
+    dateAndTimeString: string;
+    deviceLogs: Array<DeviceLogData>;
+    deviceRegisteredActions: DeviceRegisteredActions;
+    devices: Array<Device>;
     devicesIds_00254: DeviceIds;
     dispCfg: DispCfg;
     dispMeta: DispMeta;
     dispSts: DispSts;
     eoatCfg: TwoPosCfg;
     eoatSts: TwoPosSts;
+    errors: SystemFaultData;
+    estopCircuit_OK: boolean;
+    estopCircuitDelayed_OK: boolean;
+    ethercatMaster_OK: boolean;
+    ethercatSlaves_OK: boolean;
     extruderCfg: ExtruderCfg;
     extruderMeta: ExtruderMeta;
     extruderSts: ExtruderSts;
+    fenceCircuit_OK: boolean;
     gripCfg: TwoPosCfg;
     gripSts: TwoPosSts;
+    guardDoors_LOCKED: boolean;
+    heartbeatHMI: number;
+    heartbeatPLC: number;
     hmiCfg: HmiCfg;
     hmiSts: HmiSts;
     inputs: inputs;
     job: JobData;
     liftCfg: TwoPosCfg;
     liftSts: TwoPosSts;
+    machineLog: LogRecordData;
+    machineRetainParameters: MachineRetainParameters;
+    manualMode: boolean;
     mixerCfg: MixerCfg;
     mixerMeta: MixerMeta;
     mixerSts: MixerSts;
+    networkHealth_OK: boolean;
     outputs: outputs;
     paddleCfg: AxisCfg;
     paddleSts: AxisNonSoftMotionSts;
@@ -2073,24 +2445,172 @@ export type MachineTypeRoot = {
     piston_bSts: AxisNonSoftMotionSts;
     piston_tCfg: AxisCfg;
     piston_tSts: AxisNonSoftMotionSts;
+    registeredDevices: Array<DeviceRegistration>;
+    registeredInputs: Array<DeviceInput>;
+    resetEthercat_REQ: boolean;
     robCfg: RobCfg;
     robMeta: RobMeta;
     robSts: RobSts;
     screenerCfg: ScreenerCfg;
     screenerMeta: ScreenerMeta;
     screenerSts: ScreenerSts;
+    settings: Settings;
     sftyCfg: SftyCfg;
     sftySts: SftySts;
+    supplyAir_OK: boolean;
+    syncClockDone: boolean;
+    syncClockReq: boolean;
+    syncClockTime: bigint | number;
     syringeCfg: AxisCfg;
     syringeSts: AxisNonSoftMotionSts;
     sysCfg: SysCfg;
+    sysFb: {
+        _actionRequestCtr: number;
+        _childrenDeclared: boolean;
+        _claimedDevices: Array<number>;
+        _clearingActive: boolean;
+        _clearingActiveTimeMs: bigint | number;
+        _configured: boolean;
+        _deviceCount: number;
+        _doNotReturnToCallingStep: boolean;
+        _heartbeatUpdated: boolean;
+        _hmiInputs: DeviceHmiInputs;
+        _hmiStopRequested: boolean;
+        _holdMethodActiveFor250ms: boolean;
+        _lastLogTimeMs: bigint | number;
+        _lastStepUsedForStepDesc: number;
+        _lastTimeApiOpcuaReqHmi: bigint | number;
+        _lastTimeApiOpcuaReqOrch: bigint | number;
+        _lastTimeExecMethod: bigint | number;
+        _logId: number;
+        _paramArray: Array<number>;
+        _prevActiveIdNotZero: boolean;
+        _preventAutoKillOfProcessDueToErrorOrInstantKill: boolean;
+        _preventAutoKillOfScriptDueToErrorOrInstantKill: boolean;
+        _prevExecMethodId: number;
+        _prevReceivedActionId: Array<number>;
+        _prevReceivedCmdId: number;
+        _prevReceivedTaskId: number;
+        _prevScriptActiveIdNotZero: boolean;
+        _prevState: number;
+        _prevTaskActiveIdNotZero: boolean;
+        _processIsFinishedTimeMs: bigint | number;
+        _processSkipReturnToStepThatCalled: boolean;
+        _processStepStartTime: bigint | number;
+        _registered: boolean;
+        _requestedExecMethodId: number;
+        _requestExecMethod: boolean;
+        _requestProcess: boolean;
+        _requestTask: boolean;
+        _scriptData: ProcessData;
+        _scriptIsFinishedTimeMs: bigint | number;
+        _scriptStepStartTime: bigint | number;
+        _sysIsConfigured: boolean;
+        _taskActiveStartTime: bigint | number;
+        _taskIsFinishedTimeMs: bigint | number;
+        _taskStepStartTime: bigint | number;
+        _uniqueActionRequestId: number;
+        _useCustomInstantKillLogic: boolean;
+        cfg: SysCfg;
+        CLEARING_DURATION_MS: number;
+        cmd: DeviceCmdReqBits;
+        dev: Device;
+        deviceStateEngineFB: {
+            _lastStepUsedForDescription: number;
+            cmd: DeviceCmdReqBits;
+            dev: Device;
+            eng: StateEngine;
+            errorCode: number;
+            firstPowerUpScan: boolean;
+            ignoreStepTimeout: boolean;
+            instantKillActive: boolean;
+            resetStepTime: boolean;
+            runTimeoutTimer: boolean;
+            stepTimeout: Date | string;
+            stopwatchON: boolean;
+            timeRecorded: boolean;
+            TON_0: {
+                ET: Date | string;
+                IN: boolean;
+                PT: Date | string;
+                q: boolean;
+            };
+            toNstepTime: {
+                ET: Date | string;
+                IN: boolean;
+                PT: Date | string;
+                q: boolean;
+            };
+            toNstopwatch: {
+                ET: Date | string;
+                IN: boolean;
+                PT: Date | string;
+                q: boolean;
+            };
+        };
+        eng: StateEngine;
+        faultMonitorFB: {
+            devError: FaultCodeData;
+            dontDropErrorPresent: boolean;
+            dontDropWarningPresent: boolean;
+            i: number;
+            j: number;
+            k: number;
+            m: number;
+            sMessage: string;
+        };
+        id: number;
+        mnemonic: string;
+        msgString: string;
+        opcuaDeviceid: DeviceIds;
+        parentId: number;
+        rtrig: Array<{
+            CLK: boolean;
+            q: boolean;
+        }>;
+        stoppingComplete: boolean;
+        sts: SysSts;
+        sysCfgFb: {
+            cfgError: boolean;
+            configured: boolean;
+            deviceCnt: number;
+            diMyResult: number;
+            dummyBOOL: boolean;
+            i: number;
+            pApplication: unknown;
+            RETAIN_SAVE_FILEPATH: string;
+            retainsVarsSaved: boolean;
+        };
+        tempBool: boolean;
+        tempDint: number;
+        toNclearFlts: {
+            ET: Date | string;
+            IN: boolean;
+            PT: Date | string;
+            q: boolean;
+        };
+        utilitiesFb: {
+            firstScan: boolean;
+            i: number;
+            startupTimeMs: bigint | number;
+            toNs: Array<{
+                ET: Date | string;
+                IN: boolean;
+                PT: Date | string;
+                q: boolean;
+            }>;
+        };
+    };
     sysSts: SysSts;
     taskQueue: TaskQueue;
     udpCfg: UdpCfg;
     udpSts: UdpSts;
+    user: UserData;
+    utilities: UtilityData;
     visCfg: ExtServiceCfg;
     visMeta: VisMeta;
     visSts: VisSts;
+    warnings: SystemFaultData;
 };
 export type MachineRuntimeExcludedKeys = 'SyncClockReq' | 'ResetEthercat_REQ' | 'DeviceLogs' | 'RegisteredInputs' | 'Utilities' | 'RegisteredDevices' | 'Devices' | 'DeviceRegisteredActions' | 'SysFb';
 export type MachineRuntime = Omit<Machine, MachineRuntimeExcludedKeys>;

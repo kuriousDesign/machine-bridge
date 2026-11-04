@@ -99,6 +99,7 @@ interface StructureDefinitionLike {
 }
 
 interface GeneratedTagNode {
+    additionalRoots?: GeneratedTagNode[];
     children?: Record<string, GeneratedTagNode>;
     items?: GeneratedTagNode[];
     tag: string;
@@ -958,6 +959,90 @@ async function buildSchemaTree(
     };
 }
 
+function getSchemaShapeSize(node: SchemaNode): number {
+    if (node.kind === 'object') {
+        return 1 + node.children.reduce((size, child) => size + getSchemaShapeSize(child), 0);
+    }
+
+    return node.kind === 'array' ? 1 + getSchemaShapeSize(node.element) : 0;
+}
+
+function collectNamedSchemaShapes(node: SchemaNode, shapes: Map<string, SchemaNode>): void {
+    const typeName = getNamedDataType(node.dataTypeName);
+    if (typeName && node.kind !== 'leaf') {
+        const existing = shapes.get(typeName);
+        if (!existing || getSchemaShapeSize(node) > getSchemaShapeSize(existing)) {
+            shapes.set(typeName, node);
+        }
+    }
+
+    if (node.kind === 'array') {
+        collectNamedSchemaShapes(node.element, shapes);
+    } else if (node.kind === 'object') {
+        for (const child of node.children) {
+            collectNamedSchemaShapes(child, shapes);
+        }
+    }
+}
+
+function supplementSchemaWithMachineShapes(
+    node: SchemaNode,
+    shapes: Map<string, SchemaNode>,
+    matchingShape?: SchemaNode,
+): SchemaNode {
+    const typeName = getNamedDataType(node.dataTypeName);
+    const shape = matchingShape
+        ?? (typeName ? shapes.get(typeName) : undefined);
+
+    if (node.kind === 'leaf' && shape && shape.kind !== 'leaf') {
+        if (shape.kind === 'object') {
+            return {
+                ...shape,
+                browseName: node.browseName,
+                dataTypeName: node.dataTypeName,
+                dataTypeNodeId: node.dataTypeNodeId ?? shape.dataTypeNodeId,
+                isArray: node.isArray,
+                nodeId: node.nodeId,
+            };
+        }
+
+        return {
+            ...shape,
+            browseName: node.browseName,
+            dataTypeName: node.dataTypeName,
+            dataTypeNodeId: node.dataTypeNodeId ?? shape.dataTypeNodeId,
+            nodeId: node.nodeId,
+        };
+    }
+
+    if (node.kind === 'object') {
+        const shapeChildren = shape?.kind === 'object' ? shape.children : [];
+        const shapeChildrenByName = new Map(shapeChildren.map((child) => [child.browseName, child]));
+        const presentNames = new Set(node.children.map((child) => child.browseName));
+        const children = [
+            ...node.children.map((child) => supplementSchemaWithMachineShapes(
+                child,
+                shapes,
+                shapeChildrenByName.get(child.browseName),
+            )),
+            ...shapeChildren.filter((child) => !presentNames.has(child.browseName)),
+        ]
+            .sort((left, right) => left.browseName.localeCompare(right.browseName))
+
+        return { ...node, children };
+    }
+
+    if (node.kind === 'array') {
+        const shapeElement = shape?.kind === 'array' ? shape.element : undefined;
+        return {
+            ...node,
+            element: supplementSchemaWithMachineShapes(node.element, shapes, shapeElement),
+        };
+    }
+
+    return node;
+}
+
 interface RenderContext {
     declarations: Map<string, string>;
     order: string[];
@@ -1164,6 +1249,14 @@ function renderTagNode(node: GeneratedTagNode, level: number): string {
         lines.push(`${indent(level + 1)}] as const,`);
     }
 
+    if (node.additionalRoots && node.additionalRoots.length > 0) {
+        lines.push(`${indent(level + 1)}additionalRoots: [`);
+        for (const rootNode of node.additionalRoots) {
+            lines.push(`${indent(level + 2)}${renderTagNode(rootNode, level + 2)},`);
+        }
+        lines.push(`${indent(level + 1)}] as const,`);
+    }
+
     lines.push(`${indent(level)}}`);
     return lines.join('\n');
 }
@@ -1178,6 +1271,7 @@ function renderTagModule(options: CliOptions, tagTree: GeneratedTagNode): string
         '    tag: string;',
         '    children?: Record<string, MachineTagNode>;',
         '    items?: readonly MachineTagNode[];',
+        '    additionalRoots?: readonly MachineTagNode[];',
         '}',
         '',
         `export const machineTagSource = ${JSON.stringify({
@@ -1201,6 +1295,12 @@ function renderTagModule(options: CliOptions, tagTree: GeneratedTagNode): string
         '    if (node.items) {',
         '        for (const child of node.items) {',
         '            yield* iterateMachineTags(child);',
+        '        }',
+        '    }',
+        '',
+        '    if (node.additionalRoots) {',
+        '        for (const root of node.additionalRoots) {',
+        '            yield* iterateMachineTags(root);',
         '        }',
         '    }',
         '}',
@@ -1234,6 +1334,37 @@ async function main(): Promise<void> {
     const { client, session } = await connectSession(options.endpoint);
 
     try {
+        const machineShapes = new Map<string, SchemaNode>();
+        let machineSchema: SchemaNode | undefined;
+        let machineTagTree: GeneratedTagNode | undefined;
+        if (options.machineId) {
+            const machineRootTag = 'Machine';
+            const machineRootNodeId = toNodeId(machineRootTag, options.controllerName);
+            console.log(`[OPCUA] inspecting supplemental shape source ${machineRootTag}`);
+            console.log(`[OPCUA] supplemental root node id ${machineRootNodeId}`);
+
+            machineSchema = await buildSchemaTree(
+                session,
+                machineRootNodeId,
+                machineRootTag,
+                new Set<string>(),
+            );
+            collectNamedSchemaShapes(machineSchema, machineShapes);
+            machineTagTree = await buildTagTree(
+                session,
+                machineRootNodeId,
+                machineRootTag,
+                machineRootTag,
+                new Set<string>(),
+            );
+
+            if (machineShapes.size === 0) {
+                console.warn('[OPCUA] no reusable named data type shapes found under Machine');
+            } else {
+                console.log(`[OPCUA] collected ${machineShapes.size} named data type shape(s) from Machine`);
+            }
+        }
+
         for (const target of generationTargets) {
             const targetOptions: CliOptions = {
                 ...options,
@@ -1247,9 +1378,20 @@ async function main(): Promise<void> {
             console.log(`[OPCUA] inspecting tag ${targetOptions.rootTag}`);
             console.log(`[OPCUA] root node id ${targetOptions.rootNodeId}`);
 
-            const schema = await buildSchemaTree(session, targetOptions.rootNodeId, targetOptions.rootTag, new Set<string>());
+            const machineSpecificSchema = await buildSchemaTree(
+                session,
+                targetOptions.rootNodeId,
+                targetOptions.rootTag,
+                new Set<string>(),
+            );
+            const schema = machineSchema
+                ? supplementSchemaWithMachineShapes(machineSpecificSchema, machineShapes, machineSchema)
+                : machineSpecificSchema;
             const content = renderGeneratedModule(targetOptions, schema);
             const tagTree = await buildTagTree(session, targetOptions.rootNodeId, targetOptions.rootTag, targetOptions.rootTag, new Set<string>());
+            if (machineTagTree) {
+                tagTree.additionalRoots = [machineTagTree];
+            }
             const tagsContent = renderTagModule(targetOptions, tagTree);
 
             await writeOutputFile(targetOptions.outputPath, content);
